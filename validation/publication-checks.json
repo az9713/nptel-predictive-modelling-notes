@@ -1,0 +1,424 @@
+{
+  "checked_at_utc": "2026-11-04T11:35:00.130948+00:00",
+  "repository": "https://github.com/az9713/nptel-predictive-modelling-notes",
+  "url": "https://az9713.github.io/nptel-predictive-modelling-notes/",
+  "content_commit": "461c6f9e82c2c34ef5987c015fcd73b9e282cd24",
+  "remote_commit": "461c6f9e82c2c34ef5987c015fcd73b9e282cd24",
+  "push_verified": true,
+  "pages_build_status": "built",
+  "pages_build_commit": "461c6f9e82c2c34ef5987c015fcd73b9e282cd24",
+  "pages_verified": true,
+  "passed": true,
+  "served_files_checked": 58,
+  "served_files": [
+    {
+      "path": "about.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "9cc0c12a2d6500c810e32c428bdebc00d694bb47ea4797f0cb11316fe42b8348"
+    },
+    {
+      "path": "chapter-01.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "c11993afd18309fb28b228bce4e79e582514b91f08c226b9c5ec68799f32c714"
+    },
+    {
+      "path": "chapter-02.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "b41e80b35bc954b93258a8c8a4508604da61d379be9aeca35cf7848a6a8faf0a"
+    },
+    {
+      "path": "chapter-03.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "30bb6a90b0c222c545549131fb2cdf88d0866d58a9167360767c8a0541ca5648"
+    },
+    {
+      "path": "chapter-04.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "0293275a7f6c0588a72cdd19d6ff18e69b6c258727189caa6f4048158fd5cca8"
+    },
+    {
+      "path": "chapter-05.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "f569488c8ece60643146a79f9275cde8f7d43de59a4e58d5c2d35739ce022c37"
+    },
+    {
+      "path": "chapter-06.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "937553b2f152c4e30a3731805f0d8a2ac7e320d85fc5e46cc3109ffaf7866760"
+    },
+    {
+      "path": "chapter-07.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "e12402fbbca6bc79eb4dcf2593a7d200a61fe2e25466d3ef47c9d7d3f9c1b1e1"
+    },
+    {
+      "path": "chapter-08.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "8c73527bb77ff64ab4e230eebb733badffa529218c67dfec07acb25f927dd32a"
+    },
+    {
+      "path": "chapter-09.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "a50b344b47e13fd6002a1706af9dedb2fdcee49f80e23ee43996ac3e7b4799c9"
+    },
+    {
+      "path": "chapter-10.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "ef4acea372250cd03ee8ed827e7a26d96ed75528f6e5c5c637fc2a82939e814c"
+    },
+    {
+      "path": "chapter-11.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "86218be665c7648883bc901d14c33bbb20a2715230086c5807886d7e7a96cda4"
+    },
+    {
+      "path": "chapter-12.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "22faec38777cafa8efe4e43bb2bac54f88a5932fb8e5f89813d158806158f9a1"
+    },
+    {
+      "path": "chapter-13.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "9f0937ca26f7d130fb1ad51ee51b33a7e4c5465be2d411f136bc468f2e61bc0b"
+    },
+    {
+      "path": "chapter-14.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "4bceefa3fee49b9cb7eca776fbafbc5d7b30930a60c1634175f7475a792c201d"
+    },
+    {
+      "path": "chapter-15.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "950e81ed328060120942f11491e15a3cb49b1303682bd9cb673da48695580cbe"
+    },
+    {
+      "path": "chapter-16.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "f738f97040a60d2f363ccf9d978aa5f9e89845676d11356637b250a3b32a5cea"
+    },
+    {
+      "path": "chapter-17.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "50cdcd4e2b1835b45ae492df46cc5dda954007a58a24a20cc279e5f74a4083db"
+    },
+    {
+      "path": "chapter-18.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "a4416153551c83eea590de72fd1da69abbd48537357cfc8b54884de0cffaea95"
+    },
+    {
+      "path": "course-plan.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "2dec5fd913c3e6ae889a629dc1593950a82f92f3c31f45416676e5701268f14b"
+    },
+    {
+      "path": "index.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "345b5fdc6375e5793a2af219d734350dae1777b8400a137f3617f1a787bb8cc1"
+    },
+    {
+      "path": "laboratory.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "93bac5adccec5d13b78e5ed96b848dee99f8469dfd473a2fa2a3f0b9db4bea72"
+    },
+    {
+      "path": "notation.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "1ecd967f3c2fdbe38363fa84050b1ed9f752b4c383aa28a4fe6db134d049d314"
+    },
+    {
+      "path": "python-conversions.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "43deabdee39188216bf1fc9cd6ce201e57e6fa9d33ce234c1051bbb7eff194f2"
+    },
+    {
+      "path": "source-map.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "114f279c86b206d8fdd08cc70e8d6843142937fb3196fc21463dc8e27110685b"
+    },
+    {
+      "path": "study-guide.html",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "c46ffe264b991850158f5e390e362e37a807d5bd28ebefc100c0732ec8f6fb83"
+    },
+    {
+      "path": "assets/book.css",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "54e0a98f390da48ced1a6b5e9793044f7411d758054a791a4caa35316565c2e4"
+    },
+    {
+      "path": "assets/book.js",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "1ff3faff4b86fbd5e169514fad12f014946bf25f7657db5763e993e6be1c58d2"
+    },
+    {
+      "path": "assets/ch02-source-plots.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "25f67e0ef9481acc1fc99e5ddcb3b0214df1476be7554851762eb8c2e33ced57"
+    },
+    {
+      "path": "assets/ch03-factor-examples.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "1ba21ec04af0d48f21609925157a2dbeec8343dc1b8cffeaf4c1e495cba6c43a"
+    },
+    {
+      "path": "assets/ch05-agglomerative.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "fb458c91fac41bd1f250d85de0f1aff1aacac7007aa7900973e55571e1b39fcf"
+    },
+    {
+      "path": "assets/ch05-diana.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "c3c90b7592cc70153857150329be52c42605732329026e007450b94f4529f9da"
+    },
+    {
+      "path": "assets/ch05-manual.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "fb30159989a9605f833a925d1d52afe085f32c53291b4c6e50c3465071932fd9"
+    },
+    {
+      "path": "assets/ch05-nbclust.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "9c30e88ce5b2b4189157edcd51793e69d07b5d3df4f5b7c2ae2ddc8c14082d16"
+    },
+    {
+      "path": "assets/ch05-utilities-display.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "253b08f161e32976667cc79f70d6a26b8809d05cb76bc865e26453fa64e90d81"
+    },
+    {
+      "path": "assets/ch05-utilities-heatmap.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "c2598fc84626e347d7888f3603c7eb414ec0a50c44070e3145c3cd8a94a08f5d"
+    },
+    {
+      "path": "assets/ch05-votes-banner.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "55a44984a845265802e1c667667ee422492132672efcc0dc181be4240bb147b4"
+    },
+    {
+      "path": "assets/ch06-arrests-diagnostics.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "108a6e2134a0d82e5e64e4f0a903d4c2f4fc5cca89d69490af9303c125cb9089"
+    },
+    {
+      "path": "assets/ch06-arrests-partitions.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "fba6e3707daf0eba92a906268ee7c6c65cf3625dc9c719184f7b20efa3607aee"
+    },
+    {
+      "path": "assets/ch06-arrests-state-labels.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "2337d9bfbbf4d7935fc4681c84540a8a915e86faeda293f9d9e4beaeefb3468d"
+    },
+    {
+      "path": "assets/ch06-utilities.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "386a5e379d53b321bd4d7d433c3ecb7c3a4c568130417ede362259b2dbd5d6a5"
+    },
+    {
+      "path": "assets/ch06-wine-raw.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "0b3949c0100e55bbb0d2a03f918351effcdbf0995c094bea1551852b91ef4c63"
+    },
+    {
+      "path": "assets/ch06-wine-selection.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "d259ce519bb73881133016287f91aaab9ddf9749865895d0e897e43f566f3fe8"
+    },
+    {
+      "path": "assets/ch08-housing-coefficients.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "3529d145cc08c8d1edd92b38fa6d4ce614da910d2b8fbea660abff72d09e518d"
+    },
+    {
+      "path": "assets/ch08-housing-distributions.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "c3f2ad59d8943ba7542e23841802b2745e78836bb375380d5f5dbe564007b7f4"
+    },
+    {
+      "path": "assets/ch08-housing-facets.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "479eb9d9a928734e326113a5427d45a751e7fb46e18faf0acf665c5b1c564bdc"
+    },
+    {
+      "path": "assets/ch09-delivery-dfbetas.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "7998471c40e0010a3309cc008a3adbf142aad376bef027dc6a8e39b35964175f"
+    },
+    {
+      "path": "assets/ch09-delivery-diagnostics.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "1039690f0cd5340e27319c1ed4fb34ea45a41672a9fb2ec55171c09675c93c67"
+    },
+    {
+      "path": "assets/ch11-boston-curvature.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "cf54effc44107d1b289c2957d3e3e6fa80153f7b03d919e6b8bd6e8c0fed63a1"
+    },
+    {
+      "path": "assets/ch11-boston-diagnostics.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "12ad027ef4891ba78f58eca9ebc28b2334ad0f16c9d489db7de71a00afdc6bfc"
+    },
+    {
+      "path": "assets/ch11-credit-interaction.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "82976a5079f0eb912d9667e48a4f945212fdc2c6f132d47c529194d4802e9547"
+    },
+    {
+      "path": "assets/ch12-ar1-residuals.svg",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "90d2b814cc16e293d8fdd6bd0d6a1517ab1731e77a112dd2499e7b8513f4a62b"
+    },
+    {
+      "path": "assets/input/tex/extensions/boldsymbol.js",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "d6771fee0772db2657796c8d0e20e1878bb3237f6d3ed1e828e1834a4ff743ca"
+    },
+    {
+      "path": "assets/math-config.js",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "3fd820b81fb59af16621b952ce86097424e9b0299ae7f921c896e3f1640e292a"
+    },
+    {
+      "path": "assets/mathjax-LICENSE",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+    },
+    {
+      "path": "assets/mathjax-tex-svg.js",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "d4295dc33744836935c1399feece5159577b34c5c8ffb9f1c6324cd82e03a882"
+    },
+    {
+      "path": "assets/reader-preview.png",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "49b4c06e9e7148289662d33080a06349404fe3247ac617ea19b500be4a86b81e"
+    },
+    {
+      "path": "assets/search-index.js",
+      "status": 200,
+      "bytes_match": true,
+      "sha256": "fd135e8e3140d1f5dab39bf7af7347de3dbeda01cadf8b5e4ca48e5ff7db63d6"
+    }
+  ],
+  "live_reader_checks": [
+    {
+      "math": 0,
+      "mathErrors": [],
+      "unknownCommands": [],
+      "overflow": false,
+      "page": "index.html",
+      "width": 1440,
+      "status": 200,
+      "javascript_errors": [],
+      "theme_changes": true,
+      "search_results": 12,
+      "passed": true
+    },
+    {
+      "math": 96,
+      "mathErrors": [],
+      "unknownCommands": [],
+      "overflow": false,
+      "page": "chapter-06.html",
+      "width": 1440,
+      "status": 200,
+      "javascript_errors": [],
+      "theme_changes": true,
+      "solution_opens": true,
+      "passed": true
+    },
+    {
+      "math": 0,
+      "mathErrors": [],
+      "unknownCommands": [],
+      "overflow": false,
+      "page": "index.html",
+      "width": 390,
+      "status": 200,
+      "javascript_errors": [],
+      "theme_changes": true,
+      "search_results": 12,
+      "passed": true
+    },
+    {
+      "math": 96,
+      "mathErrors": [],
+      "unknownCommands": [],
+      "overflow": false,
+      "page": "chapter-06.html",
+      "width": 390,
+      "status": 200,
+      "javascript_errors": [],
+      "theme_changes": true,
+      "solution_opens": true,
+      "passed": true
+    }
+  ],
+  "scope": "Served HTML and bundled assets compared byte-for-byte with named content commit; live desktop/mobile home and k-means chapter rendering/controls. Scientific and finite-code acceptance recorded separately.",
+  "fresh_clone": {
+    "public_code_data_body_files_checked": 76,
+    "html_pages_rebuilt_and_compared": 26,
+    "passed": true,
+    "issues": []
+  }
+}

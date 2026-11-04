@@ -537,7 +537,7 @@
       "lab_present": true
     }
   ],
-  "publication_performed": false,
+  "publication_performed": true,
   "limitations": [
     "Machine-caption source text requires correction; selected frames are not a comprehensive audiovisual audit.",
     "Independent AI reviews are not human certification or formal proof verification."

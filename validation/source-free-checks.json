@@ -112,7 +112,12 @@
     }
   ],
   "archive": "dist/predictive-modelling-notes.zip",
-  "archive_sha256": "b580bd70b8a99f60a80f242ada35f54a4a9b32e99ab344661fc36676a3ac3341",
-  "archive_bytes": 2901054,
-  "scope": "Reader rebuild and all main labs from authored public inputs without private media, transcripts or R references; no network retrieval in the build/lab code."
+  "archive_sha256": "8e6be319f905ec53b7aa8979e3e269fc2bda29b6452c556fab1d399ac51359dd",
+  "archive_bytes": 2909060,
+  "scope": "Reader rebuild and all main labs from authored public inputs without private media, transcripts or R references; no network retrieval in the build/lab code.",
+  "documentation_and_provenance_refreshed_after_execution": [
+    "WORKFLOW.md",
+    "tools/check_export.py",
+    "validation/publication-checks.json"
+  ]
 }

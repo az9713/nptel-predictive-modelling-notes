@@ -31,7 +31,7 @@ source_status:
 publication_authorized: true
 github_repository: az9713/nptel-predictive-modelling-notes
 publication_checks: validation/publication-checks.json
-publication_performed: false
+publication_performed: true
 laboratory_language: Python
 r_example_policy: Convert every R example; explain each unresolved or unfaithful conversion
   individually.

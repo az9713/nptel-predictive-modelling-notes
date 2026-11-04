@@ -41,4 +41,6 @@ validate this course.
 All 39 teaching recordings are covered in 18 authored chapters, with 108 worked
 solutions and 18 executable laboratories. Current-content review acceptance,
 execution results, reader checks and export checks are recorded separately in
-completion.json and validation/. No publication has been performed.
+completion.json and validation/. The GitHub reading edition is published at
+https://az9713.github.io/nptel-predictive-modelling-notes/ ; served-file and live
+reader checks are recorded in validation/publication-checks.json.

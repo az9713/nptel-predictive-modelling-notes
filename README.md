@@ -92,6 +92,8 @@ or human expert certification.
 - [R conversion ledger](validation/r-to-python-examples.json) and fresh-R comparison records in `validation/`.
 - [Execution and link checks](validation/book-checks.json), [offline reader checks](validation/reader-checks.json), and [source-free export checks](validation/source-free-checks.json).
 - [Production workflow](WORKFLOW.md) and [verification environment](validation/environment.json).
+- [Publication checks](validation/publication-checks.json): served-file integrity
+  and live desktop/mobile reader behavior for the named content commit.
 
 ## Source coverage and reproduction limits
 
