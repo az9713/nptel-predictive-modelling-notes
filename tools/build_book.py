@@ -166,7 +166,8 @@ def main():
                   "solved_exercises": sum(r["solved_exercises"] for r in records),
                   "labs_present": sum(r["lab_present"] for r in records),
                   "r_examples_inventoried": len(examples), "chapters": records,
-                  "publication_performed": False,
+                  "publication_performed": bool(read_json(
+                      ROOT / "validation/publication-checks.json", {}).get("pages_verified")),
                   "limitations": ["Machine-caption source text requires correction; selected frames are not a comprehensive audiovisual audit.",
                                   "Independent AI reviews are not human certification or formal proof verification."]}
     write_json(ROOT / "completion.json", completion)

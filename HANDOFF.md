@@ -7,7 +7,9 @@ Prof. Sayantee Jana, IIT Hyderabad; IIT Madras is the NPTEL coordinator/uploader
 
 The user explicitly authorized completing the entire course autonomously,
 including routine plan decisions and repairs. No further user gate is pending.
-Remote repository creation, pushing and publication were not requested.
+The user subsequently requested committing and pushing in the same style as
+the other lecture-note repositories. Repository creation and root-level Pages
+publication are authorized; see validation/publication-checks.json for evidence.
 
 Current evidence is in completion.json and validation/. Each chapter has two
 independent AI review reports in reviews/; acceptance is current only when its

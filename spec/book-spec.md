@@ -89,5 +89,6 @@ references. An acquisition or a source timestamp is not evidence of complete
 reading or visual verification.
 
 The user authorized completion, repairs and independent reviews autonomously.
-Public repository creation, pushing, and Pages publication have not been
-requested. Keep all project artifacts in this folder.
+The user subsequently requested committing and pushing in the same style as
+the existing lecture-note repositories, including public root-level Pages.
+Keep all project artifacts in this folder and exclude private inputs.

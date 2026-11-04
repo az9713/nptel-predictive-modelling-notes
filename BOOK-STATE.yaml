@@ -28,7 +28,9 @@ source_status:
   audiovisual_audit: not_performed
   all_recording_captions: 40_of_40_acquired
   orientation: read_full_by_lead
-publication_authorized: false
+publication_authorized: true
+github_repository: az9713/nptel-predictive-modelling-notes
+publication_checks: validation/publication-checks.json
 publication_performed: false
 laboratory_language: Python
 r_example_policy: Convert every R example; explain each unresolved or unfaithful conversion

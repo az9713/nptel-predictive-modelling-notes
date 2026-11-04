@@ -27,7 +27,7 @@ def main():
             shutil.copytree(ROOT / name, destination / name,
                             ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.part"))
         for name in ["source-manifest.json", "completion.json", "requirements.txt",
-                     "requirements-lock.txt", "code_lab.py", "README.md"]:
+                     "requirements-lock.txt", "code_lab.py", "README.md", ".nojekyll"]:
             shutil.copy2(ROOT / name, destination / name)
         for name in ["validation/chapters", "sources", "reviews"]:
             (destination / name).mkdir(parents=True, exist_ok=True)

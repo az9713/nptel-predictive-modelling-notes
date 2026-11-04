@@ -4,7 +4,9 @@ The user explicitly authorized autonomous completion of the entire course,
 without intermediate approval requests, using the established NPTEL/Stanford
 lecture-note workflow. All source R examples must become Python, and every
 remaining reproduction or conversion obstacle must be explained individually.
-Publication, remote repository creation, and pushing have not been requested.
+The user subsequently requested committing and pushing to GitHub in the same
+style and structure as the other lecture-note repositories. Public repository
+creation and root-level GitHub Pages publication follow that instruction.
 
 Read BOOK-STATE.yaml, EDITOR_DOMAIN.md, WORKFLOW.md, plan/notation.md, and the
 applicable chapter metadata before editing. Current counts and reviewed hashes
