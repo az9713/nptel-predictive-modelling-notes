@@ -1,0 +1,75 @@
+Source five-object single merge heights: [2. 3. 5. 6.]
+Source five-object single cut2: [1 2 1 2 1]
+Source five-object complete merge heights: [ 2.  5.  9. 11.]
+Source five-object complete cut2: [1 1 2 1 2]
+Source ABCDE divisive cut2: [1 1 1 2 2]
+Nutrient raw distances first4:
+[[  0.        95.640002  80.934294  35.24202 ]
+ [ 95.640002   0.       176.492181 130.877844]
+ [ 80.934294 176.492181   0.        45.764178]
+ [ 35.24202  130.877844  45.764178   0.      ]]
+Nutrient scaled distances first4:
+[[0.       1.376933 1.769715 0.548794]
+ [1.376933 0.       3.005141 1.910869]
+ [1.769715 3.005141 0.       1.280126]
+ [0.548794 1.910869 1.280126 0.      ]]
+Nutrient cut5 sizes: [ 7 16  1  2  1]
+Nutrient raw within-cluster medians:
+   energy  protein   fat  calcium  iron
+1   340.0     19.0  29.0      9.0  2.50
+2   170.0     20.0   8.0     13.0  1.45
+3   160.0     26.0   5.0     14.0  5.90
+4    57.5      9.0   1.0     78.0  5.70
+5   180.0     22.0   9.0    367.0  2.50
+Nutrient standardized within-cluster medians:
+     energy   protein       fat   calcium      iron
+1  1.310102  0.000000  1.378562 -0.448046  0.081105
+2 -0.369610  0.235200 -0.486938 -0.396787 -0.637431
+3 -0.468417  1.646402 -0.753438 -0.383972  2.407792
+4 -1.481184 -2.352002 -1.108772  0.436181  2.270928
+5 -0.270803  0.705601 -0.398105  4.139683  0.081105
+Nutrient literal26-index recommendations: {2: 4, 3: 4, 4: 2, 5: 4, 9: 1, 10: 1, 13: 2, 14: 1, 15: 4}
+Tied largest vote counts: [2, 3, 5, 15]
+NbClust convention-selected k: 2
+Utilities all8-variable PCA display fractions: [0.271618 0.237533]
+Utilities single cut3 sizes: [11  7  4]
+Utilities single cut5 sizes: [11  6  1  2  2]
+Utilities single cut6 sizes: [11  3  1  2  2  3]
+Utilities average cut3 sizes: [11  7  4]
+Utilities average cut5 sizes: [7 7 4 2 2]
+Utilities average cut6 sizes: [7 3 4 4 2 2]
+Utilities average cut4 membership:
+Company
+Arizona         1
+Boston          2
+Central         3
+Commonwealth    1
+NY              2
+Florida         3
+Hawaiian        2
+Idaho           4
+Kentucky        1
+Madison         1
+Nevada          4
+New England     2
+Northern        1
+Oklahoma        1
+Pacific         2
+Puget           4
+San Diego       2
+Southern        3
+Texas           4
+Wisconsin       1
+United          2
+Virginia        3
+Authored Ward SSE increment/direct formula: 1.14802472
+USArrests DC=0.85304811 cut2 sizes: [20 30]
+Votes Manhattan DC=0.88691817 cut2 sizes: [ 8 42]
+Votes Euclidean DC=0.86163004 cut2 sizes: [ 8 42]
+Agriculture DC=0.87110617 cut2 sizes: [8 4]
+Votes Manhattan/Euclidean cut2 assignments identical: True
+Votes first cut2 group:
+['Alabama', 'Arkansas', 'Florida', 'Georgia', 'Louisiana', 'Mississippi', 'South Carolina', 'Texas']
+Source bisecting-kmeans examples: run ch05_clusterlearn.py.
+NbClust26-index source wrapper converted and independently R-checked.
+Checks passed: source merges, Ward identity, hierarchies.

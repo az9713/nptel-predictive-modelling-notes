@@ -1,0 +1,13 @@
+Credit rows: 400
+additive coefficients: {'Intercept': 211.14296439806128, 'C(Student)[T.Yes]': 382.67053884252294, 'Income': 5.984335565056196}
+interaction coefficients: {'Intercept': 200.62315294979334, 'C(Student)[T.Yes]': 476.6758432070151, 'Income': 6.218168736952061, 'Income:C(Student)[T.Yes]': -1.999150871513741}
+additive interaction adjusted_R_squared: [0.273818883 0.274428277]
+interaction_partial_F p_value df: [1.333432372 0.248891851 1.         ]
+Income No Yes difference: 20.0 [324.986527689 761.679353466 436.692825777]
+Income No Yes difference: 100.0 [ 822.440026645 1099.200782701  276.760756056]
+Boston rows: 506
+linear coefficients: [34.553840879 -0.950049354]
+quadratic coefficients: [42.862007328 -2.332821098  0.043546889]
+linear quadratic SSE: [19472.381418326 15347.243158382]
+quadratic_partial_F p_value df: 135.199822101 7.630115993367e-28 1
+all assertions passed: equivalent formulas, centering, nested SSE

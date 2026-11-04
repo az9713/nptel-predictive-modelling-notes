@@ -1,0 +1,155 @@
+{
+  "passed": true,
+  "issues": [],
+  "reviewed_chapters": 18,
+  "independent_rounds": 36,
+  "reviewer_records": [
+    {
+      "chapter": 1,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533"
+    },
+    {
+      "chapter": 2,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "c2df83f909f5b2a9e80c777968e5c3e05eea361d7efc05631d16c7e7276394da"
+    },
+    {
+      "chapter": 3,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "f199c8c7d4e41e5b51c8144e2aac748939f5473a0c22b079a5ad176824379545"
+    },
+    {
+      "chapter": 4,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "3cb272dbd173eba55af6b02d210cc8a81bc85a641c6db28991f969cb13363966"
+    },
+    {
+      "chapter": 5,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "a7b9bf12e178eb4cf021cc5d1d21d9f68453060af60152742bc036e34b13485d"
+    },
+    {
+      "chapter": 6,
+      "reviewers": [
+        "review_01_06_r1 independent full-edition science editor",
+        "review_01_06_r2; independent of chapter/helper authorship"
+      ],
+      "current_digest": "319809c0c238abe601b7dd860d770f0b1004fdabd9e148b76895583f250b882e"
+    },
+    {
+      "chapter": 7,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "377dbc94233c5e10b6ddc4a9b9af760574b2a5866de4d20ab85f0b11dbb97c42"
+    },
+    {
+      "chapter": 8,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "b6e36093340d1eaeeb197bc09f3efc450845ecb3e8b44b4d4227a2f9ce3b8ca5"
+    },
+    {
+      "chapter": 9,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "90be5a6e79b40144d0b00b8f787fba852015e659970ba0f8d95e3e919ec04b69"
+    },
+    {
+      "chapter": 10,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "d4f00fc7bbe7964db059e80b9df914ec7a970ead667e377ef187b29f7128de22"
+    },
+    {
+      "chapter": 11,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "0c4e2333f0867279b9be4d0cf24ea191433e3804d43f680b70300d4578bd8a1a"
+    },
+    {
+      "chapter": 12,
+      "reviewers": [
+        "Independent science-editor; not chapter author",
+        "/root/review_13_18_r1"
+      ],
+      "current_digest": "5b2ea2b317a261d3b9965d1ef4c3f5e38dfc688cf5cafc9ded184988eff27591"
+    },
+    {
+      "chapter": 13,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d"
+    },
+    {
+      "chapter": 14,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69"
+    },
+    {
+      "chapter": 15,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "fc548ae6e3fd639d92431c8a5926f9a6ca8cfd22e395b0104741175f98e34d11"
+    },
+    {
+      "chapter": 16,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "0ace45891ef6be3e67b36670e876646951c808b9ecaa9468e8daa1343270b45c"
+    },
+    {
+      "chapter": 17,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "98de7aaf9c6e8c8c8ec856a83c8b2af0bcb64d10312daff2dcf30a585d6a2caa"
+    },
+    {
+      "chapter": 18,
+      "reviewers": [
+        "/root/review_13_18_r1",
+        "/root/review_07_12_r1"
+      ],
+      "current_digest": "356368caf046f37251cd14c328b53f3b9cba02d6c2477ff09d7d46e06fd5fd14"
+    }
+  ],
+  "solved_exercises": 108,
+  "teaching_recording_coverage": 39,
+  "scope": "Current-body acceptance and independently recorded reviewer identities; not a substitute for scientific review."
+}

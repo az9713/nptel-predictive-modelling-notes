@@ -1,0 +1,62 @@
+{
+  "source_package": "clustlearn",
+  "version": "1.0.0",
+  "reference_r": "4.5.1",
+  "python_helper_sha256": "4705b0d6bee80ac5b15f4421d55de09e1489a579dd39253498770a3910c44a9e",
+  "checks": [
+    {
+      "dataset": "db1",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 4.263256414560601e-14
+    },
+    {
+      "dataset": "db2",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 3.375077994860476e-14
+    },
+    {
+      "dataset": "db3",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 4.796163466380676e-14
+    },
+    {
+      "dataset": "db4",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 3.907985046680551e-14
+    },
+    {
+      "dataset": "db5",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 1.5987211554602254e-14
+    },
+    {
+      "dataset": "db6",
+      "rows": 500,
+      "same_initial_centers_replayed": true,
+      "merge_identical": true,
+      "order_identical": true,
+      "max_abs_height_error": 1.7763568394002505e-14
+    }
+  ],
+  "limitations": "Identical R-selected initial centers are replayed for cross-language validation; independent Python RNG does not claim identical source default draws. Source algorithm rather than DIANA is ported.",
+  "r_reference_exit_code": 0,
+  "r_reference_script_sha256": "b61dfab03d7201d92f3f1d8abbbb53443c9ed3a3fdb946f1f975263b29cb1b56",
+  "reference_environment_note": "The tool environment omitted PROCESSOR_ARCHITECTURE. Set it to actual AMD64 for cli package Windows cleanup, and disable only the optional display timer. Numerical routines unchanged.",
+  "reference_environment_source": "https://github.com/r-lib/cli/blob/main/src/thread.c",
+  "passed": true
+}

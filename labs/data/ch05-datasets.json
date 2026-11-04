@@ -1,0 +1,43 @@
+{
+  "nutrient": {
+    "path": "ch05-nutrient.csv",
+    "source": "https://github.com/cran/flexclust/blob/master/data/nutrient.txt.gz",
+    "shape": [
+      27,
+      5
+    ]
+  },
+  "Utilities": {
+    "path": "ch05-Utilities.csv",
+    "source": "https://github.com/gedeck/dmba/blob/master/src/dmba/csvFiles/Utilities.csv.gz",
+    "shape": [
+      22,
+      8
+    ]
+  },
+  "USArrests": {
+    "path": "ch05-USArrests.csv",
+    "source": "R4.5.1 datasets::USArrests",
+    "shape": [
+      50,
+      4
+    ]
+  },
+  "votes.repub": {
+    "path": "ch05-votes-repub.csv",
+    "source": "R4.5.1 cluster2.1.8.1::votes.repub",
+    "shape": [
+      50,
+      31
+    ],
+    "missing": "retained"
+  },
+  "agriculture": {
+    "path": "ch05-agriculture.csv",
+    "source": "R4.5.1 cluster2.1.8.1::agriculture",
+    "shape": [
+      12,
+      2
+    ]
+  }
+}

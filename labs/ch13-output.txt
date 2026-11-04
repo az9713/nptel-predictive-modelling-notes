@@ -1,0 +1,10 @@
+ToothGrowth rows: 60
+Shapiro-Wilk W=0.967428644, p=0.109100493
+Quartile reference line: intercept=19.175000, slope=9.043874
+Inside approximate pointwise 95% envelope: 60/60
+Affine-invariance check: passed
+Model: len ~ intercept + I(supp == VC) + numeric dose
+Coefficients: [ 9.2725   -3.7       9.763571]
+Residual Shapiro W=0.955382810, nominal iid p=0.028091034
+Residual p-value is descriptive, not exact regression calibration.
+Three-point standard-normal KS distance=0.174678079

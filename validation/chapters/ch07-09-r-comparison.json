@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "reference": "Fresh base R4.5.1 execution",
+  "absolute_tolerance": 1e-08,
+  "max_absolute_errors": {
+    "ch07_coefficients": 1.7763568394002505e-15,
+    "ch07_standard_errors": 1.5543122344752192e-15,
+    "ch07_mean": 4.440892098500626e-14,
+    "ch07_pred": 5.329070518200751e-15,
+    "ch08_housing_coefficients": 1.0348912837798707e-09,
+    "ch08_housing_standard_errors": 1.5834800137781713e-10,
+    "ch08_housing_mean": 1.5661143493161944e-09,
+    "ch08_housing_pred": 1.1533174415490066e-09,
+    "ch09_all_diagnostics": 3.884288723998708e-13,
+    "ch09_coefficients": 9.725553695716371e-14
+  },
+  "limits": [
+    "Ch7 uses original constructed data, not unrecovered course insurance rows.",
+    "Ch8 public housing file matched across languages; source exact dataset version not independently certified.",
+    "Ch9 supplied delivery observations match mirror and primary manual description; no comprehensive audiovisual code transcription."
+  ]
+}

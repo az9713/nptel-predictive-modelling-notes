@@ -1,0 +1,20 @@
+[
+  {
+    "path": "assets/mathjax-tex-svg.js",
+    "source_url": "https://raw.githubusercontent.com/az9713/nptel-quantum-computation-information-notes/main/assets/mathjax-tex-svg.js",
+    "bytes": 2108580,
+    "sha256": "d4295dc33744836935c1399feece5159577b34c5c8ffb9f1c6324cd82e03a882"
+  },
+  {
+    "path": "assets/mathjax-LICENSE",
+    "source_url": "https://raw.githubusercontent.com/az9713/nptel-quantum-computation-information-notes/main/assets/mathjax-LICENSE",
+    "bytes": 11358,
+    "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+  },
+  {
+    "path": "assets/input/tex/extensions/boldsymbol.js",
+    "source_url": "https://raw.githubusercontent.com/az9713/nptel-quantum-computation-information-notes/main/assets/input/tex/extensions/boldsymbol.js",
+    "bytes": 4056,
+    "sha256": "d6771fee0772db2657796c8d0e20e1878bb3237f6d3ed1e828e1834a4ff743ca"
+  }
+]

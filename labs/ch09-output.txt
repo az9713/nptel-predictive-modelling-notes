@@ -1,0 +1,12 @@
+data: robustbase delivery, original order, 25 rows
+intercept products distance: [2.341231145 1.615907211 0.014384826]
+n q df SSE: 25 3 22 233.731677421
+leverage_sum mean: [3.   0.12]
+Cook screening threshold4/n: 0.16
+Cook-screen rows,1-based: [9, 22]
+row leverage residual internal external Cook DFFITS: 9 [0.498292159 7.419706203 3.213762784 4.310780119 3.419318411 4.296080927]
+row DFBETAS intercept products distance: 9 [-2.575739806  0.928743342  1.507550618]
+row leverage residual internal external Cook DFFITS: 22 [ 0.391575218 -3.686527888 -1.449995414 -1.489624732  0.451045451
+ -1.195036104]
+row DFBETAS intercept products distance: 22 [ 0.398566309 -1.02541407   0.57314024 ]
+all assertions passed, including all25 explicit deleted refits

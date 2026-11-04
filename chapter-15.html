@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Heteroscedasticity and variance-aware regression — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a aria-current="page" href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Heteroscedasticity and variance-aware regression</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch15-1">15.1 A fitted mean does not specify the noise</a></li><li><a href="#ch15-2">15.2 Whitening and generalized least squares</a></li><li><a href="#ch15-3">15.3 Goldfeld-Quandt: a test with a specified ordering</a></li><li><a href="#ch15-4">15.4 Transforming units changes the question</a></li><li><a href="#ch15-5">15.5 Python conversions and source-data limits</a></li><li><a href="#ch15-6">15.6 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 15 · <a href="https://www.youtube.com/watch?v=-K6Nqjr9eTA">Recording 1</a> · <a href="https://www.youtube.com/watch?v=KMRZHOGE1aQ">Recording 2</a> · <a href="https://www.youtube.com/watch?v=_gooKHbGkS0">Recording 3</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch15-variance">
+<h2 id="ch15-1">15.1 A fitted mean does not specify the noise</h2>
+<p>A house-price model may make larger absolute errors on expensive houses than on inexpensive houses. This need not imply that its conditional mean is biased. It means that a single error variance may fail to describe the observations. The distinction determines whether to change the mean model, the coefficient estimator, the standard errors, or more than one of them.</p>
+<p>For a fixed full-column-rank design $\mathbf X\in\mathbb R^{n\times q}$, let $\mathbf y=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon$ and assume $E(\boldsymbol\varepsilon\mid\mathbf X)=\mathbf0$. Write the conditional error covariance as $\boldsymbol\Omega$. <dfn>Heteroscedasticity</dfn> means that its diagonal entries are not all equal. In the independent-error case, $\boldsymbol\Omega=\operatorname{diag}(\sigma_1^2,\ldots,\sigma_n^2)$. Nonzero off-diagonal entries additionally describe dependence, which is a distinct issue.</p>
+<p>Define $\mathbf A=(\mathbf X^T\mathbf X)^{-1}\mathbf X^T$. Ordinary least squares has $\widehat{\boldsymbol\beta}_{O}=\mathbf A\mathbf y=\boldsymbol\beta+\mathbf A\boldsymbol\varepsilon$. Taking conditional expectation and covariance gives</p>
+<p>$$E(\widehat{\boldsymbol\beta}_{O}\mid\mathbf X)=\boldsymbol\beta,\qquad \operatorname{Cov}(\widehat{\boldsymbol\beta}_{O}\mid\mathbf X)=\mathbf A\boldsymbol\Omega\mathbf A^T.\tag{15.1}$$</p>
+<p>Mean-zero errors preserve unbiasedness. Unequal variances change its covariance and generally invalidate the conventional formula $\widehat\sigma^2(\mathbf X^T\mathbf X)^{-1}$. They do not necessarily increase every coefficient's variance relative to every imagined constant-variance model: a comparison requires a specified reference covariance. The relevant efficiency comparison below holds for the same actual covariance and different estimators.</p>
+<p>Residual-versus-fitted plots can suggest a changing spread. Curvature can instead indicate a wrong conditional mean, and groups with different means can produce apparent fanning when pooled. Establish the scientific units and inspect plausible mean misspecification before fitting a variance model.</p>
+<p>Even with a correct mean, squared residuals are not direct observations of the individual error variances. Writing $\mathbf M=\mathbf I-\mathbf H$, we have $E(e_i^2\mid\mathbf X)=(\mathbf M\boldsymbol\Omega\mathbf M^T)_{ii}$. Under homoscedasticity this reduces to $\sigma^2(1-h_{ii})$; under heteroscedasticity the discrepancy from $\sigma_i^2$ can have either sign. Interpret a residual pattern in the context of the fitted mean, leverage, and covariance model.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=-K6Nqjr9eTA&amp;t=329">Heteroscedasticity 1, 05:29</a>, and the model discussion at <a href="https://www.youtube.com/watch?v=-K6Nqjr9eTA&amp;t=918">15:18</a>.</p>
+</section>
+
+<section id="ch15-gls">
+<h2 id="ch15-2">15.2 Whitening and generalized least squares</h2>
+<p>Suppose $\boldsymbol\Omega$ is known and positive definite. This is stronger than being a covariance matrix: a covariance can be merely positive semidefinite and singular. Positive definiteness permits an inverse and a square-root transformation. Choose an invertible matrix $\mathbf L$ satisfying $\mathbf L\boldsymbol\Omega\mathbf L^T=\mathbf I$. Premultiplying the model gives transformed errors with identity covariance.</p>
+<p>Least squares on $\mathbf L\mathbf y$ and $\mathbf L\mathbf X$ minimizes $(\mathbf y-\mathbf X\boldsymbol\beta)^T\boldsymbol\Omega^{-1}(\mathbf y-\mathbf X\boldsymbol\beta)$. Differentiating this quadratic and solving its normal equation gives the generalized least-squares estimator</p>
+<p>$$\widehat{\boldsymbol\beta}_{G}=(\mathbf X^T\boldsymbol\Omega^{-1}\mathbf X)^{-1}\mathbf X^T\boldsymbol\Omega^{-1}\mathbf y,\qquad \operatorname{Cov}(\widehat{\boldsymbol\beta}_{G}\mid\mathbf X)=(\mathbf X^T\boldsymbol\Omega^{-1}\mathbf X)^{-1}.\tag{15.2}$$</p>
+<p>The covariance expression follows by inserting $\boldsymbol\Omega$ between the coefficient map and its transpose and canceling $\boldsymbol\Omega^{-1}\boldsymbol\Omega$. It does not require normality. Normality supplies exact distributional inference when the covariance is known or known up to a common estimated scale.</p>
+<div class="prop"><p><strong>Proposition 15.1 (proved here).</strong> For the same design and positive-definite error covariance, GLS has covariance no larger than OLS in the positive-semidefinite matrix order.</p></div>
+<div class="proof"><p>Let $\mathbf B=(\mathbf X^T\boldsymbol\Omega^{-1}\mathbf X)^{-1}\mathbf X^T\boldsymbol\Omega^{-1}$ and $\mathbf C=\mathbf A-\mathbf B$. Both $\mathbf A\mathbf X$ and $\mathbf B\mathbf X$ equal the identity, so $\mathbf C\mathbf X=0$. Also $\mathbf B\boldsymbol\Omega=(\mathbf X^T\boldsymbol\Omega^{-1}\mathbf X)^{-1}\mathbf X^T$, giving $\mathbf B\boldsymbol\Omega\mathbf C^T=0$. Expanding $(\mathbf B+\mathbf C)\boldsymbol\Omega(\mathbf B+\mathbf C)^T$ leaves $\mathbf B\boldsymbol\Omega\mathbf B^T+\mathbf C\boldsymbol\Omega\mathbf C^T$. For every vector $\mathbf u$, $\mathbf u^T\mathbf C\boldsymbol\Omega\mathbf C^T\mathbf u\ge0$. Thus the covariance difference is positive semidefinite. Equality is possible; strict improvement in every direction is not guaranteed. <span class="qed">∎</span></p></div>
+<p>For independent errors, whitening divides row $i$ of both response and design by the standard deviation $\sigma_i$, including its intercept entry. Equivalently, weighted least squares uses weights $w_i=1/\sigma_i^2$ in $\sum_iw_i(y_i-\mathbf x_i^T\boldsymbol\beta)^2$. Dividing by the variance instead would apply weights $1/\sigma_i^4$ and solve another problem. Multiplying every weight by one positive common constant preserves the coefficient estimates.</p>
+<p>In practice, variances are usually estimated. <dfn>Feasible GLS</dfn> replaces the true covariance by a fitted one. It does not automatically inherit every finite-sample property of known-covariance GLS, especially when weights depend on the same responses. A variance fit must remain positive. Modeling log variance is one way to enforce that; clipping a negative predicted variance needs an explicit rule. Diagnostics of a weighted fit should distinguish raw residuals from whitened residuals $\sqrt{w_i}e_i$. Correctly specified heteroscedastic errors need not produce equal raw residual spread.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=KMRZHOGE1aQ&amp;t=313">Heteroscedasticity 2, 05:13</a>. Weight semantics: <a href="https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.WLS.html">statsmodels WLS</a>.</p>
+</section>
+
+<section id="ch15-test">
+<h2 id="ch15-3">15.3 Goldfeld-Quandt: a test with a specified ordering</h2>
+<p>The Goldfeld-Quandt comparison is designed for a possible change in variance along a chosen ordering variable. Sort the observations by that variable, omit a chosen central block if desired, and fit the same regression specification separately to the lower and upper retained blocks. Let their sizes be $n_1,n_2$, their common full design rank be $q$, and their residual sums of squares be $S_1,S_2$. Assume $n_1&gt;q$ and $n_2&gt;q$ so both residual variance estimates have positive degrees of freedom.</p>
+<p>Under independent Gaussian errors with common variance and a correct mean model in both blocks, $S_j/\sigma^2$ has a chi-square distribution with $n_j-q$ degrees of freedom. The blocks involve disjoint independent errors, so these quadratic forms are independent. Therefore</p>
+<p>$$F=\frac{S_2/(n_2-q)}{S_1/(n_1-q)}\sim F_{n_2-q,n_1-q}.\tag{15.3}$$</p>
+<p>This derives the reference ratio from two independent variance estimates. For an increasing-variance alternative, use the upper tail. A decreasing alternative reverses the relevant tail; a two-sided test needs its own p-value rule. Equal block sizes are convenient but not required. Choosing an ordering, central deletion, or alternative after examining the results changes the procedure and its nominal interpretation. The test does not detect every possible nonconstant variance pattern.</p>
+<p>The laboratory specifies an increasing alternative, 120 observations ordered by a constructed predictor, two retained blocks of 50, and 20 omitted middle observations. Each block estimates two coefficients, giving degrees of freedom $(48,48)$. The direct residual-variance ratio equals statsmodels' statistic: $F=10.129821645$, with p-value approximately $1.55730689\times10^{-13}$. This is a seeded synthetic check of the translated algorithm, not a claimed reproduction of the lecturer's petroleum CSV.</p>
+<p>A heteroscedasticity-consistent covariance estimate offers another response to unequal variances when the mean model remains useful. The basic HC0 estimator substitutes squared fitted residuals into the diagonal covariance:</p>
+<p>$$\widehat{\operatorname{Cov}}_{HC0}(\widehat{\boldsymbol\beta}_{O})=(\mathbf X^T\mathbf X)^{-1}\mathbf X^T\operatorname{diag}(e_i^2)\mathbf X(\mathbf X^T\mathbf X)^{-1}.\tag{15.4}$$</p>
+<p>This is an estimator, not an exact finite-sample identity. Its usual justification is large-sample behavior under independent observations, a correctly specified conditional mean, adequate moment and design regularity, and leverage that does not concentrate on a few rows. HC1, HC2, and HC3 alter finite-sample or leverage corrections. Such standard errors leave the OLS coefficients unchanged and do not themselves address serial dependence or an incorrect conditional mean. They should be named when reporting results rather than called simply “robust.”</p>
+<p class="source-note">Source test: <a href="https://www.youtube.com/watch?v=KMRZHOGE1aQ&amp;t=16">Heteroscedasticity 2, 00:16</a>; implementation: <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.het_goldfeldquandt.html">statsmodels Goldfeld-Quandt</a>. The HC discussion is an authored extension of the covariance identity.</p>
+</section>
+
+<section id="ch15-transform">
+<h2 id="ch15-4">15.4 Transforming units changes the question</h2>
+<p>The source considers logarithmic responses and per-capita quantities as remedies. They can be useful when their scale matches the scientific mechanism. A multiplicative disturbance can become additive after a logarithm. A state total can share an obvious scale dependence with population. However, a smaller numerical residual after changing units is not evidence by itself that prediction improved.</p>
+<p>If a response is rescaled from dollars to thousands of dollars, its residuals shrink by the conversion factor with no improvement in the fitted information. A log residual and a raw monetary residual have different meanings. Likewise, a petroleum-total residual cannot be directly compared with a per-person residual by its numerical range. Compare predictions on the same target scale with a justified loss and an appropriate held-out sample.</p>
+<p>Changing a response to $\log Y$ also changes the conditional quantity being fitted. Exponentiating an estimate of $E(\log Y\mid\mathbf x)$ does not generally estimate $E(Y\mid\mathbf x)$, because exponentiation is nonlinear. Under a conditionally lognormal model with known log-error variance $s^2$, the conditional mean is $\exp(\mathbf x^T\boldsymbol\beta+s^2/2)$; this follows from the normal moment-generating function. The median is $\exp(\mathbf x^T\boldsymbol\beta)$. Retransformation needs a stated target and distributional or empirical correction.</p>
+<p>The source's per-capita petroleum model regresses consumption divided by population on price and vehicles divided by population. Dividing every term of a total-consumption regression by population would also divide its original intercept and its price term. Thus the source's model is a new specification, not an algebraically identical rewriting of the old one. Its interpretation and its residual variance must be assessed as such.</p>
+<p class="source-note">Source transformations: <a href="https://www.youtube.com/watch?v=_gooKHbGkS0&amp;t=70">Heteroscedasticity 3, 01:10</a>, <a href="https://www.youtube.com/watch?v=-K6Nqjr9eTA&amp;t=673">petroleum models, 11:13</a>.</p>
+</section>
+
+<section id="ch15-conversion">
+<h2 id="ch15-5">15.5 Python conversions and source-data limits</h2>
+<p>The <a href="labs/ch15.py">Python laboratory</a> implements the four demonstrated workflows: home-price raw/log models and estimated weights; expenditure raw/log models; petroleum total/per-capita models and variance testing; and a market-share model with promotion indicators and group-based weights. It also checks known-variance GLS against explicit whitening and checks the covariance-dominance result numerically.</p>
+<p>The home-price data were recovered from an independently published Monash teaching dataset with 522 rows. The first source rows, original dollar and square-foot units, residual degrees of freedom, and fitted log-model coefficients agree with the inspected lecture frame. The log-price OLS coefficients are $(1.963614,1.219758,0.110340)$ for intercept, log home area, and log lot area. A superficially similar Penn State file contains 521 rows and different units; it is retained in the data provenance but is not substituted for the matched source example. Estimating standard deviations from absolute residuals regressed on fitted log price and applying reciprocal-squared weights gives $(2.376709,1.201356,0.083076)$. Fresh R and Python fits agree for the same recovered inputs and specified weighting procedure.</p>
+<p>The market-share data contain 36 monthly rows. The first source rows match the recovered public file after encoding the source's three promotion labels. The inspected R formula includes both a discount indicator and promotion factors, even though discount is determined by promotion category. Its five-column matrix has rank four and R aliases one coefficient. Python uses the equivalent full-rank basis <code>intercept, Price, P1, P2</code>, preserving fitted values rather than claiming a unique value for the aliased coefficient. Its OLS coefficients are $(3.195916,-0.333584,0.308076,0.484311)$. The source's weights are reciprocal residual variances separately estimated within discounted and nondiscounted groups. Python implements that exact rule; the WLS fit also matches a fresh R run.</p>
+<figure><img src="labs/ch15-diagnostics.svg" alt="Observed real-estate log-model residuals and weighted market-share residuals"><figcaption>Fig. 15.1. Diagnostics on the attributed public counterparts. The right panel uses whitened residuals; its vertical scale has a different meaning from an unweighted raw residual.</figcaption></figure>
+<p>The petroleum example was recovered from the textbook publisher's <code>GAS10</code> table, with the 50 observations and columns <code>PCON, PRICE, REG, POP</code> matching the source table. The original-order total-consumption regression produces Goldfeld-Quandt statistic $4.537989153$ and p-value $0.000389445259$, agreeing with a fresh R <code>lmtest::gqtest</code> run and the source's rounded display. The total and per-capita regression coefficients are both reproduced in the stored output. The test's row ordering is preserved; a different ordering would define a different test.</p>
+<p>The original 20-row consumption-expenditure CSV remains unavailable in complete form. The Python raw/log-response workflow is implemented and exercised with a labeled synthetic fixture, but exact source coefficients and plots cannot be reproduced from an incomplete table. This is a missing-input limitation, not an unavailable Python statistical method. No fabricated replacement is presented as the original data.</p>
+<p class="source-note">Demonstrations: <a href="https://www.youtube.com/watch?v=_gooKHbGkS0&amp;t=16">Heteroscedasticity 3</a>. Data recovery sources: <a href="https://monash-r.cpsievert.me/4-modelling/">Monash real-estate modeling example</a>, <a href="https://online.stat.psu.edu/stat462/node/186/">Penn State market-share data</a>, and the <a href="https://media.pearsoncmg.com/ph/bp/bp_studenmund_econometrics_7/data/Ch10ASCII.zip">Pearson chapter-10 data archive containing GAS10</a>.</p>
+</section>
+
+<section id="ch15-exercises">
+<h2 id="ch15-6">15.6 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Conceptual: a smaller residual.</strong> A log-response regression has numerically smaller residuals than a raw-response regression. Has predictive accuracy improved?</p><details><summary>Solution</summary><p>The units and loss have changed. Convert predictions to the same stated target scale, account for the conditional quantity being predicted, and compare an appropriate held-out loss. A reduction in numerical residual magnitude across incompatible units does not establish improvement.</p></details></li>
+<li><p><strong>Conceptual: zero correlations.</strong> Does a diagonal covariance matrix imply independent errors?</p><details><summary>Solution</summary><p>It implies pairwise uncorrelated errors. Independence is stronger. Joint Gaussian errors with diagonal covariance are independent; without that distributional condition, zero covariances alone do not establish independence. The GQ derivation explicitly uses independent Gaussian blocks.</p></details></li>
+<li><p><strong>Derivation: the correct weight.</strong> Show the equivalence between dividing each row by $\sigma_i$ and weighted least squares with $w_i=1/\sigma_i^2$.</p><details><summary>Solution</summary><p>The transformed residual is $(y_i-\mathbf x_i^T\boldsymbol\beta)/\sigma_i$. Its square equals $w_i(y_i-\mathbf x_i^T\boldsymbol\beta)^2$. Summing gives the same objective. Every design entry, including the intercept, is transformed. A row transformation by $1/\sigma_i^2$ would square again and use a different weight.</p></details></li>
+<li><p><strong>Derivation: a common weight factor.</strong> Prove that multiplying all positive weights by a constant leaves the WLS coefficients unchanged.</p><details><summary>Solution</summary><p>Replacing the weight matrix $\mathbf W$ by $c\mathbf W$ changes the coefficient expression to $(c\mathbf X^T\mathbf W\mathbf X)^{-1}c\mathbf X^T\mathbf W\mathbf y$. The scalar cancels. Estimated uncertainty still requires an explicit convention for whether weights represent known absolute precision or precision up to a fitted scale.</p></details></li>
+<li><p><strong>Computational: verify GQ.</strong> Recalculate the laboratory's GQ statistic from two separate regressions and explain its degrees of freedom.</p><details><summary>Solution</summary><p>Fit the first 50 and last 50 observations after omitting the central 20. Each two-column fit has residual degrees of freedom 48. Divide the upper-block residual mean square by the lower-block value. The executed ratio $10.129821645$ matches the package statistic and the upper-tail $F_{48,48}$ calculation.</p></details></li>
+<li><p><strong>Computational: efficiency without simulation.</strong> Check GLS's covariance advantage using the known variances in the laboratory. What does it establish?</p><details><summary>Solution</summary><p>Compute both covariance matrices from eqs. (15.1) and (15.2), subtract, and check that the eigenvalues are nonnegative within floating-point tolerance. The true slope variances are $0.050811693$ for OLS and $0.022485608$ for GLS. This verifies the finite constructed case and the algebraic implementation. It is not evidence that estimated weights always improve a real dataset.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch15.py"><code>labs/ch15.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Python weighting, diagnostics, and recovered source examples.&quot;&quot;&quot;
+from pathlib import Path
+
+import matplotlib
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from scipy import stats
+from statsmodels.stats.diagnostic import het_goldfeldquandt
+
+import matplotlib.pyplot as plt
+
+matplotlib.use(&quot;Agg&quot;)
+
+
+def home_workflow(frame):
+    log_features = np.log(frame[[&quot;SqFeet&quot;, &quot;Lot&quot;]].to_numpy())
+    log_response = np.log(frame[&quot;SalePrice&quot;].to_numpy())
+    design = sm.add_constant(log_features)
+    ordinary = sm.OLS(log_response, design).fit()
+    spread = sm.OLS(np.abs(ordinary.resid),
+                    sm.add_constant(ordinary.fittedvalues)).fit().fittedvalues
+    if np.any(spread &lt;= 0):
+        raise ValueError(&quot;Estimated standard deviations must remain positive&quot;)
+    weighted = sm.WLS(log_response, design, weights=1 / spread**2).fit()
+    return ordinary, weighted
+
+
+def market_workflow(frame):
+    design = sm.add_constant(frame[[&quot;Price&quot;, &quot;P1&quot;, &quot;P2&quot;]])
+    ordinary = sm.OLS(frame[&quot;MarketShare&quot;], design).fit()
+    discount = frame[&quot;Discount&quot;].to_numpy()
+    variances = [ordinary.resid[discount == group].var(ddof=1)
+                 for group in [0, 1]]
+    weights = np.array([1 / variances[int(group)] for group in discount])
+    weighted = sm.WLS(frame[&quot;MarketShare&quot;], design, weights=weights).fit()
+    return ordinary, weighted, weights
+
+
+def petroleum_workflow(frame):
+    &quot;&quot;&quot;Reusable conversion; frame requires the original source observations.&quot;&quot;&quot;
+    raw = sm.OLS(frame[&quot;consumption&quot;], sm.add_constant(
+        frame[[&quot;price&quot;, &quot;vehicles&quot;]])).fit()
+    per_capita = sm.OLS(frame[&quot;consumption&quot;] / frame[&quot;population&quot;],
+                        sm.add_constant(np.column_stack([
+                            frame[&quot;price&quot;],
+                            frame[&quot;vehicles&quot;] / frame[&quot;population&quot;]
+                        ]))).fit()
+    return raw, per_capita
+
+
+def expenditure_workflow(frame):
+    &quot;&quot;&quot;Raw/log-response fits without inventing missing original data.&quot;&quot;&quot;
+    design = sm.add_constant(frame[&quot;income&quot;])
+    if np.any(frame[&quot;expenditure&quot;] &lt;= 0):
+        raise ValueError(
+            &quot;The log-response model requires positive expenditure&quot;)
+    return (sm.OLS(frame[&quot;expenditure&quot;], design).fit(),
+            sm.OLS(np.log(frame[&quot;expenditure&quot;]), design).fit())
+
+
+def main():
+    here = Path(__file__).resolve().parent
+    estate = pd.read_csv(here / &quot;data/ch15-homeprice-source.csv&quot;)
+    market = pd.read_csv(here / &quot;data/ch15-marketshare.txt&quot;, sep=r&quot;\s+&quot;)
+    home_raw = sm.OLS(estate[&quot;SalePrice&quot;], sm.add_constant(
+        estate[[&quot;SqFeet&quot;, &quot;Lot&quot;]])).fit()
+    home_ols, home_wls = home_workflow(estate)
+    market_ols, market_wls, weights = market_workflow(market)
+    print(&quot;Recovered source-matching home and market examples; see provenance&quot;)
+    print(&quot;Home rows:&quot;, len(estate))
+    print(&quot;Home raw OLS:&quot;,
+          np.array2string(home_raw.params.to_numpy(), precision=6))
+    print(&quot;Home log OLS:&quot;, np.array2string(home_ols.params, precision=6))
+    print(&quot;Home feasible WLS:&quot;, np.array2string(home_wls.params, precision=6))
+    print(&quot;Market rows:&quot;, len(market))
+    print(
+        &quot;Market OLS:&quot;,
+        np.array2string(
+            market_ols.params.to_numpy(),
+            precision=6))
+    print(&quot;Market group-variance WLS:&quot;,
+          np.array2string(market_wls.params.to_numpy(), precision=6))
+    rng = np.random.default_rng(1501)
+    x = np.linspace(0.1, 3, 120)
+    design = sm.add_constant(x)
+    sd = 0.2 + x
+    y = design @ np.array([2., 1.5]) + sd*rng.normal(size=len(x))
+    ordinary = sm.OLS(y, design).fit()
+    weighted = sm.WLS(y, design, weights=1 / sd**2).fit()
+    direct = np.linalg.lstsq(design / sd[:, None], y / sd, rcond=None)[0]
+    assert np.allclose(weighted.params, direct, atol=1e-12)
+    bread = np.linalg.inv(design.T @ design)
+    covariance_ols = bread @ (design.T @ (sd[:, None]**2*design)) @ bread
+    covariance_gls = np.linalg.inv(design.T @ (design / sd[:, None]**2))
+    eigenvalues = np.linalg.eigvalsh(covariance_ols - covariance_gls)
+    assert eigenvalues.min() &gt;= -1e-12
+    statistic, pvalue, _ = het_goldfeldquandt(
+        y, design, idx=1, split=50, drop=20, alternative=&quot;increasing&quot;,
+        result_object=False)
+    lower = sm.OLS(y[:50], design[:50]).fit()
+    upper = sm.OLS(y[70:], design[70:]).fit()
+    direct_f = upper.mse_resid / lower.mse_resid
+    assert np.isclose(statistic, direct_f)
+    assert np.isclose(pvalue, stats.f.sf(direct_f, 48, 48))
+    print(&quot;Synthetic known-variance example; seed=1501, n=120&quot;)
+    print(f&quot;True slope variance: OLS={covariance_ols[1, 1]:.9f}, &quot;
+          f&quot;GLS={covariance_gls[1, 1]:.9f}&quot;)
+    print(f&quot;GQ increasing F={statistic:.9f}, p={pvalue:.9g}, df=(48,48)&quot;)
+    print(&quot;GLS/whitening and GQ/direct-F checks: passed&quot;)
+    gasoline = pd.read_csv(here / &quot;data/ch15-gas10.csv&quot;)
+    petroleum = gasoline.rename(
+        columns={
+            &quot;PCON&quot;: &quot;consumption&quot;,
+            &quot;PRICE&quot;: &quot;price&quot;,
+            &quot;REG&quot;: &quot;vehicles&quot;,
+            &quot;POP&quot;: &quot;population&quot;})
+    petroleum_raw, petroleum_capita = petroleum_workflow(petroleum)
+    gas_design = sm.add_constant(petroleum[[&quot;price&quot;, &quot;vehicles&quot;]])
+    gas_f, gas_p, _ = het_goldfeldquandt(
+        petroleum[&quot;consumption&quot;], gas_design, alternative=&quot;increasing&quot;,
+        result_object=False)
+    print(&quot;Publisher GAS10 rows:&quot;, len(gasoline))
+    print(&quot;Petroleum total-model coefficients:&quot;,
+          np.array2string(np.asarray(petroleum_raw.params), precision=9))
+    print(&quot;Petroleum per-capita coefficients:&quot;,
+          np.array2string(np.asarray(petroleum_capita.params), precision=9))
+    print(f&quot;Source-order GQ F={gas_f:.9f}, p={gas_p:.9f}&quot;)
+    synthetic = pd.DataFrame({&quot;income&quot;: x, &quot;expenditure&quot;: np.exp(1 + x/3),
+                              &quot;population&quot;: 10 + 20*x,
+                              &quot;price&quot;: 1 + rng.uniform(size=len(x)),
+                              &quot;vehicles&quot;: (10 + 20*x)*(0.5 + np.sin(x)/8),
+                              &quot;consumption&quot;: (10 + 20*x)*(1 + x/5)})
+    petroleum_workflow(synthetic)
+    expenditure_workflow(synthetic)
+    print(&quot;Petroleum/expenditure conversion functions: &quot;
+          &quot;synthetic schema checks passed&quot;)
+    print(&quot;Original expenditure CSV pending: &quot;
+          &quot;no source-data expenditure results claimed&quot;)
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4))
+    axes[0].scatter(home_ols.fittedvalues, home_ols.resid, s=8, alpha=0.5)
+    axes[0].set(xlabel=&quot;Fitted log price&quot;, ylabel=&quot;Raw log-scale residual&quot;)
+    axes[1].scatter(market_wls.fittedvalues,
+                    np.sqrt(weights)*market_wls.resid, c=market[&quot;Discount&quot;])
+    axes[1].set(xlabel=&quot;Fitted market share&quot;, ylabel=&quot;Whitened residual&quot;)
+    for ax in axes:
+        ax.axhline(0, color=&quot;gray&quot;, linewidth=0.8)
+    figure.tight_layout()
+    figure.savefig(here / &quot;ch15-diagnostics.svg&quot;)
+    plt.close(figure)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Recovered source-matching home and market examples; see provenance
+Home rows: 522
+Home raw OLS: [-1.027464e+05  1.559711e+02  1.150941e+00]
+Home log OLS: [1.963614 1.219758 0.11034 ]
+Home feasible WLS: [2.376709 1.201356 0.083076]
+Market rows: 36
+Market OLS: [ 3.195916 -0.333584  0.308076  0.484311]
+Market group-variance WLS: [ 3.174365 -0.324319  0.308338  0.484191]
+Synthetic known-variance example; seed=1501, n=120
+True slope variance: OLS=0.050811693, GLS=0.022485608
+GQ increasing F=10.129821645, p=1.55730689e-13, df=(48,48)
+GLS/whitening and GQ/direct-F checks: passed
+Publisher GAS10 rows: 50
+Petroleum total-model coefficients: [ 4.101287972e+03 -1.885111429e+03  1.580598026e-01]
+Petroleum per-capita coefficients: [ 0.22972181  -0.096507968  0.149028181]
+Source-order GQ F=4.537989153, p=0.000389445
+Petroleum/expenditure conversion functions: synthetic schema checks passed
+Original expenditure CSV pending: no source-data expenditure results claimed
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-14.html">← Previous chapter</a><a href="chapter-16.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

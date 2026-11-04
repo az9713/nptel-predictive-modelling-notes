@@ -1,0 +1,75 @@
+USJudgeRatings canonical shape: (43, 12)
+Source rating-only PCA omits numeric CONT, leaving: (43, 11)
+DECI/DILG covariance (n-1), matching source column order:
+[[0.644707 0.691656]
+ [0.691656 0.811617]]
+DILG/DECI correlation: 0.9561660826098957
+Rating correlation eigenvalues: [10.133417  0.424629  0.25528   0.091303  0.0373    0.019761  0.018474
+  0.008291  0.006092  0.003361  0.002091]
+First-component fraction of rating variance: 0.92121977
+Feature, loading, communality, uniqueness, score weight:
+INTG 0.918422 0.843499 0.156501 0.090633
+DMNR 0.913097 0.833746 0.166254 0.090108
+DILG 0.968877 0.938724 0.061276 0.095612
+CFMG 0.963329 0.928003 0.071997 0.095065
+DECI 0.961114 0.923740 0.076260 0.094846
+PREP 0.984960 0.970146 0.029854 0.097199
+FAMI 0.976243 0.953050 0.046950 0.096339
+ORAL 0.995447 0.990914 0.009086 0.098234
+WRIT 0.990173 0.980442 0.019558 0.097714
+PHYS 0.893695 0.798692 0.201308 0.088193
+RTEN 0.986135 0.972463 0.027537 0.097315
+First six psych-style standardized scores: [-0.185798  0.746987  0.070477  1.135876 -2.158621  0.766941]
+Parallel PCA Gaussian 95% null eigenvalues (100 draws): [2.194722 1.843411 1.589245 1.386531 1.178229 1.027872 0.912373 0.794127
+ 0.659961 0.530525 0.417107]
+Parallel PCA bootstrap 95% null eigenvalues: [2.143675 1.770017 1.534627 1.333454 1.189631 1.053292 0.930718 0.76929
+ 0.669816 0.5357   0.424812]
+Count above Gaussian null: 1
+Unscaled prcomp DILG/DECI eigenvalues: [1.424834 0.031489]
+Unscaled prcomp explained proportions: [0.978377 0.021623]
+Unscaled prcomp first five score rows (signs arbitrary):
+[[-0.403623  0.137183]
+ [ 0.958674 -0.135118]
+ [ 0.103189 -0.044867]
+ [ 1.448514 -0.034835]
+ [-1.798317 -0.230008]]
+Unscaled prcomp score variance 1: 1.424834
+Unscaled prcomp score variance 2: 0.031489
+Harman23 correlation eigenvalues: [4.67288  1.770983 0.481035 0.421441 0.233221 0.186674 0.137304 0.096463]
+Harman proportions of all original variance: [0.58411  0.221373]
+Harman proportions within retained variance: [0.725167 0.274833]
+Harman retained fraction of original variance: 0.80548281
+Harman unrotated loadings:
+[[ 0.859437 -0.372274]
+ [ 0.841587 -0.441048]
+ [ 0.813139 -0.458594]
+ [ 0.839576 -0.395331]
+ [ 0.758031  0.524651]
+ [ 0.674246  0.533269]
+ [ 0.617219  0.580113]
+ [ 0.670609  0.418463]]
+Harman Kaiser-normalized varimax loadings:
+[[0.902064 0.251994]
+ [0.931504 0.187327]
+ [0.920454 0.155784]
+ [0.901155 0.221576]
+ [0.258492 0.884902]
+ [0.187978 0.838837]
+ [0.114179 0.839318]
+ [0.257446 0.747361]]
+Harman rotated standardized-score weights, rounded as source:
+[[ 0.28 -0.05]
+ [ 0.3  -0.08]
+ [ 0.3  -0.09]
+ [ 0.28 -0.06]
+ [-0.06  0.33]
+ [-0.08  0.32]
+ [-0.1   0.34]
+ [-0.04  0.27]]
+Harman Gaussian parallel cutoff, source n.obs=302: [1.33107  1.219918 1.128342 1.058378 1.000767 0.954871 0.88662  0.826988]
+Harman Gaussian parallel cutoff, n.obs=305: [1.324412 1.221695 1.127221 1.056676 1.007319 0.954367 0.882018 0.819891]
+Sensitivity if matrix n.obs omitted and default100 used: [1.547339 1.377088 1.231479 1.099663 0.993059 0.904176 0.803637 0.712822]
+Rating rank-one reconstruction SSE: 36.39646810
+Discarded-eigenvalue SSE: 36.39646810
+Harman scores unavailable: individual rows not supplied.
+Checks passed: eigensystem, scores, rotation, reconstruction.

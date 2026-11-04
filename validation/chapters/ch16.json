@@ -1,0 +1,121 @@
+{
+  "number": 16,
+  "title": "Model selection, evaluation, and an end-to-end case study",
+  "source_videos": [
+    "c1MST7rrPIw",
+    "s9U_b3hOs5A"
+  ],
+  "reading_records": [
+    {
+      "video_id": "c1MST7rrPIw",
+      "read_full": true,
+      "transcript_sha256": "cff120e8e813c81293a2cafb81402695f9626cc49099794f0545a00b2d7baaea",
+      "limitations": "Complete English captions read; no full audiovisual audit."
+    },
+    {
+      "video_id": "s9U_b3hOs5A",
+      "read_full": true,
+      "transcript_sha256": "58a9e261bdf5b79f54cfc14e2edb8a92b16aab2587488223b18edb7776046ed5",
+      "limitations": "Complete English captions read; no full audiovisual audit."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch16-airpoll-backward-forward",
+      "video_id": "c1MST7rrPIw",
+      "start_seconds": 972,
+      "source_method": "airpoll-backward-forward",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Full-score439.7871 and both sourcepaths match; canonical fieldorder mapsX1..X15."
+    },
+    {
+      "id": "ch16-women-polynomials",
+      "video_id": "s9U_b3hOs5A",
+      "start_seconds": 44,
+      "source_method": "women-polynomials",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Same15aggregate rows; no causal or individual-health interpretation."
+    },
+    {
+      "id": "ch16-states-OLS-intervals-nested-stepwise",
+      "video_id": "s9U_b3hOs5A",
+      "start_seconds": 320,
+      "source_method": "states-OLS-intervals-nested-stepwise",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Same state.x77 rows/formula; F and AIC selection confirmed."
+    },
+    {
+      "id": "ch16-states-diagnostic-plots-influence",
+      "video_id": "s9U_b3hOs5A",
+      "start_seconds": 474,
+      "source_method": "states-diagnostic-plots-influence",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Nevada external residual confirmed by freshR; Q-Q simulator translated from car source, robustline/graphic defaults not bit-identical."
+    },
+    {
+      "id": "ch16-states-DW-resampling",
+      "video_id": "s9U_b3hOs5A",
+      "start_seconds": 722,
+      "source_method": "states-DW-resampling",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "verified_against_independent_calculation",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Residualresampling implemented; source seed unavailable so exact stochastic p-value not reproduced; arbitrary state ordering has no time interpretation."
+    },
+    {
+      "id": "ch16-states-BoxCox-spread-subsets",
+      "video_id": "s9U_b3hOs5A",
+      "start_seconds": 1034,
+      "source_method": "states-BoxCox-spread-subsets",
+      "python_method": "labs/ch16.py",
+      "data_status": "canonical source-matching R dataset bundled",
+      "status": "method_converted_exact_source_options_not_recovered",
+      "verification": "Executed Python output; freshR sources/private/ch16-reference-output.txt where applicable",
+      "limitations": "Marginal and conditional BoxCox and robust spread-level calculations implemented; exact source powerTransform and smoother options not fully frame-transcribed, so source-output equivalence is not claimed."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch16.py",
+    "stdout_path": "labs/ch16-output.txt",
+    "execution": "passed",
+    "sha256": "bcb09a7ab861ba87801a371ddc5a085df55bc1131ab2a7ef915efb9eab836a74",
+    "stdout_sha256": "e2981898d76fee8d1699a5e7e2a11e544587e195fbecacb949dda81ae7f0fdd7",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2061,
+  "source_limitations": [
+    "Source airpoll identified by exactfullAIC and both fullselectionpaths rather than unknown lecturerfile bytehash.",
+    "Diagnostic graphics use same quantities with explicit plotting and random-seed differences."
+  ],
+  "data": [
+    {
+      "path": "labs/data/ch16-pollution.csv",
+      "sha256": "af65a73557f5af237bbf003c89c28c8e912ab7f09b80d00014a12dd0818bf760",
+      "url": "https://raw.githubusercontent.com/cran/SMPracticals/master/data/pollution.rda"
+    },
+    {
+      "path": "labs/data/ch16-state.x77.csv",
+      "sha256": "f2a0904b8c0287dfa4b255916d82623e79a8cdef5a3d7dd8bdebc913fdd58715",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/state.x77.csv"
+    },
+    {
+      "path": "labs/data/ch16-women.csv",
+      "sha256": "ff95dfaa417b2da885d08a1e9844a73ccf398263ac29b823e227437e590b361c",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/women.csv"
+    }
+  ],
+  "body_sha256": "0ace45891ef6be3e67b36670e876646951c808b9ecaa9468e8daa1343270b45c"
+}

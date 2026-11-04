@@ -1,0 +1,32 @@
+{
+  "chapter": 2,
+  "round": 2,
+  "reviewer": "review_01_06_r2; independent of chapter/helper authorship",
+  "skill": "science-editor",
+  "verdict": "ACCEPT",
+  "body_sha256": "c2df83f909f5b2a9e80c777968e5c3e05eea361d7efc05631d16c7e7276394da",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [],
+  "checks": [
+    "Read the entire fragment and all six worked solutions; checked PSD covariance, Rayleigh maximization, sequential orthogonality and trace identities, reconstruction optimality and its discarded-eigenvalue error.",
+    "Checked loading correlations versus unit direction coefficients and standardized-score weights; verified orthogonal rotations preserve the retained loading product and unit score covariance, not the original principal-axis interpretation.",
+    "Checked every exercise: all-score inversion, variance-versus-prediction counterexample, score-weight derivation, within-pair versus full-trace Harman fractions, two equivalent rank-one reconstructions and nonidentifiability of individual rows from a summary matrix.",
+    "Read complete Python lab and independently executed all its numerical calculations with only plot writes disabled; saved stdout matches exactly, including reconstruction SSE36.39646810 and all source summaries.",
+    "Reviewed the eight conversion groups, canonical43x12 judge table, explicit CONT exclusion to11features, Harman n302 versus documented305, Gaussian/column-bootstrap null procedures and finite-stream limits.",
+    "Independently inspected pca-1575 source frame: USJudgeRatings[,-1], Harman n.obs302, principal none/varimax, score requests and prcomp DECI,DILG are visible.",
+    "Reviewed saved fresh-R psych2.6.9 comparison for full loading/weight/score arrays; those reference runs were not independently rebuilt here. Loading sign and rotated column alignment remain explicit."
+  ],
+  "scope": "Entire current chapter and all six worked solutions, full main laboratory numerical execution/output, conversion records and targeted independent primary-source checks.",
+  "limitations": [
+    "No exhaustive independent audiovisual/editor-line inventory. Targeted captions, selected frames, primary implementation files and authors' full-caption reading records are distinct evidence.",
+    "Finite numerical checks and code/math inspection do not prove arbitrary-input equivalence; unknown historical RNG state and package-version differences remain explicit.",
+    "No proof-assistant verification, human certification or legal licensing opinion.",
+    "Shared reader/browser rendering, source-free export and publication state are outside this fragment verdict."
+  ],
+  "lab_sha256": "1d62e8bde0fe9f5e9823f6b10b48023496817de0170c221c6d1c5af3fae2864e",
+  "stdout_sha256": "0b52b6dcb011ea50855b50cb22f9df9aba7dc45e7aca608173b598362352a1e6",
+  "round1_current_before_verdict": true,
+  "execution_note": "Numerical calculations executed without plotting/data-file writes to preserve concurrently validated artifacts. Chapters1-5 captured stdout exact; chapter6 separately executed in a fresh process to avoid inherited NumPy print settings and captured stdout exact."
+}

@@ -1,0 +1,100 @@
+{
+  "number": 17,
+  "title": "Odds ratios and logistic regression",
+  "source_videos": [
+    "ZJsfDrVT8CE",
+    "BQBpBFFsHyI",
+    "7wq85IH9sDY"
+  ],
+  "reading_records": [
+    {
+      "video_id": "ZJsfDrVT8CE",
+      "read_full": true,
+      "transcript_sha256": "b590f1cfc61c34cef219369dd6fa02d89e55eb00d1684fd760a25e09b2e7b8b8",
+      "limitations": "Complete English caption text read; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "BQBpBFFsHyI",
+      "read_full": true,
+      "transcript_sha256": "0fa868c0b4e556b7ef998851adbd85b1b5887bae66bd5af59b265ca566caa7ff",
+      "limitations": "Complete English caption text read; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "7wq85IH9sDY",
+      "read_full": true,
+      "transcript_sha256": "4b1b39407d056ddb6e28d9f00c93ab9e15d0f3fc7e13d895f67119b78ff415d2",
+      "limitations": "Complete English caption text read; no comprehensive audiovisual audit."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch17-default-balance",
+      "video_id": "BQBpBFFsHyI",
+      "start_seconds": 532,
+      "source_method": "Unpenalized R glm binomial logit; predictions, tests and tables",
+      "python_method": "statsmodels.GLM binomial, explicit intercept/response/contrasts; scipy chi2 and sklearn labeled confusion matrix",
+      "data_status": "Canonical ISLR Default/Smarket rows bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R4.5.1 coefficients/probabilities/deviance/confusion match Python; independent Newton and finite-difference score checks pass.",
+      "limitations": "Unknown source plot styling not reproduced; source mislabeled FP/FN and accuracy/error are corrected, not copied."
+    },
+    {
+      "id": "ch17-default-student",
+      "video_id": "BQBpBFFsHyI",
+      "start_seconds": 1171,
+      "source_method": "Unpenalized R glm binomial logit; predictions, tests and tables",
+      "python_method": "statsmodels.GLM binomial, explicit intercept/response/contrasts; scipy chi2 and sklearn labeled confusion matrix",
+      "data_status": "Canonical ISLR Default/Smarket rows bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R4.5.1 coefficients/probabilities/deviance/confusion match Python; independent Newton and finite-difference score checks pass.",
+      "limitations": "Unknown source plot styling not reproduced; source mislabeled FP/FN and accuracy/error are corrected, not copied."
+    },
+    {
+      "id": "ch17-default-adjusted",
+      "video_id": "BQBpBFFsHyI",
+      "start_seconds": 1339,
+      "source_method": "Unpenalized R glm binomial logit; predictions, tests and tables",
+      "python_method": "statsmodels.GLM binomial, explicit intercept/response/contrasts; scipy chi2 and sklearn labeled confusion matrix",
+      "data_status": "Canonical ISLR Default/Smarket rows bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R4.5.1 coefficients/probabilities/deviance/confusion match Python; independent Newton and finite-difference score checks pass.",
+      "limitations": "Unknown source plot styling not reproduced; source mislabeled FP/FN and accuracy/error are corrected, not copied."
+    },
+    {
+      "id": "ch17-smarket-GLM-deviance-confusion",
+      "video_id": "7wq85IH9sDY",
+      "start_seconds": 105,
+      "source_method": "Unpenalized R glm binomial logit; predictions, tests and tables",
+      "python_method": "statsmodels.GLM binomial, explicit intercept/response/contrasts; scipy chi2 and sklearn labeled confusion matrix",
+      "data_status": "Canonical ISLR Default/Smarket rows bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R4.5.1 coefficients/probabilities/deviance/confusion match Python; independent Newton and finite-difference score checks pass.",
+      "limitations": "Unknown source plot styling not reproduced; source mislabeled FP/FN and accuracy/error are corrected, not copied."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch17.py",
+    "stdout_path": "labs/ch17-output.txt",
+    "execution": "passed",
+    "sha256": "259019cee18bb0b385192684566a3d3195faf953f9ee7a2f9512b86da504fa24",
+    "stdout_sha256": "40503c2ef973aa903dd4ac1719f2a3ab541fdad0a563b6510f2c20882c7358e4",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2171,
+  "source_limitations": [
+    "No comprehensive audiovisual review; mathematical source ambiguities corrected with explicit assumptions."
+  ],
+  "data": [
+    {
+      "path": "labs/data/ch17-default.csv",
+      "sha256": "032b79d6f3de539777af8d211c8113c0087fb0e2cf2984bb9deba27573e3203d",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/ISLR/Default.csv"
+    },
+    {
+      "path": "labs/data/ch17-smarket.csv",
+      "sha256": "e376f854047e4212eb25e9232dd255e9fb1b9a271c25673e8633b6bc3adc9440",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/ISLR/Smarket.csv"
+    }
+  ],
+  "body_sha256": "98de7aaf9c6e8c8c8ec856a83c8b2af0bcb64d10312daff2dcf30a585d6a2caa"
+}

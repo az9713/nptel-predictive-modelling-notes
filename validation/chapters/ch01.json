@@ -1,0 +1,35 @@
+{
+  "number": 1,
+  "title": "Data, prediction, and correlation",
+  "source_videos": [
+    "aF8LvZhelzw",
+    "pi-nFW0SOV8"
+  ],
+  "reading_records": [
+    {
+      "video_id": "aF8LvZhelzw",
+      "read_full": true,
+      "transcript_sha256": "220f1d1e5fcd86b60a841c9256331117c281adb0d0e8199bcb78f1c5afe672b8",
+      "limitations": "English automatic captions; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "pi-nFW0SOV8",
+      "read_full": true,
+      "transcript_sha256": "53fe56605028af0058f0905e3da8cc4e3e7ce31a0f6375591a4993043b967f18",
+      "limitations": "English automatic captions; no comprehensive audiovisual audit."
+    }
+  ],
+  "r_examples": [],
+  "r_inventory_scope": "No R code demonstrated in the two complete caption tracks; visual code inventory not independently comprehensive.",
+  "lab": {
+    "path": "labs/ch01.py",
+    "stdout_path": "labs/ch01-output.txt",
+    "execution": "passed using global Python with NumPy"
+  },
+  "word_count": 2905,
+  "source_limitations": [
+    "ASR can misstate mathematical terminology; definitions corrected in exposition.",
+    "No comprehensive slide/frame review; retail anecdotes omitted."
+  ],
+  "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533"
+}

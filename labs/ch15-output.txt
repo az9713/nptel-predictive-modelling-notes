@@ -1,0 +1,18 @@
+Recovered source-matching home and market examples; see provenance
+Home rows: 522
+Home raw OLS: [-1.027464e+05  1.559711e+02  1.150941e+00]
+Home log OLS: [1.963614 1.219758 0.11034 ]
+Home feasible WLS: [2.376709 1.201356 0.083076]
+Market rows: 36
+Market OLS: [ 3.195916 -0.333584  0.308076  0.484311]
+Market group-variance WLS: [ 3.174365 -0.324319  0.308338  0.484191]
+Synthetic known-variance example; seed=1501, n=120
+True slope variance: OLS=0.050811693, GLS=0.022485608
+GQ increasing F=10.129821645, p=1.55730689e-13, df=(48,48)
+GLS/whitening and GQ/direct-F checks: passed
+Publisher GAS10 rows: 50
+Petroleum total-model coefficients: [ 4.101287972e+03 -1.885111429e+03  1.580598026e-01]
+Petroleum per-capita coefficients: [ 0.22972181  -0.096507968  0.149028181]
+Source-order GQ F=4.537989153, p=0.000389445
+Petroleum/expenditure conversion functions: synthetic schema checks passed
+Original expenditure CSV pending: no source-data expenditure results claimed

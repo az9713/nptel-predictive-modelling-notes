@@ -1,0 +1,35 @@
+{
+  "number": 4,
+  "title": "Clustering and hierarchical linkage",
+  "source_videos": [
+    "AZ6KZikxguU",
+    "G83gaUNketk"
+  ],
+  "reading_records": [
+    {
+      "video_id": "AZ6KZikxguU",
+      "read_full": true,
+      "transcript_sha256": "4bf5b2fc5dba2fe2dd33b01f18d91c0ffe041966dd6859689756dfbf47079d1b",
+      "limitations": "English automatic captions; no comprehensive visual audit."
+    },
+    {
+      "video_id": "G83gaUNketk",
+      "read_full": true,
+      "transcript_sha256": "edfd016534e99d2cd17c927b93cd291c9b0f5254b6ecf73e2b51a0dbb6f8226f",
+      "limitations": "English automatic captions; no comprehensive visual audit."
+    }
+  ],
+  "r_examples": [],
+  "r_inventory_scope": "No R program demonstrated in the complete assigned theory caption tracks.",
+  "lab": {
+    "path": "labs/ch04.py",
+    "stdout_path": "labs/ch04-output.txt",
+    "execution": "passed in project .venv; direct linkage heights matched SciPy"
+  },
+  "word_count": 2350,
+  "source_limitations": [
+    "Source anecdotes not promoted to verified commercial or historical claims.",
+    "Gower implementation intentionally restricted to stated complete-data numeric/nominal convention."
+  ],
+  "body_sha256": "3cb272dbd173eba55af6b02d210cc8a81bc85a641c6db28991f969cb13363966"
+}

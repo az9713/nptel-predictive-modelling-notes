@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Simple linear regression: fitting and uncertainty — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a aria-current="page" href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Simple linear regression: fitting and uncertainty</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch07-problem-heading">7.1 A fitted line is a prediction rule</a></li><li><a href="#ch07-fit-heading">7.2 Deriving the least-squares coefficients</a></li><li><a href="#ch07-units-heading">7.3 Units, correlation, and explained variation</a></li><li><a href="#ch07-uncertainty-heading">7.4 From a fitted coefficient to uncertainty</a></li><li><a href="#ch07-python-heading">7.5 Converting the insurance demonstration to Python</a></li><li><a href="#ch07-exercises-heading">7.6 Exercises with worked solutions</a></li><li><a href="#ch07-limits-heading">7.7 What the single-predictor model captures and misses</a></li></ul></nav><p class="meta">Chapter 7 · <a href="https://www.youtube.com/watch?v=znWxD_73rtg">Recording 1</a> · <a href="https://www.youtube.com/watch?v=j35ZjlaXpPs">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch07-problem">
+<h2 id="ch07-problem-heading">7.1 A fitted line is a prediction rule</h2>
+<p>An insurer wants to predict a premium from an applicant's age. A table contains paired observations $(x_i,y_i)$, where $x_i$ is the age recorded for applicant or age bracket $i$, and $y_i$ is the corresponding premium. The subscript $i$ identifies a row, and $n$ is the number of rows. A useful prediction rule must preserve these pairs: permuting complete rows changes no least-squares calculation, whereas sorting the age and premium columns separately creates a different dataset.</p>
+<p>Simple linear regression uses one numerical predictor and an intercept. Its population model is
+$$Y_i=\beta_0+\beta_1x_i+\varepsilon_i. \tag{7.1}$$
+Here $Y_i$ is the random response, $\beta_0$ and $\beta_1$ are unknown real coefficients, and $\varepsilon_i$ is the discrepancy from the proposed line. When $E(\varepsilon_i\mid X)=0$, the conditional mean is $E(Y_i\mid X)=\beta_0+\beta_1x_i$, where $X$ denotes all observed predictor values. This conditional-mean assumption is substantive: omitted risk factors associated with age can violate it. Merely fitting a line cannot establish it.</p>
+<p>The fitted predictor is $\widehat y(x)=\widehat\beta_0+\widehat\beta_1x$. The hat identifies a quantity calculated from the sample. Its residual for observation $i$ is $e_i=y_i-\widehat y(x_i)$. The error $\varepsilon_i$ belongs to the population model with unknown coefficients; the residual belongs to the fitted sample model. Calling them both an error without this distinction hides the statistical assumptions behind the calculation.</p>
+<p>Plot the paired data before interpreting a slope. A scatterplot can reveal curvature, isolated observations, unequal spread, and separate groups. A small sample correlation is not a prohibition against regression, and a significant correlation is not a certificate that the line is adequate. A curved relation can have zero linear correlation. An approximately linear relation can have a negative slope. The relevant questions are whether the proposed mean is useful for the task and whether the uncertainty calculation matches the observations.</p>
+<p>The coefficient is also not automatically a causal effect. Age can be associated with premium because of pricing rules, health composition, or other covariates. An observational fitted difference describes that association. A claim about an intervention requires an identification argument beyond least squares. Regression can be used with temporal or panel data as well, but the dependence structure must then enter the model and uncertainty calculation. The present chapter develops the independent-observation setting first.</p>
+<p class="source-note">Source discussions: <a href="https://www.youtube.com/watch?v=znWxD_73rtg&amp;t=1121">paired data and scatterplots</a>; <a href="https://www.youtube.com/watch?v=j35ZjlaXpPs&amp;t=1232">the insurance example</a>. The distinctions between errors and residuals, dependence, and causal interpretation are explicit clarifications in this edition.</p>
+</section>
+<section id="ch07-fit">
+<h2 id="ch07-fit-heading">7.2 Deriving the least-squares coefficients</h2>
+<p>The ordinary least-squares criterion is the sum of squared vertical discrepancies,
+$$Q(b_0,b_1)=\sum_{i=1}^n(y_i-b_0-b_1x_i)^2. \tag{7.2}$$
+The trial coefficients $b_0,b_1$ are real numbers. Squaring prevents positive and negative discrepancies from cancelling, but it also gives a large discrepancy more weight than an absolute-deviation criterion would. Least squares is a choice of loss function, not an inevitable definition of a best line.</p>
+<p>Differentiate the criterion with respect to each coefficient. At a minimizer,
+$$\sum_i(y_i-\widehat\beta_0-\widehat\beta_1x_i)=0,\qquad
+\sum_i x_i(y_i-\widehat\beta_0-\widehat\beta_1x_i)=0. \tag{7.3}$$
+These are the normal equations. The first gives $\widehat\beta_0=\overline y-\widehat\beta_1\overline x$, where $\overline x=n^{-1}\sum_i x_i$ and $\overline y=n^{-1}\sum_i y_i$. Substitute this expression into the second equation and define the centered sums
+$$S_{xx}=\sum_i(x_i-\overline x)^2,\quad S_{xy}=\sum_i(x_i-\overline x)(y_i-\overline y),\quad S_{yy}=\sum_i(y_i-\overline y)^2.$$
+If $S_{xx}&gt;0$, the result is
+$$\widehat\beta_1=\frac{S_{xy}}{S_{xx}},\qquad
+\widehat\beta_0=\overline y-\widehat\beta_1\overline x. \tag{7.4}$$</p>
+<div class="prop"><p><strong>Proposition 7.1 — unique minimizer, proved here.</strong> If the observed predictor is not constant, equivalently $S_{xx}&gt;0$, equation (7.4) gives the unique minimizer of (7.2).</p></div>
+<div class="proof"><p>For any changes $a_0,a_1$ from the coefficients in (7.4), expand the new residual squares:
+$$Q(\widehat\beta_0+a_0,\widehat\beta_1+a_1)
+=Q(\widehat\beta_0,\widehat\beta_1)+\sum_i(a_0+a_1x_i)^2
+-2a_0\sum_i e_i-2a_1\sum_i x_ie_i.$$
+The last two sums vanish by (7.3). The remaining added sum is nonnegative. It is zero only if $a_0+a_1x_i=0$ for every observation. Two distinct predictor values imply $a_1=0$ and then $a_0=0$. Thus every other line has strictly larger criterion. <span class="qed">∎</span></p></div>
+<p>If all ages are identical, the data identify the fitted value at that age but cannot distinguish an intercept change from an offsetting slope change. More repeated rows at the same age cannot repair this identifiability failure. Predictor variation, rather than sample size alone, identifies the slope.</p>
+<p>The normal equations imply $\sum_i e_i=0$ and $\sum_i(x_i-\overline x)e_i=0$. These are algebraic consequences of fitting an intercept by least squares. They are not evidence that the unobserved population errors have mean zero or are uncorrelated with the predictor. In particular, omitted-variable bias can coexist with residuals whose sample mean and sample predictor covariance vanish exactly.</p>
+<p class="source-note">Source derivation: <a href="https://www.youtube.com/watch?v=j35ZjlaXpPs&amp;t=465">least-squares differentiation</a> and <a href="https://www.youtube.com/watch?v=j35ZjlaXpPs&amp;t=931">normal equations</a>. This edition separates sample fitting identities from probabilistic assumptions.</p>
+</section>
+<section id="ch07-units">
+<h2 id="ch07-units-heading">7.3 Units, correlation, and explained variation</h2>
+<p>The intercept has the units of the response. The slope has response units per predictor unit. If age is stored in decades rather than years, the slope describes a decade change. Multiplying ages by a constant rescales the coefficient, even though it can leave every fitted premium unchanged. A slope without the predictor's coding and units is not yet an interpretation.</p>
+<p>When both centered sums $S_{xx}$ and $S_{yy}$ are positive, the sample correlation is $r=S_{xy}/\sqrt{S_{xx}S_{yy}}$. Define sample standard deviations $s_x=\sqrt{S_{xx}/(n-1)}$ and $s_y=\sqrt{S_{yy}/(n-1)}$. Substitution into (7.4) yields
+$$\widehat\beta_1=r\frac{s_y}{s_x}. \tag{7.5}$$
+Thus correlation carries sign and standardized strength, whereas the slope also carries the scale of measurement. Perfect negative linear association gives $r=-1$ and is as exactly linear as perfect positive association.</p>
+<p>With an intercept, $\widehat y_i-\overline y=\widehat\beta_1(x_i-\overline x)$. Since centered fitted values are orthogonal to residuals,
+$$S_{yy}=\sum_i(\widehat y_i-\overline y)^2+\sum_i e_i^2
+=\widehat\beta_1^2 S_{xx}+\mathrm{SSE}, \tag{7.6}$$
+where $\mathrm{SSE}=\sum_i e_i^2$ is the residual sum of squares. For nonconstant response, the centered coefficient of determination is
+$$R^2=1-\frac{\mathrm{SSE}}{S_{yy}}
+=\frac{S_{xy}^2}{S_{xx}S_{yy}}=r^2. \tag{7.7}$$
+This identity is proved by the substitution just shown. It requires this simple, intercept-containing least-squares model. It does not describe general nonlinear models, held-out prediction, or every software definition of an uncentered $R^2$.</p>
+<p>A high in-sample $R^2$ establishes neither accurate extrapolation nor small errors in business units. A line fitted across a broad age range may explain much variation and still make unacceptable premium errors. Conversely, noisy individual outcomes can yield a modest $R^2$ despite a useful estimated average association. Inspect the error scale and the intended prediction domain as well as a dimensionless summary.</p>
+</section>
+<section id="ch07-uncertainty">
+<h2 id="ch07-uncertainty-heading">7.4 From a fitted coefficient to uncertainty</h2>
+<p>The least-squares formulas above are deterministic. To describe their behavior across repeated samples, now assume that the predictor values are fixed and nonconstant, the errors have conditional mean zero, and their conditional covariance is $\sigma^2 I_n$. Here $\sigma^2&gt;0$ is the common error variance and $I_n$ is the identity matrix. This covariance condition rules out cross-observation correlation as well as unequal variances.</p>
+<p>Substitute the population model into the centered slope formula. Because the centered predictors sum to zero,
+$$\widehat\beta_1-\beta_1
+=\frac{\sum_i(x_i-\overline x)\varepsilon_i}{S_{xx}}.$$
+The conditional mean of this weighted error sum is zero. Its variance is
+$$\operatorname{Var}(\widehat\beta_1\mid X)
+=\frac{\sigma^2\sum_i(x_i-\overline x)^2}{S_{xx}^2}
+=\frac{\sigma^2}{S_{xx}}. \tag{7.8}$$
+This derivation identifies what improves precision: less unexplained variation, more observations with useful predictor spread, or both. Collecting many observations near the same predictor value can leave slope uncertainty large.</p>
+<p>For $n&gt;2$, estimate the unknown variance by $s^2=\mathrm{SSE}/(n-2)$. The two lost degrees of freedom correspond to fitting an intercept and a slope. Under the stated covariance model this estimate is unbiased: the residual vector is the projection of the error onto an $(n-2)$-dimensional orthogonal complement, so its expected squared length is $(n-2)\sigma^2$. The projection argument is developed fully in <a href="chapter-08.html">Chapter 8</a>.</p>
+<p>For exact small-sample distributional inference, add the assumption that the errors are jointly Gaussian. The slope error is then normal; the residual sum of squares divided by $\sigma^2$ is chi-square with $n-2$ degrees of freedom; and the orthogonal normal projections make them independent. These normal-distribution facts give the pivot
+$$T=\frac{\widehat\beta_1-\beta_1}{s/\sqrt{S_{xx}}}\sim t_{n-2}. \tag{7.9}$$
+Here $t_\nu$ denotes Student's distribution with $\nu$ degrees of freedom. Consequently a two-sided $1-\alpha$ confidence interval is $\widehat\beta_1\pm t_{1-\alpha/2,n-2}s/\sqrt{S_{xx}}$, where $t_{a,\nu}$ is its $a$ quantile. Without Gaussian errors this is not an exact finite-sample result; suitable asymptotics or another uncertainty method are needed.</p>
+<p>At predictor value $x_0$, the estimated conditional mean is $\widehat m_0=\widehat\beta_0+\widehat\beta_1x_0$. Its standard error and the prediction standard error for an independent new observation are respectively
+$$s\sqrt{\frac1n+\frac{(x_0-\overline x)^2}{S_{xx}}},\qquad
+s\sqrt{1+\frac1n+\frac{(x_0-\overline x)^2}{S_{xx}}}. \tag{7.10}$$
+To see the added unit, write the prediction error as the estimation error of the mean plus the new observation's independent error. Their variances add. The irreducible new-observation variance remains even if the mean is estimated precisely. Both intervals widen away from the predictor mean; extrapolation also risks violating the proposed mean relation, a risk these formulas do not quantify.</p>
+<p class="source-note">This uncertainty treatment is an authored mathematical extension of the two source lectures. The fitted model and $\texttt{get_prediction}$ interface are documented by <a href="https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.RegressionResults.get_prediction.html">statsmodels</a>.</p>
+</section>
+<section id="ch07-python">
+<h2 id="ch07-python-heading">7.5 Converting the insurance demonstration to Python</h2>
+<p>The course imports an insurance CSV, uses age as the predictor, and fits male premiums with R's <code>lm</code>. The Python equivalent reads the same rows with <code>pandas.read_csv</code>, explicitly adds an intercept, and fits <code>statsmodels.OLS</code>. Matrix-based statsmodels does not automatically add a constant. The laboratory uses <code>missing="raise"</code> so that missing values cannot silently change the fitted sample. A reproduction of a source run that omits missing rows must explicitly choose those same complete rows instead.</p>
+<p>The supplied Python program accepts <code>--csv FILE</code> with numeric <code>age</code> and <code>male</code> columns. Rename the authentic columns once if their capitalization differs; preserve the actual age coding rather than assuming years. The statistical method is convertible. Exact numerical reproduction of the course insurance output remains limited by the original data: the caption track does not enumerate the rows, and the inspected spreadsheet frame cuts off the relevant columns. The bundled default is therefore labeled an original teaching construction. It is not an inferred or invented copy of the course CSV.</p>
+<p>For the construction, take ages $x=(1,2,3,4,5,6)$ and define premiums by $y_i=2+3x_i+u_i$, with $u=(1,-1,0,0,-1,1)$. The vector $u$ has zero sum and is orthogonal to centered $x$. Equations (7.3)–(7.4) therefore recover the intercept and slope exactly. The executed laboratory verifies them both with an independent centered-sum calculation and with the library fit.</p>
+<table><caption>Numerical checks from the executed chapter laboratory; constructed data.</caption><thead><tr><th>Quantity</th><th>Value</th><th>Interpretation</th></tr></thead><tbody>
+<tr><td>Intercept; slope</td><td>$2;\ 3$</td><td>Recovered because the constructed discrepancy is orthogonal to the design.</td></tr>
+<tr><td>$S_{xx}$; SSE; $s^2$</td><td>$17.5;\ 4;\ 1$</td><td>Residual variance divides by $n-2$.</td></tr>
+<tr><td>$R^2$</td><td>$0.975232198$</td><td>Equals the squared sample correlation.</td></tr>
+<tr><td>95% slope interval</td><td>$[2.336302676,3.663697324]$</td><td>Normal-theory calculation; a constructed sample is not evidence of sampling coverage.</td></tr>
+<tr><td>Mean interval at $\overline x$</td><td>$[11.366521032,13.633478968]$</td><td>Uncertainty about a conditional mean.</td></tr>
+<tr><td>New-observation interval at $\overline x$</td><td>$[9.501096535,15.498903465]$</td><td>Includes the new error variance.</td></tr>
+</tbody></table>
+<p>The program also permutes paired rows and checks that coefficients are unchanged. Reversing the sign of the predictor changes the slope to $-3$ while preserving fitted values. Removing the intercept instead gives a slope $3.461538462$ and residual sum $2.307692308$. The residual-zero-sum identity belongs to the intercept model, so that last result is an expected change, not numerical failure.</p>
+<p class="source-note">Source R workflow: <a href="https://www.youtube.com/watch?v=j35ZjlaXpPs&amp;t=1306">CSV import and lm</a>. Conventions checked against <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html">R's lm manual</a> and <a href="https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html">the statsmodels OLS documentation</a>. The exact program and saved stdout appear in the <a href="#python-laboratory">Python laboratory</a>.</p>
+</section>
+<section id="ch07-exercises">
+<h2 id="ch07-exercises-heading">7.6 Exercises with worked solutions</h2>
+<ol>
+<li><p><strong>Conceptual — error or residual?</strong> A fitted intercept model has zero residual sum. Does that prove the population error has conditional mean zero?</p><details class="solution"><summary>Solution</summary><p>No. Differentiating the sample criterion with respect to the intercept imposes $\sum e_i=0$ at the minimizer, regardless of the data-generating mechanism. Conditional mean-zero errors refer to the unknown population relation and require a substantive model. An omitted covariate associated with $x$ can bias a causal interpretation while the fitted residual sum is still zero.</p></details></li>
+<li><p><strong>Conceptual — correlation as a gate.</strong> Explain why a negative sample correlation or an insignificant correlation test does not by itself rule out a regression analysis.</p><details class="solution"><summary>Solution</summary><p>A negative correlation indicates a downward linear association; equation (7.5) gives a negative slope. An insignificant test means the sample does not reject a specified null at its chosen level, not that the slope or any nonlinear relation is absent. Model usefulness depends on effect size, uncertainty, the prediction task, sample size, and diagnostics. A nonlinear feature model may be useful even if raw linear correlation is zero.</p></details></li>
+<li><p><strong>Derivation — changing age units.</strong> Set $z_i=(x_i-a)/b$, with $b\ne0$. Derive coefficients representing the same fitted line in $z$.</p><details class="solution"><summary>Solution</summary><p>Since $x_i=a+bz_i$, the fitted mean is $\widehat\beta_0+\widehat\beta_1a+(b\widehat\beta_1)z_i$. Thus the new intercept is $\widehat\gamma_0=\widehat\beta_0+a\widehat\beta_1$ and new slope $\widehat\gamma_1=b\widehat\beta_1$. Every fitted value, residual, and SSE is unchanged. The intercept changes its reference age; the slope changes its unit.</p></details></li>
+<li><p><strong>Derivation — why prediction intervals are wider.</strong> Derive the extra term in the second standard error of (7.10).</p><details class="solution"><summary>Solution</summary><p>For an independent new response $Y_0=m_0+\varepsilon_0$, the prediction error is $Y_0-\widehat m_0=\varepsilon_0-(\widehat m_0-m_0)$. The new error is independent of the training estimate and has variance $\sigma^2$. The mean-estimation variance is $\sigma^2[1/n+(x_0-\overline x)^2/S_{xx}]$. Add them and replace $\sigma^2$ by $s^2$. The extra one is irreducible observation variability.</p></details></li>
+<li><p><strong>Computation — reproduce the construction.</strong> Run <code>labs/ch07.py</code> and verify the coefficient formula, residual degrees of freedom, and $R^2=r^2$ independently.</p><details class="solution"><summary>Solution</summary><p>The centered predictor sum of squares is $17.5$. Since the constructed noise has zero design inner products, $S_{xy}=3S_{xx}$, giving slope $3$ and intercept $2$. The squared noise sums to $4$, and division by $6-2$ gives $s^2=1$. The program calculates $R^2=0.975232198$ and asserts equality to squared correlation at absolute tolerance $10^{-12}$. These are numerical checks of the finite construction.</p></details></li>
+<li><p><strong>Computation and design — a misleadingly precise extrapolation.</strong> Use (7.10) to compare a conditional-mean interval at the predictor mean with one outside the observed range. What additional risk is absent from both intervals?</p><details class="solution"><summary>Solution</summary><p>The squared distance term is zero at $x_0=\overline x$ and positive elsewhere, so the model-based mean interval is narrowest at the predictor mean. For the laboratory data, the 95% conditional-mean interval at $x_0=\overline x=3.5$ has half-width $1.133478968$. At $x_0=8$ its half-width is $3.194492272$, with fitted mean $26$ and interval $[22.805507728,29.194492272]$. Outside the observed range, the assumed straight mean can be wrong even when coefficient uncertainty is small. Equations (7.9)–(7.10) condition on the model; they do not include misspecification or an altered deployment population. A meaningful deployment check therefore needs data near its intended prediction domain.</p></details></li>
+</ol>
+</section>
+<section id="ch07-limits">
+<h2 id="ch07-limits-heading">7.7 What the single-predictor model captures and misses</h2>
+<p>A straight line summarizes a conditional average using two coefficients. Its derivation exposes the role of predictor spread, measurement units, and residual variation. It cannot separate the roles of several correlated predictors. A second measured risk factor can change both a premium prediction and the interpretation of the age coefficient. <a href="chapter-08.html">Multiple regression</a> therefore extends the mean from a line to a linear combination of several features while retaining the projection structure.</p>
+<p>Independent Gaussian, equal-variance errors are sufficient for the exact intervals developed here, not universal properties of regression data. Later chapters examine influential observations, dependent errors, distributional diagnostics, and unequal variance. These additions modify particular assumptions; they do not erase the difference between a fitted relationship and a causal claim.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch07.py"><code>labs/ch07.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Simple regression: exact checks and a Python port of the insurance workflow.
+
+The default data are an original construction, not the course CSV.
+If a CSV path is supplied, it must contain numeric columns age and male.
+&quot;&quot;&quot;
+import argparse
+
+import numpy as np
+import pandas as pd
+from scipy import stats
+import statsmodels.api as sm
+
+
+def fit_and_check(age, male):
+    &quot;&quot;&quot;Fit an intercept model and verify the centered formulas.&quot;&quot;&quot;
+    x = np.asarray(age, dtype=float)
+    y = np.asarray(male, dtype=float)
+    if x.ndim != 1 or y.shape != x.shape or len(x) &lt;= 2:
+        raise ValueError(&quot;Need more than two paired, one-dimensional rows&quot;)
+    if not np.isfinite(x).all() or not np.isfinite(y).all():
+        raise ValueError(
+            &quot;Missing/nonfinite rows require an explicit data policy&quot;)
+    xc = x - x.mean()
+    yc = y - y.mean()
+    sxx = xc @ xc
+    if sxx &lt;= 0:
+        raise ValueError(&quot;A constant predictor cannot identify a slope&quot;)
+    slope = (xc @ yc) / sxx
+    intercept = y.mean() - slope*x.mean()
+    design = sm.add_constant(x, has_constant=&quot;add&quot;)
+    fit = sm.OLS(y, design, missing=&quot;raise&quot;).fit()
+    np.testing.assert_allclose(fit.params, [intercept, slope], atol=1e-12)
+    np.testing.assert_allclose(design.T @ fit.resid, 0, atol=1e-10)
+    if yc @ yc &gt; 0:
+        correlation = np.corrcoef(x, y)[0, 1]
+        r_squared = fit.rsquared
+        np.testing.assert_allclose(r_squared, correlation**2, atol=1e-12)
+    else:
+        correlation, r_squared = np.nan, np.nan
+    variance = (fit.resid @ fit.resid)/(len(x) - 2)
+    np.testing.assert_allclose(fit.bse[1]**2, variance/sxx, atol=1e-12)
+    pred = fit.get_prediction([[1.0, x.mean()]]).summary_frame(alpha=0.05)
+    assert pred.obs_ci_upper.iloc[0] &gt;= pred.mean_ci_upper.iloc[0]
+    print(&quot;intercept slope:&quot;, np.round(fit.params, 9))
+    print(&quot;Sxx SSE residual_variance:&quot;,
+          np.round([sxx, fit.ssr, variance], 9))
+    print(&quot;correlation R_squared:&quot;, np.round([correlation, r_squared], 9))
+    print(&quot;slope_se t_statistic p_value:&quot;,
+          np.round([fit.bse[1], fit.tvalues[1], fit.pvalues[1]], 9))
+    print(&quot;95pct slope_interval:&quot;, np.round(fit.conf_int()[1], 9))
+    print(&quot;at_x_mean: mean_interval prediction_interval:&quot;,
+          np.round(pred[[&quot;mean_ci_lower&quot;, &quot;mean_ci_upper&quot;, &quot;obs_ci_lower&quot;,
+                         &quot;obs_ci_upper&quot;]].to_numpy()[0], 9))
+    return fit
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--csv&quot;, help=&quot;Course data with columns age and male&quot;)
+    args = parser.parse_args()
+    np.set_printoptions(precision=9, suppress=True)
+    if args.csv:
+        table = pd.read_csv(args.csv)
+        print(&quot;data: supplied CSV; not authenticated automatically&quot;)
+        fit_and_check(table[&quot;age&quot;], table[&quot;male&quot;])
+    else:
+        print(&quot;data: original teaching construction; &quot;
+              &quot;not course insurance data&quot;)
+        x = np.arange(1.0, 7.0)
+        noise = np.array([1.0, -1.0, 0.0, 0.0, -1.0, 1.0])
+        y = 2.0 + 3.0*x + noise
+        fit = fit_and_check(x, y)
+        np.testing.assert_allclose(fit.params, [2.0, 3.0], atol=1e-12)
+        order = np.array([5, 0, 3, 1, 4, 2])
+        permuted = np.linalg.lstsq(
+            np.column_stack([np.ones(6), x[order]]), y[order], rcond=None)[0]
+        np.testing.assert_allclose(permuted, fit.params, atol=1e-12)
+        reversed_slope = np.linalg.lstsq(
+            np.column_stack([np.ones(6), -x]), y, rcond=None)[0][1]
+        print(&quot;slope_after_x_sign_reversal:&quot;, round(reversed_slope, 9))
+        no_intercept = sm.OLS(y, x[:, None]).fit()
+        print(&quot;no_intercept_slope residual_sum:&quot;,
+              np.round([no_intercept.params[0], no_intercept.resid.sum()], 9))
+        print(&quot;critical_t_df4:&quot;, round(stats.t.ppf(0.975, 4), 9))
+        intervals = fit.get_prediction([[1.0, 3.5], [1.0, 8.0]])
+        table = intervals.summary_frame(alpha=0.05)
+        half_widths = (table.mean_ci_upper - table.mean_ci_lower)/2
+        np.testing.assert_allclose(
+            half_widths, [1.133478968, 3.194492272], atol=1e-9)
+        print(&quot;mean_interval_half_widths_at_3.5_and_8:&quot;,
+              np.round(half_widths.to_numpy(), 9))
+        print(&quot;extrapolated_mean_and_mean_interval_at_8:&quot;,
+              np.round(table.iloc[1][[
+                  &quot;mean&quot;, &quot;mean_ci_lower&quot;, &quot;mean_ci_upper&quot;]].to_numpy(), 9))
+        print(&quot;all assertions passed&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>data: original teaching construction; not course insurance data
+intercept slope: [2. 3.]
+Sxx SSE residual_variance: [17.5  4.   1. ]
+correlation R_squared: [0.987538454 0.975232198]
+slope_se t_statistic p_value: [ 0.239045722 12.549900398  0.000231968]
+95pct slope_interval: [2.336302676 3.663697324]
+at_x_mean: mean_interval prediction_interval: [11.366521032 13.633478968  9.501096535 15.498903465]
+slope_after_x_sign_reversal: -3.0
+no_intercept_slope residual_sum: [3.461538462 2.307692308]
+critical_t_df4: 2.776445105
+mean_interval_half_widths_at_3.5_and_8: [1.133478968 3.194492272]
+extrapolated_mean_and_mean_interval_at_8: [26.          22.805507728 29.194492272]
+all assertions passed
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-06.html">← Previous chapter</a><a href="chapter-08.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

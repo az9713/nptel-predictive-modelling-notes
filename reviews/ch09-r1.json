@@ -1,0 +1,48 @@
+{
+  "chapter": 9,
+  "round": 1,
+  "verdict": "ACCEPT",
+  "body_sha256": "90be5a6e79b40144d0b00b8f787fba852015e659970ba0f8d95e3e919ec04b69",
+  "lab_sha256": "49717d8b715c634395598914a79d568e3605f0b3fdb6b5f5a845c639acf22334",
+  "stdout_sha256": "e1d60826fc54321fb27019c44c5b8ae4f7c0cc6ae3db1b50de56bf4de0fee452",
+  "findings": [
+    {
+      "severity": "minor",
+      "location": "labs/ch09.py:5",
+      "quote": "No R execution is claimed",
+      "issue": "Stale docstring contradicts the chapter and metadata fresh-R same-input comparison.",
+      "replacement": "No R runtime is required; separate fresh-R comparisons are recorded in validation/chapters/ch07-09-r-comparison.json.",
+      "status": "resolved",
+      "resolution": "Current text/code inspected; targeted rerun passed."
+    },
+    {
+      "severity": "minor",
+      "location": "chapters/ch09.html:81",
+      "quote": "Every line is labeled as a screening convention",
+      "issue": "The plotting code draws dashed cutoff lines without per-line labels or a cutoff legend. The numerical convention is stated in text, so this is an inaccurate description of the figure rather than a diagnostic error.",
+      "replacement": "The dashed lines show the screening conventions stated above, and the source row numbers remain attached to the observations.",
+      "status": "resolved",
+      "resolution": "Current text/code inspected; targeted rerun passed."
+    }
+  ],
+  "scope": "Independent science-editor FULL scientific/pedagogical round 1: complete current HTML fragment, full Python lab, executed stdout, chapter metadata/conversion ledger, all six solved exercises, mathematical derivations and stated assumptions. Default labs independently rerun in project .venv, exit0, saved stdout reproduced after newline normalization. Shared reader shell, browser rendering and export are handled by root.",
+  "mathematical_and_numerical_checks": [
+    "Verified leverage bounds/trace and intercept lower bound; deletion rank condition and Sherman\u2013Morrison update; residual-variance deletion identity; external t df n-q-1.",
+    "Verified Cook, DFFITS, DFBETAS conventions against explicitly deleted coefficient fits; every 25 deletion is executed. Screening thresholds are not significance laws and no automatic row deletion is advocated.",
+    "Default outputs reproduce row 9 leverage.498292159, external residual4.310780119, Cook3.419318411; row 22 leverage.391575218 and Cook.451045451; coefficients[2.341231145,1.615907211,.014384826]. All six exercise derivations checked."
+  ],
+  "source_evidence": [
+    "la5PiJboaoo captions84\u2013200s identify robustbase delivery and response/predictor roles.",
+    "R influence.measures primary manual independently checked for rstandard/rstudent/Cook/DFFITS/DFBETAS convention distinction.",
+    "Existing ch07-09 R witness comparison covers every diagnostic array; reported max absolute discrepancy3.8843e-13.",
+    "Reviewer independently recomputed every influence-array entry against sources/private/ch09-r-diagnostics.csv: max absolute discrepancy 3.884288723998708e-13. Primary dataset manual checked: https://search.r-project.org/CRAN/refmans/robustbase/html/delivery.html (25 rows, 3 variables and response/predictor roles)."
+  ],
+  "limitations": [
+    "No comprehensive every-frame audiovisual or on-screen-code transcription; selected timestamped caption passages independently checked.",
+    "Fresh R witness files/comparison records are existing project evidence; this reviewer did not start a new R runtime. Same-input agreement is distinguished from original source-data reproduction.",
+    "This is an independent scientific editorial review, not formal proof verification or human certification."
+  ],
+  "reviewer": "Independent science-editor; not chapter author",
+  "review_date": "2026-11-04",
+  "repair_confirmation": "Focused repair confirmation: inaccurate per-line-label prose and stale no-R-execution docstring are repaired. Independent default rerun reproduces saved stdout."
+}

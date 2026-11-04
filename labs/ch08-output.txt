@@ -1,0 +1,8 @@
+data: original construction, not source Toyota rows
+simple_slope adjusted_slope: [-0.2 -2. ]
+multiple_coefficients: [10. -2.  3.]
+n q residual_df: 8 3 5
+SSE unbiased_variance mle_variance: [8.  1.6 1. ]
+projection_trace residual_projection_trace: [3. 5.]
+partial_F p_value df_difference: [45.           0.001114438  1.         ]
+all executed assertions passed

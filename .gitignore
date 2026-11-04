@@ -1,0 +1,9 @@
+sources/private/
+reviews/private/
+.serena/
+__pycache__/
+.venv/
+dist/
+validation/mobile-pilot.png
+*.part
+*.ytdl

@@ -1,0 +1,142 @@
+{
+  "html_pages": 26,
+  "local_links_checked": 1292,
+  "source_timestamps_checked": 137,
+  "pages": [
+    {
+      "file": "about.html",
+      "bytes": 7244,
+      "sha256": "9cc0c12a2d6500c810e32c428bdebc00d694bb47ea4797f0cb11316fe42b8348"
+    },
+    {
+      "file": "chapter-01.html",
+      "bytes": 32204,
+      "sha256": "c11993afd18309fb28b228bce4e79e582514b91f08c226b9c5ec68799f32c714"
+    },
+    {
+      "file": "chapter-02.html",
+      "bytes": 43598,
+      "sha256": "b41e80b35bc954b93258a8c8a4508604da61d379be9aeca35cf7848a6a8faf0a"
+    },
+    {
+      "file": "chapter-03.html",
+      "bytes": 44662,
+      "sha256": "30bb6a90b0c222c545549131fb2cdf88d0866d58a9167360767c8a0541ca5648"
+    },
+    {
+      "file": "chapter-04.html",
+      "bytes": 30815,
+      "sha256": "0293275a7f6c0588a72cdd19d6ff18e69b6c258727189caa6f4048158fd5cca8"
+    },
+    {
+      "file": "chapter-05.html",
+      "bytes": 49208,
+      "sha256": "f569488c8ece60643146a79f9275cde8f7d43de59a4e58d5c2d35739ce022c37"
+    },
+    {
+      "file": "chapter-06.html",
+      "bytes": 60713,
+      "sha256": "937553b2f152c4e30a3731805f0d8a2ac7e320d85fc5e46cc3109ffaf7866760"
+    },
+    {
+      "file": "chapter-07.html",
+      "bytes": 31898,
+      "sha256": "e12402fbbca6bc79eb4dcf2593a7d200a61fe2e25466d3ef47c9d7d3f9c1b1e1"
+    },
+    {
+      "file": "chapter-08.html",
+      "bytes": 35024,
+      "sha256": "8c73527bb77ff64ab4e230eebb733badffa529218c67dfec07acb25f927dd32a"
+    },
+    {
+      "file": "chapter-09.html",
+      "bytes": 32295,
+      "sha256": "a50b344b47e13fd6002a1706af9dedb2fdcee49f80e23ee43996ac3e7b4799c9"
+    },
+    {
+      "file": "chapter-10.html",
+      "bytes": 25762,
+      "sha256": "ef4acea372250cd03ee8ed827e7a26d96ed75528f6e5c5c637fc2a82939e814c"
+    },
+    {
+      "file": "chapter-11.html",
+      "bytes": 30823,
+      "sha256": "86218be665c7648883bc901d14c33bbb20a2715230086c5807886d7e7a96cda4"
+    },
+    {
+      "file": "chapter-12.html",
+      "bytes": 33179,
+      "sha256": "22faec38777cafa8efe4e43bb2bac54f88a5932fb8e5f89813d158806158f9a1"
+    },
+    {
+      "file": "chapter-13.html",
+      "bytes": 33196,
+      "sha256": "9f0937ca26f7d130fb1ad51ee51b33a7e4c5465be2d411f136bc468f2e61bc0b"
+    },
+    {
+      "file": "chapter-14.html",
+      "bytes": 30768,
+      "sha256": "4bceefa3fee49b9cb7eca776fbafbc5d7b30930a60c1634175f7475a792c201d"
+    },
+    {
+      "file": "chapter-15.html",
+      "bytes": 33856,
+      "sha256": "950e81ed328060120942f11491e15a3cb49b1303682bd9cb673da48695580cbe"
+    },
+    {
+      "file": "chapter-16.html",
+      "bytes": 37848,
+      "sha256": "f738f97040a60d2f363ccf9d978aa5f9e89845676d11356637b250a3b32a5cea"
+    },
+    {
+      "file": "chapter-17.html",
+      "bytes": 32671,
+      "sha256": "50cdcd4e2b1835b45ae492df46cc5dda954007a58a24a20cc279e5f74a4083db"
+    },
+    {
+      "file": "chapter-18.html",
+      "bytes": 26715,
+      "sha256": "a4416153551c83eea590de72fd1da69abbd48537357cfc8b54884de0cffaea95"
+    },
+    {
+      "file": "course-plan.html",
+      "bytes": 13615,
+      "sha256": "2dec5fd913c3e6ae889a629dc1593950a82f92f3c31f45416676e5701268f14b"
+    },
+    {
+      "file": "index.html",
+      "bytes": 9022,
+      "sha256": "345b5fdc6375e5793a2af219d734350dae1777b8400a137f3617f1a787bb8cc1"
+    },
+    {
+      "file": "laboratory.html",
+      "bytes": 8428,
+      "sha256": "93bac5adccec5d13b78e5ed96b848dee99f8469dfd473a2fa2a3f0b9db4bea72"
+    },
+    {
+      "file": "notation.html",
+      "bytes": 6529,
+      "sha256": "1ecd967f3c2fdbe38363fa84050b1ed9f752b4c383aa28a4fe6db134d049d314"
+    },
+    {
+      "file": "python-conversions.html",
+      "bytes": 51634,
+      "sha256": "43deabdee39188216bf1fc9cd6ce201e57e6fa9d33ce234c1051bbb7eff194f2"
+    },
+    {
+      "file": "source-map.html",
+      "bytes": 12188,
+      "sha256": "114f279c86b206d8fdd08cc70e8d6843142937fb3196fc21463dc8e27110685b"
+    },
+    {
+      "file": "study-guide.html",
+      "bytes": 6686,
+      "sha256": "c46ffe264b991850158f5e390e362e37a807d5bd28ebefc100c0732ec8f6fb83"
+    }
+  ],
+  "labs_executed": 0,
+  "executions": [],
+  "issues": [],
+  "passed": true,
+  "limits": "Mechanical, source-bound, and finite execution checks; not scientific acceptance."
+}

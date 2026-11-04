@@ -1,0 +1,33 @@
+{
+  "number": 18,
+  "title": "Regression discontinuity and local causal identification",
+  "source_videos": [
+    "9qR4g3nkpis"
+  ],
+  "reading_records": [
+    {
+      "video_id": "9qR4g3nkpis",
+      "read_full": true,
+      "transcript_sha256": "5e3a5ae83035b99f1710e6b692de14e6eab5afdcbef1fc9bcab8ade1e80fc3e1",
+      "limitations": "Complete English caption text read; no comprehensive audiovisual audit."
+    }
+  ],
+  "r_examples": [],
+  "lab": {
+    "path": "labs/ch18.py",
+    "stdout_path": "labs/ch18-output.txt",
+    "execution": "passed",
+    "sha256": "0f265bedb9771211e7fcd3e4c115f25dfa5cbd5db217cb923033c8b834da3d12",
+    "stdout_sha256": "56efe17902dce019d223a81dd1bc3282f5bc3894b95c133797a81cd17b31f48e",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2008,
+  "source_limitations": [
+    "No comprehensive audiovisual review; mathematical source ambiguities corrected with explicit assumptions.",
+    "Synthetic laboratory is an authored teaching example, not source mortality/pricing-data reproduction.",
+    "Conventional HC3 demo errors are not formal robust bias-corrected RD inference."
+  ],
+  "data": [],
+  "r_inventory_scope": "No R demonstration in complete assigned caption track; visual-only code inventory not independently comprehensive.",
+  "body_sha256": "356368caf046f37251cd14c328b53f3b9cba02d6c2477ff09d7d46e06fd5fd14"
+}

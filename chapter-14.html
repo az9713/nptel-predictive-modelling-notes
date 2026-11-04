@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Multicollinearity, identifiability, and conditioning — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a aria-current="page" href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Multicollinearity, identifiability, and conditioning</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch14-1">14.1 When several coefficients describe the same fit</a></li><li><a href="#ch14-2">14.2 Singular values and variance inflation</a></li><li><a href="#ch14-3">14.3 Changing the available information or changing the estimator</a></li><li><a href="#ch14-4">14.4 Converting the longley and freeny demonstrations</a></li><li><a href="#ch14-5">14.5 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 14 · <a href="https://www.youtube.com/watch?v=vqPB9ZDECaw">Recording 1</a> · <a href="https://www.youtube.com/watch?v=AokQyy_Pt5o">Recording 2</a> · <a href="https://www.youtube.com/watch?v=n8yN78mF9qw">Recording 3</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch14-identification">
+<h2 id="ch14-1">14.1 When several coefficients describe the same fit</h2>
+<p>A model can fit historical observations accurately while assigning unstable coefficients to its predictors. Household size and income may move together; macroeconomic measures may share a trend. If the data rarely vary one predictor while holding the others fixed, a fitted partial effect can depend strongly on small changes in the observations. This is a question about the geometry of the design, not the normality of the response.</p>
+<p>Let $\mathbf X\in\mathbb R^{n\times q}$ be the regression design, $\boldsymbol\beta\in\mathbb R^q$ its coefficient vector, and $\mathbf y=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon$. An intercept counts as one of the $q$ columns. The full-column-rank condition is a statement of linear algebra. It does not require the random predictor variables to be statistically independent. Correlated predictors are allowed. Exact linear dependence destroys identification; near dependence can make identification imprecise.</p>
+<div class="prop"><p><strong>Proposition 14.1 (proved here).</strong> If $\mathbf X\mathbf a=\mathbf0$ for a nonzero vector $\mathbf a$, then $\boldsymbol\beta$ and $\boldsymbol\beta+t\mathbf a$ give the same fitted mean for every real $t$. The individual coefficients are not uniquely determined by that mean.</p></div>
+<div class="proof"><p>Multiplication gives $\mathbf X(\boldsymbol\beta+t\mathbf a)=\mathbf X\boldsymbol\beta+t\mathbf X\mathbf a=\mathbf X\boldsymbol\beta$. Therefore the squared-error criterion has the same value at every point on this line. No amount of arithmetic can distinguish those coefficient vectors from the observed design alone. <span class="qed">∎</span></p></div>
+<p>The source's constructed columns are $\mathbf x_1=(2,5,10,12)^T$ and $\mathbf x_2=2\mathbf x_1$. Without an intercept, only the combination $\beta_1+2\beta_2$ enters the mean. Their two-column matrix has rank one. Replacing the second column by $(4,9,19,25)^T$ gives rank two, as the laboratory checks. Its coefficients now have a unique least-squares solution, but uniqueness alone says nothing about their precision.</p>
+<p>At exact dependence, writing an inverse formula with a zero denominator does not produce a valid estimator with an infinite variance. The inverse does not exist. Software can drop a column or select one solution through a generalized inverse; that convention does not restore identification of the original coefficients. A particular linear combination is estimable only when it has the same value for every coefficient vector producing the same mean.</p>
+<p>A pairwise correlation matrix is useful but incomplete. One predictor can be nearly a linear combination of several others without having a near-perfect correlation with any single one. For example, three centered columns can satisfy $\mathbf x_3=\mathbf x_1+\mathbf x_2$ even when the first two columns are orthogonal. Testing only pairs misses the dependence among the three-column set.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=vqPB9ZDECaw&amp;t=479">Multicollinearity 1, 07:59</a>. The notes distinguish stochastic independence, full rank, and the nonexistence of an inverse at exact dependence.</p>
+</section>
+
+<section id="ch14-sensitivity">
+<h2 id="ch14-2">14.2 Singular values and variance inflation</h2>
+<p>For a full-rank design, write its thin singular-value decomposition as $\mathbf X=\mathbf U\mathbf D\mathbf V^T$. The columns of $\mathbf U$ and $\mathbf V$ are orthonormal, and $\mathbf D$ contains positive singular values $d_1\ge\cdots\ge d_q$. Least squares gives $\widehat{\boldsymbol\beta}=\mathbf V\mathbf D^{-1}\mathbf U^T\mathbf y$. A component of the response along the last left singular vector is divided by $d_q$. A small singular value therefore amplifies that component's contribution to the coefficient vector.</p>
+<p>Under conditional mean-zero errors with covariance $\sigma^2\mathbf I$, the coefficient covariance is $\sigma^2\mathbf V\mathbf D^{-2}\mathbf V^T$. Small singular values create large uncertainty in particular coefficient directions. The fitted vector is $\mathbf H\mathbf y=\mathbf U\mathbf U^T\mathbf y$, which does not contain this inverse scaling. Thus large coefficient changes can coexist with much smaller changes in fitted responses on the observed design. Prediction away from the observed predictor relationships can still be unstable.</p>
+<p>The two-norm condition number is $\kappa_2(\mathbf X)=d_1/d_q$. For full rank, $\kappa_2(\mathbf X^T\mathbf X)=\kappa_2(\mathbf X)^2$. A threshold stated for one matrix cannot be transferred unchanged to the other. Column units and centering also affect this diagnostic. The determinant of $\mathbf X^T\mathbf X$ is a poor scale-free diagnostic: changing measurement units changes its magnitude. Condition-number and VIF cutoffs are conventions, not distribution-free hypothesis tests.</p>
+<p>A more coefficient-specific measure follows from partial regression. For slope $j$, regress its predictor column $\mathbf x_j$ on all the other design columns, including the intercept. Let $\mathbf r_j$ be the resulting residual. It is the part of predictor $j$ that the remaining predictors cannot explain. For a full-rank design,</p>
+<p>$$\widehat\beta_j=\frac{\mathbf r_j^T\mathbf y}{\mathbf r_j^T\mathbf r_j},\qquad \operatorname{Var}(\widehat\beta_j\mid\mathbf X)=\frac{\sigma^2}{\mathbf r_j^T\mathbf r_j}.\tag{14.1}$$</p>
+<p>To derive the coefficient formula, first project both the response and column $j$ off the remaining columns. The remaining least-squares problem has one predictor, $\mathbf r_j$; its normal equation is $\mathbf r_j^T(\mathbf y-\mathbf r_j\widehat\beta_j)=0$, because $\mathbf r_j$ is orthogonal to every removed column. Substitution of $\mathbf y=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon$ gives $\widehat\beta_j-\beta_j=\mathbf r_j^T\boldsymbol\varepsilon/(\mathbf r_j^T\mathbf r_j)$, from which the variance follows.</p>
+<p>Write $S_{xx,j}=\sum_i(x_{ij}-\bar x_j)^2$ and let $R_j^2$ be the coefficient of determination from that auxiliary regression. Then $\mathbf r_j^T\mathbf r_j=S_{xx,j}(1-R_j^2)$, so</p>
+<p>$$\operatorname{Var}(\widehat\beta_j\mid\mathbf X)=\frac{\sigma^2}{S_{xx,j}}\underbrace{\frac1{1-R_j^2}}_{\mathrm{VIF}_j}.\tag{14.2}$$</p>
+<p>This defines the variance inflation factor relative to a predictor with the same centered sum of squares and no linear association with the remaining predictors. It measures information lost for a partial coefficient, not the causal importance of the variable. Dropping predictors solely until every VIF is small can change the scientific question and introduce omitted-variable bias.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=n8yN78mF9qw&amp;t=365">Multicollinearity 3, 06:05</a>. Python's VIF routine is documented by <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.variance_inflation_factor.html">statsmodels</a>.</p>
+</section>
+
+<section id="ch14-remedies">
+<h2 id="ch14-3">14.3 Changing the available information or changing the estimator</h2>
+<p>A remedy must correspond to the purpose of the analysis. Additional observations help separate effects if they explore predictor combinations absent from the original data. Repeating nearly the same predictor relationship many times can reduce noise without resolving an exact structural dependence. Dropping a redundant column removes a rank defect, but dropping a scientifically relevant predictor can change the coefficient being estimated. Regularization changes the estimator rather than creating new observations.</p>
+<p>Principal-component regression first centers the numerical predictor matrix and writes $\mathbf Z=\mathbf U\mathbf D\mathbf V^T$. For $k$ retained positive singular values, regress the centered response on the first $k$ score columns $\mathbf Z\mathbf V_k=\mathbf U_k\mathbf D_k$. Transforming the coefficient back to the original predictor basis gives</p>
+<p>$$\widehat{\boldsymbol\beta}_{\rm PCR}=\mathbf V_k\mathbf D_k^{-1}\mathbf U_k^T\mathbf y_c.\tag{14.3}$$</p>
+<p>The score columns are orthogonal in the training sample. Their coefficient calculation therefore separates into scalar least-squares problems. Discarding small-singular-value directions removes the strongest inverse amplification, but can discard predictive information too. PCA orders directions by predictor variance without looking at the response. If the response depends strongly on a low-variance direction, retaining components solely to explain most predictor variance can miss the signal. Choose the retained dimension by an evaluation procedure tied to the response, fitting scaling and PCA within each training split.</p>
+<p>Ridge regression penalizes squared slope magnitude. After centering the predictors and response, minimize $\|\mathbf y_c-\mathbf Z\boldsymbol\beta\|^2+\kappa\|\boldsymbol\beta\|^2$ for a chosen $\kappa&gt;0$. The intercept is recovered from means and is not penalized. Differentiation gives $(\mathbf Z^T\mathbf Z+\kappa\mathbf I)\widehat{\boldsymbol\beta}_{\kappa}=\mathbf Z^T\mathbf y_c$. The added positive diagonal makes this matrix invertible even when the centered predictor columns are dependent.</p>
+<p>Using the singular-value decomposition,</p>
+<p>$$\widehat{\boldsymbol\beta}_{\kappa}=\mathbf V\operatorname{diag}\!\left(\frac{d_j}{d_j^2+\kappa}\right)\mathbf U^T\mathbf y_c.\tag{14.4}$$</p>
+<p>Relative to the least-squares factor $1/d_j$, ridge multiplies direction $j$ by $d_j^2/(d_j^2+\kappa)$. It shrinks weakly determined directions most strongly instead of abruptly deleting them. Under a correctly specified conditional mean and homoscedastic errors, its conditional expectation in each singular direction is the same shrinkage factor times the corresponding true coefficient. Its covariance is $\sigma^2\mathbf V\operatorname{diag}(d_j^2/(d_j^2+\kappa)^2)\mathbf V^T$. The difference between the expectation and the true coefficient is bias introduced by ridge, not bias caused by multicollinearity in full-rank OLS.</p>
+<p>A coefficient's mean squared error combines variance and squared bias. Reducing one does not guarantee that their sum decreases for every true coefficient vector. As $\kappa$ approaches zero, a full-rank fit approaches OLS. As it grows without bound, the centered slopes approach zero. Predictor scale matters because the penalty treats equally sized numerical coefficients equally; changing units changes what is penalized. State the scaling convention and how the penalty is chosen before interpreting a ridge output.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=AokQyy_Pt5o&amp;t=129">Multicollinearity 2, 02:09</a> for PCR and <a href="https://www.youtube.com/watch?v=AokQyy_Pt5o&amp;t=414">06:54</a> for ridge.</p>
+</section>
+
+<section id="ch14-conversion">
+<h2 id="ch14-4">14.4 Converting the longley and freeny demonstrations</h2>
+<p>The source uses the <code>longley</code> dataset to predict <code>GNP.deflator</code> from the six remaining variables. This differs from the commonly demonstrated Longley model whose response is <code>Employed</code>. Choosing the familiar response would reproduce a different example. The offline Python data retain the R names and all 16 rows; only the CSV row-name field is removed.</p>
+<p>The <a href="labs/ch14.py">laboratory</a> converts the correlation and OLS/VIF workflow, calculates every VIF independently through an auxiliary regression, and verifies agreement with statsmodels. For the six predictors in the order <code>GNP, Unemployed, Armed.Forces, Population, Year, Employed</code>, the executed VIFs are approximately $1214.572149$, $83.958646$, $12.156386$, $230.912215$, $2065.733939$, and $220.419682$. For centered unit-norm columns, the design condition number is $120.625320$, while the normal-equation condition number is $14550.467756$. These are different conventions applied to the same data.</p>
+<p>The source then drops <code>GNP</code>, <code>Population</code>, and <code>Year</code>. Recomputing on the three remaining predictors gives VIFs $1.859355$, $1.757381$, and $2.277019$. The training $R^2$ decreases from $0.992647396$ to $0.981444579$. This numerical comparison describes the two fitted models; it does not establish that deleting variables improves out-of-sample prediction or produces a causal model.</p>
+<p>The source's <code>ridge</code> package uses a different default from calling a Python ridge estimator with its default penalty. Its inspected <code>linearRidge</code> implementation centers the data, scales predictor columns to unit Euclidean norm under <code>corrForm</code>, creates candidate penalties from principal-component fits, and selects among them through its effective-degrees-of-freedom criterion. The Python laboratory translates that path explicitly. For the full Longley example it selects a penalty of $0.0104691196008$ and a two-component candidate. Using that same scaled matrix and fixed penalty, an independent scikit-learn SVD fit agrees with the translated coefficient calculation.</p>
+<p>The caption's additional revenue-data example is consistent with R's <code>freeny</code> dataset. The companion program supplies the documented Freeny model, <code>y</code> on its four explanatory variables, as a transparent counterpart. It contains lagged quarterly revenue and therefore also raises dependence issues beyond multicollinearity. Its exact on-screen formula was not transcribed, so that entry is labeled a dataset-based reconstruction rather than a visually certified source-output match. A fresh R 4.5.1 run of the inspected package implementation also matches the translated automatic penalties and coefficients.</p>
+<p>All statistical operations used here can be expressed in Python. Remaining reproduction uncertainty concerns source settings and the exact additional formula, not an inability of Python to fit the models. Using different penalty selection, predictor scaling, a penalized intercept, or an arbitrary coefficient-sign convention would silently change the example. The conversion ledger records which conventions were recovered and which source details remain unverified.</p>
+<p class="source-note">Demonstration: <a href="https://www.youtube.com/watch?v=n8yN78mF9qw&amp;t=547">Multicollinearity 3, 09:07</a>. Dataset documentation: <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/longley.html">longley</a> and <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/freeny.html">freeny</a>. Algorithm source: <a href="https://github.com/cran/ridge/blob/master/R/linearRidge.R">ridge::linearRidge</a>; independent fixed-penalty implementation: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.linear_model.Ridge.html">scikit-learn Ridge</a>.</p>
+</section>
+
+<section id="ch14-exercises">
+<h2 id="ch14-5">14.5 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Conceptual: independence.</strong> Must two correlated predictors be excluded from an ordinary regression? Distinguish full rank from statistical independence.</p><details><summary>Solution</summary><p>No. Full rank requires that no design column be an exact linear combination of the others. It permits correlated random predictors. Near dependence can inflate partial-coefficient uncertainty, while exact dependence prevents unique identification. Whether to omit a variable depends on the estimand, data support, and prediction task; correlation alone is insufficient.</p></details></li>
+<li><p><strong>Conceptual: pairwise screening.</strong> If three predictors satisfy $\mathbf x_3=\mathbf x_1+\mathbf x_2$, why can pairwise correlations miss an exact rank defect?</p><details><summary>Solution</summary><p>If the first two centered columns are orthogonal and have equal norm, their correlations with the sum are $1/\sqrt2$, not one. Yet the third column is exactly their sum. The null vector $(1,1,-1)^T$ proves rank deficiency. A multivariate rank or singular-value check examines combinations that a pairwise screen does not.</p></details></li>
+<li><p><strong>Derivation: an estimable combination.</strong> In the source's exact toy example, which linear combination of two coefficients determines the mean, and why can it remain identified?</p><details><summary>Solution</summary><p>Since $\mathbf x_2=2\mathbf x_1$, the mean is $\mathbf x_1(\beta_1+2\beta_2)$. The coefficient combination $\theta=\beta_1+2\beta_2$ determines the mean uniquely because the nonzero column $\mathbf x_1$ identifies its scalar multiplier. Adding $t(-2,1)^T$ to the original coefficient vector leaves $\theta$ unchanged, even though the individual coefficients vary.</p></details></li>
+<li><p><strong>Derivation: ridge bias.</strong> Derive the bias of a ridge estimator for a centered fixed design and mean-zero errors.</p><details><summary>Solution</summary><p>Let $\mathbf A=\mathbf Z^T\mathbf Z+\kappa\mathbf I$. Then $E\widehat{\boldsymbol\beta}_\kappa=\mathbf A^{-1}\mathbf Z^T\mathbf Z\boldsymbol\beta=\boldsymbol\beta-\kappa\mathbf A^{-1}\boldsymbol\beta$. The bias is $-\kappa\mathbf A^{-1}\boldsymbol\beta$. It vanishes at zero penalty when the unpenalized problem is identified, or in particular zero-signal directions. Mean-zero errors do not make a positive-penalty ridge estimator generally unbiased.</p></details></li>
+<li><p><strong>Conceptual: matching the source.</strong> If the Longley example were instead run with <code>Employed</code> as response, could its VIF list be compared directly with the source's list?</p><details><summary>Solution</summary><p>No. Changing the response also changes which column is excluded from the predictor matrix. VIF is a property of that predictor matrix, so it describes a different set of auxiliary regressions. Preserve <code>GNP.deflator</code> as the response for the source comparison. The supplied program lists its predictor order and verifies each VIF by direct auxiliary fitting.</p></details></li>
+<li><p><strong>Computational design: PCR failure.</strong> Construct a response aligned with a small-singular-value predictor direction. Explain what a variance-threshold PCR fit can lose and how to assess the retained dimension.</p><details><summary>Solution</summary><p>For a centered design $\mathbf Z=\mathbf U\mathbf D\mathbf V^T$, choose a noiseless response proportional to a left singular vector that would be discarded. Its projections on all retained left singular vectors are zero, so truncated PCR predicts the centered response as zero even though full-rank least squares can recover it. Assess component count on held-out response loss, with scaling and PCA refitted within each training split. High explained predictor variance alone is not the required criterion.</p></details></li>
+</ol>
+<p>Collinearity concerns which mean effects the design can separate. A separate question is whether observations have the same error variance. The next chapter changes the covariance model and derives the corresponding weighting and uncertainty calculations.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch14.py"><code>labs/ch14.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Convert longley/freeny diagnostics and ridge::linearRidge defaults.&quot;&quot;&quot;
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from sklearn.linear_model import Ridge
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+
+
+def automatic_ridge(features, response):
+    &quot;&quot;&quot;Translate linearRidge&#x27;s automatic corrForm path for full rank.&quot;&quot;&quot;
+    values = np.asarray(features, dtype=float)
+    target = np.asarray(response, dtype=float)
+    mean_x, mean_y = values.mean(axis=0), target.mean()
+    centered = values - mean_x
+    scales = np.linalg.norm(centered, axis=0)
+    scaled = centered / scales
+    target = target - mean_y
+    _, singular, right_t = np.linalg.svd(scaled, full_matrices=False)
+    eigenvalues = singular**2
+    right = right_t.T
+    scores = scaled @ right
+    coefficients = scores.T @ target / eigenvalues
+    fraction = np.cumsum(eigenvalues) / eigenvalues.sum()
+    maximum = int(np.searchsorted(fraction, 0.9) + 1)
+    candidates, distance = [], []
+    for count in range(1, maximum + 1):
+        residual = target - scores[:, :count] @ coefficients[:count]
+        variance = residual @ residual / (len(target) - count)
+        penalty = count*variance / \
+            (coefficients[:count] @ coefficients[:count])
+        effective = np.sum(eigenvalues**2 / (eigenvalues + penalty)**2)
+        candidates.append(penalty)
+        distance.append(abs(effective - count))
+    selected = int(np.argmin(distance))
+    penalty = candidates[selected]
+    shrinkage = coefficients*eigenvalues / (eigenvalues + penalty)
+    slopes_scaled = right @ shrinkage
+    reference = Ridge(alpha=penalty, fit_intercept=False, solver=&quot;svd&quot;)
+    reference.fit(scaled, target)
+    assert np.allclose(reference.coef_, slopes_scaled, rtol=1e-10, atol=1e-9)
+    slopes = slopes_scaled / scales
+    intercept = mean_y - mean_x @ slopes
+    return penalty, selected + 1, np.r_[intercept, slopes]
+
+
+def report(name, frame, response, predictors):
+    target = frame[response].to_numpy()
+    features = frame[predictors]
+    design = sm.add_constant(features)
+    fit = sm.OLS(target, design).fit()
+    vifs = np.array([variance_inflation_factor(design.to_numpy(), j)
+                     for j in range(1, design.shape[1])])
+    manual = []
+    for column in predictors:
+        remaining = features.drop(columns=column)
+        partial = sm.OLS(features[column], sm.add_constant(remaining)).fit()
+        manual.append(1 / (1 - partial.rsquared))
+    assert np.allclose(vifs, manual, rtol=1e-8)
+    centered = features.to_numpy() - features.to_numpy().mean(axis=0)
+    scaled = centered / np.linalg.norm(centered, axis=0)
+    condition = np.linalg.cond(scaled)
+    penalty, components, coefficient = automatic_ridge(features, target)
+    print(name, &quot;response:&quot;, response, &quot;rows:&quot;, len(frame))
+    print(&quot;Predictors:&quot;, &quot;, &quot;.join(predictors))
+    print(&quot;VIF:&quot;, np.array2string(vifs, precision=6))
+    print(f&quot;Centered/unit-norm condition X={condition:.6f}, &quot;
+          f&quot;X&#x27;X={condition**2:.6f}&quot;)
+    print(f&quot;OLS training R-squared={fit.rsquared:.9f}&quot;)
+    print(f&quot;Ridge automatic penalty={penalty:.12g}, &quot;
+          f&quot;selected PC count={components}&quot;)
+    print(&quot;Ridge raw-scale coefficients:&quot;,
+          np.array2string(coefficient, precision=6))
+    print(&quot;SVD ridge / sklearn fixed-penalty agreement: passed&quot;)
+    return vifs
+
+
+def main():
+    data_dir = Path(__file__).resolve().parent / &quot;data&quot;
+    longley_path = data_dir / &quot;ch14-longley.csv&quot;
+    longley = pd.read_csv(longley_path).drop(columns=&quot;rownames&quot;)
+    predictors = [c for c in longley if c != &quot;GNP.deflator&quot;]
+    report(&quot;longley&quot;, longley, &quot;GNP.deflator&quot;, predictors)
+    reduced = [&quot;Unemployed&quot;, &quot;Armed.Forces&quot;, &quot;Employed&quot;]
+    report(&quot;longley reduced&quot;, longley, &quot;GNP.deflator&quot;, reduced)
+    freeny = pd.read_csv(data_dir / &quot;ch14-freeny.csv&quot;).drop(columns=&quot;rownames&quot;)
+    report(&quot;freeny&quot;, freeny, &quot;y&quot;, [c for c in freeny if c != &quot;y&quot;])
+    x = np.array([2., 5., 10., 12.])
+    exact = np.column_stack([x, 2*x])
+    near = np.column_stack([x, [4., 9., 19., 25.]])
+    print(&quot;Source toy ranks (without intercept):&quot;,
+          np.linalg.matrix_rank(exact), np.linalg.matrix_rank(near))
+    assert np.linalg.matrix_rank(exact) == 1
+    assert np.linalg.matrix_rank(near) == 2
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>longley response: GNP.deflator rows: 16
+Predictors: GNP, Unemployed, Armed.Forces, Population, Year, Employed
+VIF: [1214.572149   83.958646   12.156386  230.912215 2065.733939  220.419682]
+Centered/unit-norm condition X=120.625320, X&#x27;X=14550.467756
+OLS training R-squared=0.992647396
+Ridge automatic penalty=0.0104691196008, selected PC count=2
+Ridge raw-scale coefficients: [-1.246683e+03  4.337897e-02  1.184359e-02  1.380510e-02 -2.831133e-02
+  6.566546e-01  6.745386e-01]
+SVD ridge / sklearn fixed-penalty agreement: passed
+longley reduced response: GNP.deflator rows: 16
+Predictors: Unemployed, Armed.Forces, Employed
+VIF: [1.859355 1.757381 2.277019]
+Centered/unit-norm condition X=2.656228, X&#x27;X=7.055546
+OLS training R-squared=0.981444579
+Ridge automatic penalty=0.00836652654326, selected PC count=2
+Ridge raw-scale coefficients: [-6.607901e+01  3.115889e-02  2.590119e-02  2.312700e+00]
+SVD ridge / sklearn fixed-penalty agreement: passed
+freeny response: y rows: 39
+Predictors: lag.quarterly.revenue, price.index, income.level, market.potential
+VIF: [353.452622  80.4836    45.582551 189.063467]
+Centered/unit-norm condition X=44.017536, X&#x27;X=1937.543458
+OLS training R-squared=0.998051689
+Ridge automatic penalty=0.000209640661493, selected PC count=1
+Ridge raw-scale coefficients: [-10.272532   0.135156  -0.745343   0.759559   1.307817]
+SVD ridge / sklearn fixed-penalty agreement: passed
+Source toy ranks (without intercept): 1 2
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-13.html">← Previous chapter</a><a href="chapter-15.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

@@ -1,0 +1,50 @@
+title: 'Predictive Modelling with Applications: Supervised and Unsupervised Learning'
+phase: complete_reviewed_edition
+institution: IIT Hyderabad
+instructor: Prof. Sayantee Jana
+course_url: https://nptel.ac.in/courses/106106850
+playlist_id: PLyqSpQzTE6M-GrmRMG-WQJpnPzpd0qcO3
+playlist_entries: 40
+teaching_recordings: 39
+orientation_recordings: 1
+planned_chapters: 18
+written_chapters: 18
+accepted_chapters: 18
+worked_solutions: 108
+python_laboratories: 18
+inventoried_r_examples: 79
+gates:
+  A_specification: authorized_autonomous_resolution
+  B_results_and_notation: authorized_autonomous_resolution
+  C_architecture: authorized_autonomous_resolution
+  D_outline: implemented_in_all_18_chapters
+source_status:
+  playlist_inventory: acquired
+  course_identity: verified_official_page
+  lecture_order: verified_official_course_lesson_array
+  official_lecture_order_crosscheck: all_39_video_ids_match
+  first_teaching_transcript: read_via_youtube_connector
+  teaching_transcripts: all_39_read_full
+  audiovisual_audit: not_performed
+  all_recording_captions: 40_of_40_acquired
+  orientation: read_full_by_lead
+publication_authorized: false
+publication_performed: false
+laboratory_language: Python
+r_example_policy: Convert every R example; explain each unresolved or unfaithful conversion
+  individually.
+autonomy_authorized: true
+author_decisions: []
+authorization: Complete the entire course autonomously without the user in the loop;
+  complete as many lectures as possible.
+next_action: Complete. Open index.html or use the verified portable ZIP in dist/.
+verification:
+  scientific_reviews: two_independent_current_digest_accepts_per_chapter
+  main_labs: all_18_exit_zero_and_saved_stdout_matches
+  offline_reader: desktop_and_mobile_passed
+  source_free_export: passed_all_26_reader_pages_byte_identical_and_18_labs_passed
+limitations:
+  - Caption-based source reading plus selected frames, not a complete audiovisual audit.
+  - AI editorial review, not human certification or formal proof verification.
+  - Original insurance, Toyota training-subset and expenditure data unavailable.
+  - Some original settings and random states unknown; all differences individually recorded.

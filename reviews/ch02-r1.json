@@ -1,0 +1,32 @@
+{
+  "chapter": 2,
+  "round": 1,
+  "reviewer": "review_01_06_r1 independent full-edition science editor",
+  "skill": "science-editor",
+  "body_sha256": "c2df83f909f5b2a9e80c777968e5c3e05eea361d7efc05631d16c7e7276394da",
+  "verdict": "ACCEPT",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [],
+  "checks": [
+    "Complete chapter fragment read, including all six exercise statements and worked solutions.",
+    "Local notation and assumptions audited against EDITOR_DOMAIN.md, plan/notation.md and house style.",
+    "Main Python lab independently executed with project .venv; exit0 and saved stdout matched exactly.",
+    "Review is independent of chapter authorship; no chapter or lab edits performed.",
+    "Verified variance-maximization and projection-error proofs, repeated-eigenvalue/sign freedom, centered vs standardized PCA and prediction counterexample.",
+    "Derived feature-loading correlations and regression score weights; checked rotations and all six solutions.",
+    "Inspected source PCA code frame1088: actual CONT exclusion, source302 Harman count, default/source method calls.",
+    "Read primary psych principal and fa.parallel documentation/source and local fresh-R reference script/array-comparison evidence.",
+    "Checked canonical judge43x12/Harman8x8 inputs, source numerical outputs, null-stream limitations and missing individual-score boundary."
+  ],
+  "limits": [
+    "No complete independent audiovisual audit: focused source captions, selected code frames and primary documentation support checks.",
+    "No formal proof-assistant or human certification.",
+    "Shared reader/browser rendering and portable-export checks are outside this fragment review.",
+    "Finite numerical agreement does not prove universal algorithmic equivalence or model adequacy."
+  ],
+  "lab_sha256": "1d62e8bde0fe9f5e9823f6b10b48023496817de0170c221c6d1c5af3fae2864e",
+  "stdout_sha256": "0b52b6dcb011ea50855b50cb22f9df9aba7dc45e7aca608173b598362352a1e6",
+  "scope": "Entire chapter fragment, all six worked exercises, main lab/output, source metadata and targeted source verification."
+}

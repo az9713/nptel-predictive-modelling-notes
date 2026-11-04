@@ -1,0 +1,38 @@
+{
+  "number": 12,
+  "title": "Autocorrelated errors and dependent observations",
+  "source_videos": [
+    "oWddrGt3xJA",
+    "WLXxjZPbRg0"
+  ],
+  "reading_records": [
+    {
+      "video_id": "oWddrGt3xJA",
+      "read_full": true,
+      "transcript_sha256": "58cb8415b8e94958b2b6659e6f00826b59ce514dccb42d014adca9b1b47ba3cc",
+      "limitations": "All English caption text read; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "WLXxjZPbRg0",
+      "read_full": true,
+      "transcript_sha256": "5a373af90cd392d49b97bbd78739092551663deff618cc10118003af7400d476",
+      "limitations": "All English caption text read; no comprehensive audiovisual audit."
+    }
+  ],
+  "r_examples": [],
+  "r_inventory_scope": "No R demonstration identified in either complete caption track; theoretical methods receive an original Python laboratory. Not an exhaustive every-frame code inventory.",
+  "lab": {
+    "path": "labs/ch12.py",
+    "stdout_path": "labs/ch12-output.txt",
+    "execution": "passed; whitening equivalence, GLS coefficients, PSD covariance comparison, DW boundary identity and fixed-design Monte Carlo checks"
+  },
+  "word_count": 2249,
+  "source_limitations": [
+    "Captions contain incorrect correlation/bias and AR1 lag-cutoff wording, corrected in derivations.",
+    "DW direction determined from exact definition; endpoint correction included.",
+    "Feasible iterative PW is a transparently specified original implementation, not a claim of matching every R package default.",
+    "No source observational dataset claimed."
+  ],
+  "body_sha256": "5b2ea2b317a261d3b9965d1ef4c3f5e38dfc688cf5cafc9ded184988eff27591",
+  "code_validation": "validation/chapters/ch07-12-code-checks.json"
+}

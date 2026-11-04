@@ -1,0 +1,26 @@
+longley response: GNP.deflator rows: 16
+Predictors: GNP, Unemployed, Armed.Forces, Population, Year, Employed
+VIF: [1214.572149   83.958646   12.156386  230.912215 2065.733939  220.419682]
+Centered/unit-norm condition X=120.625320, X'X=14550.467756
+OLS training R-squared=0.992647396
+Ridge automatic penalty=0.0104691196008, selected PC count=2
+Ridge raw-scale coefficients: [-1.246683e+03  4.337897e-02  1.184359e-02  1.380510e-02 -2.831133e-02
+  6.566546e-01  6.745386e-01]
+SVD ridge / sklearn fixed-penalty agreement: passed
+longley reduced response: GNP.deflator rows: 16
+Predictors: Unemployed, Armed.Forces, Employed
+VIF: [1.859355 1.757381 2.277019]
+Centered/unit-norm condition X=2.656228, X'X=7.055546
+OLS training R-squared=0.981444579
+Ridge automatic penalty=0.00836652654326, selected PC count=2
+Ridge raw-scale coefficients: [-6.607901e+01  3.115889e-02  2.590119e-02  2.312700e+00]
+SVD ridge / sklearn fixed-penalty agreement: passed
+freeny response: y rows: 39
+Predictors: lag.quarterly.revenue, price.index, income.level, market.potential
+VIF: [353.452622  80.4836    45.582551 189.063467]
+Centered/unit-norm condition X=44.017536, X'X=1937.543458
+OLS training R-squared=0.998051689
+Ridge automatic penalty=0.000209640661493, selected PC count=1
+Ridge raw-scale coefficients: [-10.272532   0.135156  -0.745343   0.759559   1.307817]
+SVD ridge / sklearn fixed-penalty agreement: passed
+Source toy ranks (without intercept): 1 2

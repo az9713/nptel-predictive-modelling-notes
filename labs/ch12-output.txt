@@ -1,0 +1,15 @@
+data: original seeded AR1 construction, not source observations
+n rho innovation_sd: 80 0.7 0.5
+OLS coefficients: [1.809371477 3.010666645]
+known_covariance_GLS coefficients: [1.872134462 3.046010793]
+Prais_Winsten agrees with GLS: passed
+conditional_Cochrane_Orcutt coefficients: [1.771527355 3.122922415]
+true_OLS_standard_deviations: [0.183708631 0.166056904]
+true_GLS_standard_deviations: [0.181568046 0.157276753]
+DW lag_ratio endpoint_correction: [0.647275361 0.638134035 0.076456569]
+Gaussian_fixed_design_DW_MC: lower_tail_count draws p_plus1: 0 9999 0.0001
+iterated_PW rho iterations converged: 0.663376083 7 True
+iterated_PW coefficients: [1.862893902 3.04076057 ]
+Durbin_initial_rho: 0.618739345
+Durbin_initialized_PW coefficients: [1.853883016 3.035367551]
+all assertions passed: whitening, GLS, covariance order, DW identity

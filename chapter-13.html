@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Normality checks and the assumptions behind inference — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a aria-current="page" href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Normality checks and the assumptions behind inference</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch13-1">13.1 Which distribution must be normal?</a></li><li><a href="#ch13-2">13.2 Quantile comparisons and their uncertainty</a></li><li><a href="#ch13-3">13.3 Empirical distributions and the Kolmogorov-Smirnov distance</a></li><li><a href="#ch13-4">13.4 What the Shapiro-Wilk statistic measures</a></li><li><a href="#ch13-5">13.5 The ToothGrowth example in Python</a></li><li><a href="#ch13-6">13.6 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 13 · <a href="https://www.youtube.com/watch?v=C7ihAtunKro">Recording 1</a> · <a href="https://www.youtube.com/watch?v=D_oscdlZD40">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch13-model">
+<h2 id="ch13-1">13.1 Which distribution must be normal?</h2>
+<p>A regression can predict a response whose pooled histogram is strongly skewed. It can also fail when the pooled response looks normal. The distinction matters when a diagnostic determines whether we trust an interval for a coefficient or a future observation. A distributional assumption must identify the random quantity being modeled and what is held fixed.</p>
+<p>Let $\mathbf y\in\mathbb R^n$ contain the responses, and let $\mathbf X\in\mathbb R^{n\times q}$ be a fixed design matrix of full column rank. Its $q$ columns include an intercept when specified. The linear model is $\mathbf y=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon$, where $\boldsymbol\beta\in\mathbb R^q$ is the coefficient vector and $\boldsymbol\varepsilon$ is the unobserved error vector. The Gaussian homoscedastic assumption is</p>
+<div class="def"><p><strong>Definition 13.1 (conditional Gaussian model).</strong> Conditional on the design, $\boldsymbol\varepsilon\mid\mathbf X\sim N_n(\mathbf0,\sigma^2\mathbf I)$ with $\sigma^2&gt;0$. Consequently, $\mathbf y\mid\mathbf X\sim N_n(\mathbf X\boldsymbol\beta,\sigma^2\mathbf I)$. Each response has its own conditional mean $\mathbf x_i^T\boldsymbol\beta$.</p></div>
+<p>This does not assert that the entries of the response vector are identically distributed. A pooled histogram mixes observations with different means. If predictors are random, the marginal distribution integrates over their distribution and can be nonnormal even when every conditional error is Gaussian. For example, a binary predictor separates two Gaussian response distributions with different means; their mixture need not be Gaussian. The appropriate question is whether the conditional model and its errors describe the data adequately.</p>
+<p>Ordinary least squares does not require Gaussian errors to minimize squared residuals. Its conditional unbiasedness requires $E(\boldsymbol\varepsilon\mid\mathbf X)=\mathbf0$, not a normal distribution. Gaussianity supplies additional finite-sample distributional results, including the usual exact $t$ and $F$ reference distributions when the other assumptions also hold. A histogram cannot check exogeneity, and recentering an observed residual vector does not repair omitted-variable bias. In particular, zero residual mean follows algebraically from an intercept; it does not establish zero conditional error mean.</p>
+<p>The fitted residual vector is $\mathbf e=(\mathbf I-\mathbf H)\mathbf y$, where $\mathbf H=\mathbf X(\mathbf X^T\mathbf X)^{-1}\mathbf X^T$ is the orthogonal projection onto the design-column space. Residuals are observable, but they are not the original errors.</p>
+<div class="prop"><p><strong>Proposition 13.2 (proved here).</strong> Under the conditional Gaussian model, $\mathbf e\mid\mathbf X\sim N_n(\mathbf0,\sigma^2(\mathbf I-\mathbf H))$. The covariance is singular whenever the model estimates at least one coefficient.</p></div>
+<div class="proof"><p>Because $(\mathbf I-\mathbf H)\mathbf X=\mathbf0$, we have $\mathbf e=(\mathbf I-\mathbf H)\boldsymbol\varepsilon$. A linear transformation of a Gaussian vector is Gaussian. Its mean is zero and its covariance is $\sigma^2(\mathbf I-\mathbf H)(\mathbf I-\mathbf H)^T$. Symmetry and idempotence of an orthogonal projection reduce this to $\sigma^2(\mathbf I-\mathbf H)$. This matrix has rank $n-q$, so it is singular if $q&gt;0$. <span class="qed">∎</span></p></div>
+<p>Thus $\operatorname{Var}(e_i\mid\mathbf X)=\sigma^2(1-h_{ii})$ and $\operatorname{Cov}(e_i,e_j\mid\mathbf X)=-\sigma^2h_{ij}$ for different observations. An off-the-shelf normality test calibrated for independent, identically distributed observations is not automatically an exact test of regression errors when applied to residuals. Dividing by a leverage adjustment helps compare marginal scales; it does not generally remove dependence. A model-based simulation can account for refitting and the design, provided the simulation reproduces the entire diagnostic procedure.</p>
+<p class="source-note">Related source: <a href="https://www.youtube.com/watch?v=C7ihAtunKro&amp;t=17">Tests for Normality 1, 00:17</a>. The distinctions between conditional responses, pooled responses, and projected residuals are explicit clarifications of the model assumptions.</p>
+</section>
+
+<section id="ch13-qq">
+<h2 id="ch13-2">13.2 Quantile comparisons and their uncertainty</h2>
+<p>A quantile-quantile plot compares the ordered observations with quantiles of a proposed reference distribution. It exposes where a mismatch occurs: the middle, one tail, both tails, or isolated observations. A histogram can hide these features through its choice of bin edges. Neither graph proves a distributional hypothesis.</p>
+<p>For a real sample $v_1,\ldots,v_n$, write its order statistics as $v_{(1)}\le\cdots\le v_{(n)}$. Choose plotting probabilities $p_i$ and theoretical standard-normal quantiles $z_i=\Phi^{-1}(p_i)$, where $\Phi$ is the standard-normal cumulative distribution function. Plot $(z_i,v_{(i)})$. If the sample is approximately $N(\mu,\sigma^2)$, the points should approximately follow $v=\mu+\sigma z$. The expected line is generally not the bisector $v=z$: response location and units determine its intercept and slope.</p>
+<p>The source R example uses <code>qqnorm</code> and <code>qqline</code>. Their conventions can be preserved in Python rather than replaced with a visually similar plot using different plotting positions or a least-squares reference line. R's normal plotting positions use $p_i=(i-a)/(n+1-2a)$, with $a=3/8$ for $n\le10$ and $a=1/2$ otherwise. The default reference line passes through the sample first and third quartiles. For sample quartiles $Q_1,Q_3$ and normal quartiles $z_{.25},z_{.75}$, its slope and intercept are</p>
+<p>$$b=\frac{Q_3-Q_1}{z_{.75}-z_{.25}},\qquad a_0=Q_1-bz_{.25}.\tag{13.1}$$</p>
+<p>Here $a_0$ denotes the line intercept, not the plotting-position offset. NumPy's <code>quantile(..., method="linear")</code> implements the interpolation convention used by R's default type-7 sample quantiles. The line follows from solving the two equations $Q_1=a_0+bz_{.25}$ and $Q_3=a_0+bz_{.75}$; it is not a regression fit to every plotted point.</p>
+<p>The lecture also uses <code>car::qqPlot</code> on a numeric vector. Its default normal envelope has a direct Python translation. To understand its scale, an empirical proportion near a probability $p$ fluctuates on the order of $\sqrt{p(1-p)/n}$. The derivative of the normal quantile is $1/\phi(z)$, where $\phi$ is the standard-normal density. A first-order transformation gives the approximate standard error $b\sqrt{p_i(1-p_i)/n}/\phi(z_i)$. The package's default envelope is therefore</p>
+<p>$$a_0+bz_i\;\pm\;\Phi^{-1}(0.975)\,\frac{b}{\phi(z_i)}\sqrt{\frac{p_i(1-p_i)}n}.\tag{13.2}$$</p>
+<p>This is an approximate pointwise envelope based on the fitted quartile line. It is not a simultaneous 95% confidence region for the entire quantile curve and does not incorporate every effect of estimating location and scale. The first-order quantile argument is least reliable at extremes and in small samples. The broader tails express lower precision of extreme sample quantiles; they do not make any observation acceptable by construction. An observation outside a band is a reason to investigate the model, its data quality, and its calibration.</p>
+<p>A heavy-tailed distribution often produces points below the reference in the left tail and above it in the right tail. A skewed distribution can bend asymmetrically. Several populations mixed together can produce a different systematic pattern. The diagnostic should guide a model revision tied to the data-generating mechanism. Applying transformations solely until a test stops rejecting changes the procedure and can undermine a claimed confirmatory interpretation.</p>
+<p class="source-note">Related source: <a href="https://www.youtube.com/watch?v=C7ihAtunKro&amp;t=335">Tests for Normality 1, 05:35</a>. Implementation conventions were checked against <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/qqnorm.html">R's quantile-plot documentation</a> and the <a href="https://github.com/cran/car/blob/master/R/qqPlot.R">car package source</a>.</p>
+</section>
+
+<section id="ch13-edf">
+<h2 id="ch13-3">13.3 Empirical distributions and the Kolmogorov-Smirnov distance</h2>
+<p>The empirical cumulative distribution function records the fraction of observations at or below a value. For independent observations $v_1,\ldots,v_n$, define $F_n(t)=n^{-1}\sum_{i=1}^n\mathbf1\{v_i\le t\}$. It jumps by the observed proportion at each distinct value. The one-sample Kolmogorov-Smirnov statistic compares it with a specified continuous cumulative distribution function $F_0$:</p>
+<p>$$D_n=\sup_{t\in\mathbb R}|F_n(t)-F_0(t)|.\tag{13.3}$$</p>
+<p>The supremum is needed because the empirical curve jumps. Checking only the right edge of every jump can miss the largest discrepancy. For sorted observations and a continuous reference, an equivalent computation is</p>
+<p>$$D_n=\max_{1\le i\le n}\left\{\frac{i}{n}-F_0(v_{(i)}),\;F_0(v_{(i)})-\frac{i-1}{n}\right\}.\tag{13.4}$$</p>
+<p>To see why, between successive observations the empirical curve is constant while the reference increases monotonically. The greatest absolute discrepancy on that interval occurs at one of its endpoints. The two terms examine the right and left sides of the jump. In the laboratory, the constructed sample consisting of $-1,0,1$, tested against a fully specified standard normal, has distance $0.174678079$. The direct formula agrees with SciPy's routine.</p>
+<p>For independent observations from a completely specified continuous null, transforming each observation through $F_0$ gives independent uniform variables. This explains why the null distribution of the statistic does not depend on the particular continuous $F_0$. It does not mean that a normality test is valid without choosing or estimating distributional parameters. If the normal mean and variance were fitted from these same observations, the transformed values are no longer the independent uniforms used in that argument. Standard KS p-values then have the wrong calibration.</p>
+<p>A test specialized for a fitted normal family, such as a Lilliefors test, or a simulation that repeats parameter estimation can address this different null. Neither choice automatically solves the additional dependence introduced by regression residuals. Discrete observations and ties also change the continuous-null setting. These distinctions are more important than choosing whichever named routine returns the largest p-value.</p>
+<p class="source-note">Related source: <a href="https://www.youtube.com/watch?v=C7ihAtunKro&amp;t=700">Tests for Normality 1, 11:40</a>. See <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.kstest.html">SciPy's KS implementation</a> and <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.diagnostic.lilliefors.html">statsmodels' fitted-family Lilliefors test</a>.</p>
+</section>
+
+<section id="ch13-shapiro">
+<h2 id="ch13-4">13.4 What the Shapiro-Wilk statistic measures</h2>
+<p>The Shapiro-Wilk test compares the ordered sample with the shape expected from normal order statistics, while removing arbitrary location and scale. Its null is that the observations are an independent sample from some nondegenerate normal distribution. The statistic is not a probability, and a large value does not certify normality.</p>
+<p>Let $\mathbf z_{()}$ be the ordered version of a sample of $n$ independent standard-normal variables. Define its expectation vector $\mathbf m=E\mathbf z_{()}$ and covariance matrix $\mathbf V=\operatorname{Cov}(\mathbf z_{()})$. Sorting introduces dependence: $\mathbf V$ is not the identity matrix. Under a normal location-scale model, the ordered observed sample satisfies $E\mathbf v_{()}=\mu\mathbf1+\sigma\mathbf m$ and has covariance $\sigma^2\mathbf V$.</p>
+<p>The source motivates a generalized least-squares fit of the ordered observations to their expected normal order statistics. Minimizing $(\mathbf v_{()}-\mu\mathbf1-\sigma\mathbf m)^T\mathbf V^{-1}(\mathbf v_{()}-\mu\mathbf1-\sigma\mathbf m)$ leads to linear normal equations. Normal symmetry gives $\mathbf1^T\mathbf V^{-1}\mathbf m=0$: reversing the order changes $\mathbf m$ to $-\mathbf m$, preserves $\mathbf V$, and preserves $\mathbf1$, so this scalar equals its own negative. The fitted scale therefore follows the direction $\mathbf V^{-1}\mathbf m$.</p>
+<p>Normalize that direction as $\mathbf a=\mathbf V^{-1}\mathbf m/\sqrt{\mathbf m^T\mathbf V^{-2}\mathbf m}$. Then $\|\mathbf a\|=1$ and $\mathbf a^T\mathbf1=0$. The idealized Shapiro-Wilk form is</p>
+<p>$$W=\frac{(\mathbf a^T\mathbf v_{()})^2}{\sum_{i=1}^n(v_i-\bar v)^2}.\tag{13.5}$$</p>
+<p>Because the weight vector has zero sum, its numerator is unchanged by adding a constant to every observation. Multiplying every observation by a nonzero constant multiplies numerator and denominator by its square; reversing the order for a negative constant only changes the sign of the weighted contrast. Thus the statistic is invariant to location and nonzero scale. Cauchy-Schwarz applied to the centered ordered sample shows $0\le W\le1$ for a nonconstant sample. A lower value indicates a stronger departure from the normal-order pattern. The test rejects in the lower tail.</p>
+<p>The entries of $\mathbf m$ and $\mathbf V$ and the statistic's sampling distribution are nontrivial numerical objects. The laboratory uses the tested library implementation rather than estimating them by a small simulation and presenting that approximation as the standard test. SciPy documents its algorithm and the limitations of its p-value approximation; for samples larger than 5,000 it cautions that the statistic can remain accurate while the p-value need not. Our source dataset contains 60 observations, so that particular size limitation is not triggered.</p>
+<p>A p-value exceeding a chosen significance level means that this test did not reject at that level. It does not mean the null has been accepted as true, and it does not measure the probability that normality is true. A small sample can miss consequential deviations; a sufficiently large sample can detect departures too small to matter for a particular prediction. Distributional diagnostics must be interpreted with the purpose of the model, the sampling design, and the uncertainty calculation.</p>
+<p class="source-note">Related source: <a href="https://www.youtube.com/watch?v=D_oscdlZD40&amp;t=97">Tests for Normality 2, 01:37</a>. The numerical contract is documented by <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html">SciPy's Shapiro-Wilk routine</a>.</p>
+</section>
+
+<section id="ch13-conversion">
+<h2 id="ch13-5">13.5 The ToothGrowth example in Python</h2>
+<p>The source demonstration examines the <code>len</code> column of <code>ToothGrowth</code>. R's dataset documentation identifies 60 guinea pigs receiving vitamin C at different doses and by different delivery methods. The response measures odontoblast length; it is not a clinical trial of human dental treatment. The dataset belongs to R's <code>datasets</code> package. Loading <code>dplyr</code> is not required to obtain it.</p>
+<p>The companion <a href="labs/ch13.py">Python laboratory</a> reads an offline copy of the same public dataset. It converts the source sequence: histogram, normal Q-Q coordinates, quartile reference line, <code>car::qqPlot</code>'s default numeric-vector envelope, and <code>shapiro.test</code>. The histogram uses the Sturges bin-count rule; exact pretty-bin endpoints chosen by R are a plotting convention rather than a different statistical model. The Q-Q coordinates and quartile-line computations preserve the explicit R conventions. The envelope implements the inspected package formula, rather than substituting a bootstrap band with a different coverage meaning.</p>
+<figure><img alt="Histogram of ToothGrowth lengths and a normal Q-Q plot with a quartile reference line and approximate pointwise envelope" src="labs/ch13-normality.svg"/><figcaption>Fig. 13.1. The actual ToothGrowth response has all 60 plotted values inside this approximate pointwise normal envelope. This is a descriptive comparison, not proof of Gaussian regression errors.</figcaption></figure>
+<p>The executed Python result is $W=0.967428644$ with $p=0.109100493$. At a significance level of $0.05$, the test does not reject normality for the pooled response sample. The quartile line has intercept $19.175000$ and slope $9.043874$. These values come from the stored laboratory output. Selected source frames at 16:44 and 17:25 confirm the car::qqPlot call and the displayed R Shapiro result W=0.96743, p=0.1091. A fresh R 4.5.1 reference run also matches the statistic and p-value within the displayed precision.</p>
+<p>As an explicitly authored extension, the laboratory fits a conditional model with an intercept, the indicator of delivery method <code>VC</code>, and numeric dose. The fitted coefficients are $9.272500$, $-3.700000$, and $9.763571$, respectively. Shapiro-Wilk applied to the residual vector gives $W=0.955382810$ and a nominal independent-sample p-value of $0.028091034$. This different result illustrates why a response test and a model diagnostic answer different questions. The residual p-value is labeled nominal because the residuals have the projection covariance derived in <a href="#ch13-1">§13.1</a>. It is not presented as an exact regression-error test.</p>
+<p>All methods in this source demonstration have Python implementations. The conversion does not reproduce R's interactive plot identification or its precise graphics styling, neither of which changes the computed normality statistic. The remaining evidence boundary is that no full visual transcription of every on-screen command was performed. Named methods and data identified in the spoken demonstration are converted; any source settings visible only on screen require a separate visual check.</p>
+<p class="source-note">Source demonstration: <a href="https://www.youtube.com/watch?v=D_oscdlZD40&amp;t=755">Tests for Normality 2, 12:35</a>. Data description: <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html">R's ToothGrowth documentation</a>. The offline CSV was obtained from the <a href="https://vincentarelbundock.github.io/Rdatasets/csv/datasets/ToothGrowth.csv">Rdatasets distribution of the R dataset</a>.</p>
+</section>
+
+<section id="ch13-exercises">
+<h2 id="ch13-6">13.6 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Conceptual: a normal-looking response.</strong> A researcher tests the pooled response for normality, obtains a large p-value, and concludes that a multiple-regression model satisfies its assumptions. Identify the unsupported steps.</p><details><summary>Solution</summary><p>The test concerns the response's marginal distribution, whereas the regression assumption concerns errors conditional on the specified design. It does not check the conditional mean, constant variance, independence, or omission of relevant predictors. A large p-value is failure to reject the stated null, not a probability that the complete regression model is correct. Examine conditional residual patterns and the sampling design instead.</p></details></li>
+<li><p><strong>Conceptual: all points inside a band.</strong> Does containment of every Q-Q point in a nominal 95% pointwise envelope establish a 95% probability that the population is Gaussian?</p><details><summary>Solution</summary><p>No. Pointwise coverage concerns an individual quantile under a specified construction; simultaneous coverage concerns the whole curve. Neither is a posterior probability for a model. This particular envelope is approximate and uses a fitted line. Containment is a diagnostic observation whose meaning depends on that construction and the sampling assumptions.</p></details></li>
+<li><p><strong>Derivation: residual covariance.</strong> Derive the covariance of residuals when the true errors have general covariance $\boldsymbol\Omega$ and zero conditional mean.</p><details><summary>Solution</summary><p>With $\mathbf M=\mathbf I-\mathbf H$, the residual is $\mathbf e=\mathbf M\boldsymbol\varepsilon$. Therefore $E(\mathbf e\mid\mathbf X)=0$ and $\operatorname{Cov}(\mathbf e\mid\mathbf X)=\mathbf M\boldsymbol\Omega\mathbf M^T$. If $\boldsymbol\Omega=\sigma^2\mathbf I$, symmetry and idempotence give $\sigma^2\mathbf M$. Error dependence or unequal variance cannot be removed merely by subtracting the residual mean.</p></details></li>
+<li><p><strong>Derivation: bounds and invariance of $W$.</strong> Given a unit vector $\mathbf a$ with zero sum, prove that the statistic in eq. (13.5) lies between zero and one and is unchanged under a positive affine transformation.</p><details><summary>Solution</summary><p>Set $\mathbf v_c=\mathbf v_{()}-\bar v\mathbf1$. Since $\mathbf a^T\mathbf1=0$, the numerator is $(\mathbf a^T\mathbf v_c)^2$. Cauchy-Schwarz bounds this by $\|\mathbf a\|^2\|\mathbf v_c\|^2=\|\mathbf v_c\|^2$, the denominator. Both are nonnegative. Replacing observations by $u+sv_i$ with $s&gt;0$ preserves ordering and multiplies numerator and denominator by $s^2$, while the added constant vanishes in both centered expressions. The laboratory verifies the transformation $3+2v_i$ numerically.</p></details></li>
+<li><p><strong>Computational: both sides of an empirical jump.</strong> Compute the KS distance for the sample $-1,0,1$ against the standard normal, and explain why checking one side is insufficient in general.</p><details><summary>Solution</summary><p>Evaluate both $i/3-\Phi(v_{(i)})$ and $\Phi(v_{(i)})-(i-1)/3$ for each ordered point, then take their maximum. The laboratory obtains $0.174678079$ and agrees with <code>stats.kstest</code>. The empirical CDF has different left and right limits at an observation. A reference can be farther from the left limit than the right, so one-sided sampling of its jumps can miss the supremum.</p></details></li>
+<li><p><strong>Computational design: calibrating a residual diagnostic.</strong> Describe a simulation calibration for a Shapiro statistic after fitting a fixed-design Gaussian regression. What must be repeated?</p><details><summary>Solution</summary><p>Hold the design fixed, simulate independent Gaussian error vectors, form simulated responses from a fitted null mean, refit the same regression, compute residuals using the same scaling rule, and recompute the statistic. Compare the observed statistic with the lower tail of these refitted statistics. Refitting reproduces the projection dependence. This is a model-based Monte Carlo calculation, not a remedy for an incorrect design or an unmodeled dependence structure. If variable selection was part of the original procedure, repeat selection too; otherwise the simulated procedure differs from the observed one.</p></details></li>
+</ol>
+<p>Normality diagnostics describe distributional shape under a specified sampling model. They do not determine whether coefficients can be estimated stably. The next chapter examines a separate difficulty: predictors whose columns contain almost the same information.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch13.py"><code>labs/ch13.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Convert the lecture&#x27;s ToothGrowth normality example to Python.&quot;&quot;&quot;
+from pathlib import Path
+
+import matplotlib
+import numpy as np
+import pandas as pd
+from scipy import stats
+
+import matplotlib.pyplot as plt
+
+matplotlib.use(&quot;Agg&quot;)
+
+
+def qq_coordinates(values):
+    &quot;&quot;&quot;R qqnorm ppoints, qqline type-7 quartiles, car default envelope.&quot;&quot;&quot;
+    ordered = np.sort(np.asarray(values, dtype=float))
+    n = ordered.size
+    offset = 0.375 if n &lt;= 10 else 0.5
+    probabilities = (np.arange(1, n + 1) - offset) / (n + 1 - 2*offset)
+    theoretical = stats.norm.ppf(probabilities)
+    quartiles = np.quantile(ordered, [0.25, 0.75], method=&quot;linear&quot;)
+    normal_quartiles = stats.norm.ppf([0.25, 0.75])
+    slope = np.diff(quartiles)[0] / np.diff(normal_quartiles)[0]
+    intercept = quartiles[0] - slope*normal_quartiles[0]
+    fitted = intercept + slope*theoretical
+    se = slope / stats.norm.pdf(theoretical)
+    se *= np.sqrt(probabilities*(1 - probabilities) / n)
+    halfwidth = stats.norm.ppf(0.975)*se
+    return ordered, theoretical, fitted, halfwidth, intercept, slope
+
+
+def main():
+    here = Path(__file__).resolve().parent
+    data = pd.read_csv(here / &quot;data/ch13-toothgrowth.csv&quot;)
+    length = data[&quot;len&quot;].to_numpy()
+    assert len(length) == 60 and not np.isnan(length).any()
+    ordered, theoretical, fitted, halfwidth, a, b = qq_coordinates(length)
+    result = stats.shapiro(length)
+    shifted = stats.shapiro(3 + 2*length)
+    assert np.isclose(result.statistic, shifted.statistic, atol=1e-12)
+    print(f&quot;ToothGrowth rows: {len(length)}&quot;)
+    print(f&quot;Shapiro-Wilk W={result.statistic:.9f}, p={result.pvalue:.9f}&quot;)
+    print(f&quot;Quartile reference line: intercept={a:.6f}, slope={b:.6f}&quot;)
+    inside = np.abs(ordered - fitted) &lt;= halfwidth
+    print(f&quot;Inside approximate pointwise 95% envelope: {inside.sum()}/60&quot;)
+    print(&quot;Affine-invariance check: passed&quot;)
+    design = np.column_stack([
+        np.ones(len(data)), (data[&quot;supp&quot;] == &quot;VC&quot;).astype(float), data[&quot;dose&quot;]
+    ])
+    coefficient = np.linalg.lstsq(design, length, rcond=None)[0]
+    residual = length - design @ coefficient
+    residual_result = stats.shapiro(residual)
+    print(&quot;Model: len ~ intercept + I(supp == VC) + numeric dose&quot;)
+    print(&quot;Coefficients:&quot;, np.array2string(coefficient, precision=6))
+    print(f&quot;Residual Shapiro W={residual_result.statistic:.9f}, &quot;
+          f&quot;nominal iid p={residual_result.pvalue:.9f}&quot;)
+    print(&quot;Residual p-value is descriptive, not exact regression calibration.&quot;)
+    sample = np.array([-1.0, 0.0, 1.0])
+    distribution = stats.norm.cdf(sample)
+    right = np.arange(1, 4) / 3 - distribution
+    left = distribution - np.arange(3) / 3
+    discrepancy = max(right.max(), left.max())
+    print(f&quot;Three-point standard-normal KS distance={discrepancy:.9f}&quot;)
+    assert np.isclose(discrepancy, stats.kstest(sample, &quot;norm&quot;).statistic)
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4))
+    axes[0].hist(length, bins=&quot;sturges&quot;, edgecolor=&quot;white&quot;)
+    axes[0].set(xlabel=&quot;Odontoblast length&quot;, ylabel=&quot;Count&quot;)
+    axes[0].set_title(&quot;ToothGrowth response; Sturges bin count&quot;)
+    axes[1].fill_between(theoretical, fitted - halfwidth,
+                         fitted + halfwidth, alpha=0.2)
+    axes[1].plot(theoretical, fitted, color=&quot;firebrick&quot;)
+    axes[1].scatter(theoretical, ordered, s=14)
+    axes[1].set(xlabel=&quot;Standard-normal quantile&quot;, ylabel=&quot;Observed length&quot;)
+    axes[1].set_title(&quot;Quartile line and pointwise 95% envelope&quot;)
+    figure.tight_layout()
+    figure.savefig(here / &quot;ch13-normality.svg&quot;)
+    plt.close(figure)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>ToothGrowth rows: 60
+Shapiro-Wilk W=0.967428644, p=0.109100493
+Quartile reference line: intercept=19.175000, slope=9.043874
+Inside approximate pointwise 95% envelope: 60/60
+Affine-invariance check: passed
+Model: len ~ intercept + I(supp == VC) + numeric dose
+Coefficients: [ 9.2725   -3.7       9.763571]
+Residual Shapiro W=0.955382810, nominal iid p=0.028091034
+Residual p-value is descriptive, not exact regression calibration.
+Three-point standard-normal KS distance=0.174678079
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-12.html">← Previous chapter</a><a href="chapter-14.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

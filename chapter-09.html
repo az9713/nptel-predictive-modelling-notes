@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Outliers, leverage, and influence — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a aria-current="page" href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Outliers, leverage, and influence</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch09-distinction-heading">9.1 Three different reasons to inspect an observation</a></li><li><a href="#ch09-leverage-heading">9.2 Leverage is a property of the design</a></li><li><a href="#ch09-residuals-heading">9.3 Standardization is not a single convention</a></li><li><a href="#ch09-deletion-heading">9.4 Deletion diagnostics can be derived without repeated inverses</a></li><li><a href="#ch09-influence-heading">9.5 Cook distance, DFFITS, and coefficient-specific changes</a></li><li><a href="#ch09-python-heading">9.6 Reproducing the delivery example in Python</a></li><li><a href="#ch09-exercises-heading">9.7 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 9 · <a href="https://www.youtube.com/watch?v=3EX388b-7s4">Recording 1</a> · <a href="https://www.youtube.com/watch?v=Cn572X5kKKA">Recording 2</a> · <a href="https://www.youtube.com/watch?v=la5PiJboaoo">Recording 3</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch09-distinction">
+<h2 id="ch09-distinction-heading">9.1 Three different reasons to inspect an observation</h2>
+<p>A delivery route contains a stop whose service time is much larger than the others. Before deleting it, distinguish three questions. Is its response unusual relative to the fitted mean? Is its predictor combination unusual relative to the other design rows? Does removing it materially change the fitted model? Residuals, leverage, and influence answer these different questions.</p>
+<p>Use the full-rank linear model $y=X\beta+\varepsilon$ with $n$ rows and $q$ design columns, including an intercept when specified. The fitted coefficient is $\widehat\beta=(X^{\mathsf T}X)^{-1}X^{\mathsf T}y$, the fitted response is $\widehat y=X\widehat\beta$, and $e=y-\widehat y$ is the residual vector. A response outlier has a discrepancy unusual under the proposed response model. A high-leverage row has an unusual predictor position in the design geometry. An influential row changes a specified fitted quantity substantially when its contribution changes or it is removed.</p>
+<p>A high-leverage observation lying close to the fitted surface may have a small residual. An unusual response near the center of the predictor cloud can have low leverage. Influence combines discrepancy with position. Calling all three simply an outlier makes a diagnostic cutoff look like a decision rule it cannot justify.</p>
+<p>Inspection can reveal a transcription mistake, a genuinely rare event, a different population, or an inadequate mean model. These imply different actions. A documented measurement error may be corrected. A rare but valid event may be exactly what a risk model must retain. A mixture of operating regimes may require separate models. Repeatedly deleting whichever row crosses a diagnostic threshold can progressively erase valid tail behavior and invalidate the analysis that motivated the deletion.</p>
+<p class="source-note">Source distinction and domain-sensitive action: <a href="https://www.youtube.com/watch?v=3EX388b-7s4&amp;t=133">unusual and influential observations</a> and <a href="https://www.youtube.com/watch?v=3EX388b-7s4&amp;t=680">retention, separate analysis, and deletion</a>. The historical ozone anecdote is omitted because it is not needed to establish the diagnostic principles.</p>
+</section>
+<section id="ch09-leverage">
+<h2 id="ch09-leverage-heading">9.2 Leverage is a property of the design</h2>
+<p>Define the hat matrix $H=X(X^{\mathsf T}X)^{-1}X^{\mathsf T}$. Its diagonal entry $h_{ii}=x_i^{\mathsf T}(X^{\mathsf T}X)^{-1}x_i$ is the <dfn>leverage</dfn> of row $i$. It depends on the predictors, not on the observed response. The projection result in <a href="chapter-08.html#ch08-projection">Chapter 8</a> gives symmetry and idempotence.</p>
+<div class="prop"><p><strong>Proposition 9.1 — leverage bounds, proved here.</strong> Each leverage lies in $[0,1]$, and $\sum_i h_{ii}=q$. If the design contains an intercept, $h_{ii}\geq1/n$.</p></div>
+<div class="proof"><p>The diagonal of $H^2=H$, together with symmetry, gives $h_{ii}=\sum_j h_{ij}^2\geq0$ and $h_{ii}\geq h_{ii}^2$. Thus $h_{ii}(1-h_{ii})\geq0$, giving the upper bound. Cyclic invariance of trace gives $\operatorname{tr}(H)=\operatorname{tr}[(X^{\mathsf T}X)^{-1}X^{\mathsf T}X]=q$. With an intercept, the unit vector $n^{-1/2}\mathbf1$ belongs to the fitted space. Projecting coordinate vector $\delta_i$ onto that direction already contributes squared length $1/n$. Its projection onto the remaining orthogonal fitted directions adds a nonnegative amount, and $h_{ii}=\|H\delta_i\|^2\geq1/n$. <span class="qed">∎</span></p></div>
+<p>The average leverage is $q/n$ for every full-rank design. No assumption that leverages are equally distributed is required. Rules such as $2q/n$ or $3q/n$ identify rows worth inspecting; they are not universal significance cutoffs. When $q$ is large relative to $n$, these screens also have little room to distinguish individual rows.</p>
+<p>One leverage equal to zero makes the corresponding row and column of $H$ zero. It does not imply the entire matrix is zero. One leverage equal to one makes that row's off-diagonal entries zero and its fitted value equal its observed value. It does not imply $H=I_n$ or perfect fits for all other observations. Moreover $h_{ii}=1$ makes deletion remove information needed for rank, so the ordinary deletion formulas below require $h_{ii}&lt;1$.</p>
+<p>Under conditional error covariance $\sigma^2I_n$, the residual covariance is $\sigma^2(I_n-H)$. In particular,
+$$\operatorname{Var}(e_i\mid X)=\sigma^2(1-h_{ii}). \tag{9.1}$$
+This follows from matrix idempotence, not from an imagined scalar identity $h_{ii}^2=h_{ii}$. A diagonal entry of a projection is generally fractional, as the delivery example demonstrates.</p>
+<p class="source-note">Source hat-matrix and leverage discussion: <a href="https://www.youtube.com/watch?v=Cn572X5kKKA&amp;t=30">definition and bounds</a>, <a href="https://www.youtube.com/watch?v=Cn572X5kKKA&amp;t=474">trace and screening</a>. The statements about individual extreme leverages are corrected here.</p>
+</section>
+<section id="ch09-residuals">
+<h2 id="ch09-residuals-heading">9.3 Standardization is not a single convention</h2>
+<p>Let $s^2=\mathrm{SSE}/(n-q)$ with $n&gt;q$. The <dfn>internally studentized residual</dfn>, often called a standardized residual, is
+$$r_i=\frac{e_i}{s\sqrt{1-h_{ii}}}. \tag{9.2}$$
+The factor $\sqrt{1-h_{ii}}$ adjusts for the different residual variances in (9.1). Dividing only by $s$ ignores this geometry. Package terminology varies, so a conversion must state the formula rather than rely on a label.</p>
+<p>The same observation contributes to both the numerator and the estimate $s$. Consequently $r_i$ is not generally a Student t variable with the residual degrees of freedom. In fact, the deletion identity below implies $r_i^2\leq n-q$ when the required deleted fit exists. A variable bounded in magnitude cannot have the ordinary unbounded t distribution. Treating an internal residual as an exact t statistic would give an unjustified calibration.</p>
+<p>Let $s_{(i)}^2$ be the residual variance estimate after deleting row $i$ and refitting the same design columns. Provided that deleted design retains rank $q$ and $n&gt;q+1$, define the <dfn>externally studentized residual</dfn>
+$$t_i=\frac{e_i}{s_{(i)}\sqrt{1-h_{ii}}}. \tag{9.3}$$
+Under the Gaussian equal-variance model, this statistic has the exact $t_{n-q-1}$ distribution for a prespecified observation. One way to see the independence is to write the deleted prediction error as the held-out observation error minus the deleted fitted-mean error; it is independent of the deleted model's orthogonal residual projection. The denominator uses that deleted projection's variance estimate.</p>
+<p>Screening every observation at a fixed single-observation level is a multiple-comparison procedure. A threshold of two may be convenient for a plot but is not a guarantee about the probability of any false flag across the dataset. Also, a small residual does not exclude influence when the row has high leverage and helps pull the fit toward itself.</p>
+<p class="source-note">Source residual scaling and deleted variance: <a href="https://www.youtube.com/watch?v=Cn572X5kKKA&amp;t=912">standardized and studentized diagnostics</a>. This edition states the internal/external formulas and their different distributional status explicitly.</p>
+</section>
+<section id="ch09-deletion">
+<h2 id="ch09-deletion-heading">9.4 Deletion diagnostics can be derived without repeated inverses</h2>
+<p>Write $G=X^{\mathsf T}X$ and let $\widehat\beta_{(i)}$ denote the coefficient fitted after deleting observation $i$. Assume $h_{ii}&lt;1$, so that the deleted design retains full column rank. The coefficient change has the exact form
+$$\Delta_i=\widehat\beta-\widehat\beta_{(i)}
+=\frac{G^{-1}x_i e_i}{1-h_{ii}}. \tag{9.4}$$
+To prove it, the deleted normal equations give $(G-x_ix_i^{\mathsf T})\Delta_i=x_i e_i$. Substituting the right side of (9.4) into the left multiplies $G^{-1}x_i$ by $G-x_ix_i^{\mathsf T}$ and produces $x_i(1-h_{ii})$. The denominator cancels and yields $x_i e_i$, as required. Uniqueness of the deleted solution completes the proof.</p>
+<p>The condition $h_{ii}&lt;1$ has a geometric interpretation. Whiten the deleted cross-product matrix as $G^{1/2}(I-uu^{\mathsf T})G^{1/2}$ with $u=G^{-1/2}x_i$. Its only potentially reduced eigenvalue is $1-u^{\mathsf T}u=1-h_{ii}$. It is positive precisely when the deletion has retained all coefficient directions.</p>
+<p>Multiplying (9.4) by $x_i^{\mathsf T}$ gives the change in the fitted value at row $i$. Hence its held-out prediction error is
+$$y_i-x_i^{\mathsf T}\widehat\beta_{(i)}
+=e_i+\frac{h_{ii}e_i}{1-h_{ii}}
+=\frac{e_i}{1-h_{ii}}. \tag{9.5}$$
+A small training residual can therefore conceal a much larger leave-one-out discrepancy when leverage is close to one.</p>
+<p>The deleted residual sum of squares is
+$$\mathrm{SSE}_{(i)}=\mathrm{SSE}-\frac{e_i^2}{1-h_{ii}},\qquad
+s_{(i)}^2=\frac{\mathrm{SSE}-e_i^2/(1-h_{ii})}{n-q-1}. \tag{9.6}$$
+For the first identity, evaluate the full-data criterion at the deleted coefficient. Projection orthogonality makes it $\mathrm{SSE}+\Delta_i^{\mathsf T}G\Delta_i$. Remove the squared held-out residual from (9.5). Since $\Delta_i^{\mathsf T}G\Delta_i=e_i^2h_{ii}/(1-h_{ii})^2$, the expression reduces to (9.6). Nonnegativity of the deleted sum of squares also proves the internal-residual bound discussed earlier.</p>
+<p>These identities avoid fitting $n$ models merely to compute the diagnostics. Nevertheless explicit refits make an excellent independent implementation check. The laboratory refits all deleted delivery datasets and checks their coefficient changes, held-out errors, and standardized changes against the formulas.</p>
+</section>
+<section id="ch09-influence">
+<h2 id="ch09-influence-heading">9.5 Cook distance, DFFITS, and coefficient-specific changes</h2>
+<p><dfn>Cook distance</dfn> measures the squared change across all fitted responses, scaled by the full-model residual variance:
+$$D_i=\frac{\|X\widehat\beta-X\widehat\beta_{(i)}\|^2}{q s^2}
+=\frac{e_i^2}{q s^2}\frac{h_{ii}}{(1-h_{ii})^2}
+=\frac{r_i^2}{q}\frac{h_{ii}}{1-h_{ii}}. \tag{9.7}$$
+The second equality follows by substituting (9.4). This decomposition explains why discrepancy and design position interact. A diagnostic such as $4/n$ is a screening convention; Cook distance is not itself an ordinary probability.</p>
+<p><dfn>DFFITS</dfn> uses the externally estimated variance and standardizes the change in the fitted value of the deleted row:
+$$\mathrm{DFFITS}_i=\frac{\widehat y_i-x_i^{\mathsf T}\widehat\beta_{(i)}}{s_{(i)}\sqrt{h_{ii}}}
+=t_i\sqrt{\frac{h_{ii}}{1-h_{ii}}}. \tag{9.8}$$
+This expression assumes positive leverage and positive deleted residual variance. An intercept gives $h_{ii}\geq1/n$, so positive leverage is automatic here. The sign records the direction of the fitted-value change.</p>
+<p>Let $c_{jj}$ be diagonal entry $j$ of $G^{-1}$. The standardized change in coefficient $j$ is
+$$\mathrm{DFBETAS}_{ij}=\frac{\widehat\beta_j-\widehat\beta_{(i),j}}{s_{(i)}\sqrt{c_{jj}}}. \tag{9.9}$$
+This is a vector across coefficients. A row may have little effect on one coefficient and a substantial effect on another. The denominator uses the full design's coefficient scale together with the deleted variance estimate; comparing unstandardized coefficient changes across different units can be misleading.</p>
+<p>Common exploratory cutoffs include $2\sqrt{q/n}$ for the magnitude of DFFITS and $2/\sqrt n$ for DFBETAS. They prioritize inspection. They do not prove an observation is erroneous, nor do flags across several mathematically related diagnostics constitute independent replications of a hypothesis test. Report what changes after a sensitivity refit and decide how to handle a valid unusual row from the analysis objective.</p>
+<p class="source-note">Source practical diagnostics: <a href="https://www.youtube.com/watch?v=la5PiJboaoo&amp;t=373">Cook distance</a> and <a href="https://www.youtube.com/watch?v=la5PiJboaoo&amp;t=864">coefficient and fitted-value deletion changes</a>. Implemented formulas were checked against <a href="https://www.statsmodels.org/stable/generated/statsmodels.stats.outliers_influence.OLSInfluence.html">statsmodels OLSInfluence</a>.</p>
+</section>
+<section id="ch09-python">
+<h2 id="ch09-python-heading">9.6 Reproducing the delivery example in Python</h2>
+<p>The source models service time using products stocked and distance walked. The dataset is <code>delivery</code> from R's <code>robustbase</code> package. Its primary package manual identifies the three variables and the original Montgomery–Peck source. The Python laboratory includes the factual observations in their original order, retrieved from a public data mirror, so it runs offline without R.</p>
+<p>The port fits the same intercept model, obtains leverage and residual diagnostics, and produces the source demonstration's standardized-residual, studentized-residual, leverage, DFFITS, Cook-distance bar and chart displays, and coefficient-specific DFBETAS panels. Numerical values are independently checked against the derived formulas, all explicit deleted refits, and a fresh base-R calculation on the identical delivery rows. The graphical styling is a Python presentation; it does not claim pixel-identical reproduction of the R plots.</p>
+<table><caption>Executed delivery diagnostics, with source observation numbering preserved.</caption><thead><tr><th>Quantity</th><th>Observation 9</th><th>Observation 22</th></tr></thead><tbody>
+<tr><td>Leverage</td><td>$0.498292159$</td><td>$0.391575218$</td></tr>
+<tr><td>Residual</td><td>$7.419706203$</td><td>$-3.686527888$</td></tr>
+<tr><td>Internal standardized residual</td><td>$3.213762784$</td><td>$-1.449995414$</td></tr>
+<tr><td>External studentized residual</td><td>$4.310780119$</td><td>$-1.489624732$</td></tr>
+<tr><td>Cook distance</td><td>$3.419318411$</td><td>$0.451045451$</td></tr>
+<tr><td>DFFITS</td><td>$4.296080927$</td><td>$-1.195036104$</td></tr>
+</tbody></table>
+<p>The coefficient vector for intercept, products, and distance is $(2.341231145,1.615907211,0.014384826)$. There are $25$ rows and $3$ coefficients, so the mean leverage is $0.12$ and the source Cook screening cutoff $4/n$ is $0.16$. Observations 9 and 22 exceed that cutoff, reproducing the lecture's qualitative comparison. Observation 22 has a moderate residual but substantial leverage, so its Cook flag answers a different question from a residual-only flag.</p>
+<p>Figure 9.1 makes that distinction visible across the full dataset. The dashed lines show the screening conventions stated above, and the source row numbers remain attached to the observations. Figure 9.2 separates changes to coefficients measured on different scales.</p>
+<figure><img src="assets/ch09-delivery-diagnostics.svg" alt="Six panels show delivery residual, leverage, DFFITS and Cook diagnostics; source rows 9 and22 are labeled."/><figcaption>9.1. Diagnostic screens for the same fitted model can flag different aspects of a row. Dashed cutoffs prioritize investigation rather than automatic deletion.</figcaption></figure>
+<figure><img src="assets/ch09-delivery-dfbetas.svg" alt="Three panels show standardized deleted changes for the intercept, products coefficient, and distance coefficient."/><figcaption>9.2. DFBETAS preserves coefficient-specific information that a single Cook distance summarizes.</figcaption></figure>
+<p class="source-note">Source R demonstration: <a href="https://www.youtube.com/watch?v=la5PiJboaoo&amp;t=84">delivery data and fit</a>, <a href="https://www.youtube.com/watch?v=la5PiJboaoo&amp;t=462">diagnostic plots</a>. Dataset description: <a href="https://search.r-project.org/CRAN/refmans/robustbase/html/delivery.html">robustbase delivery manual</a>; numeric data retrieval: <a href="https://vincentarelbundock.github.io/Rdatasets/csv/robustbase/delivery.csv">Rdatasets delivery CSV</a>. Exact Python code and executed stdout appear in the <a href="#python-laboratory">laboratory</a>.</p>
+</section>
+<section id="ch09-exercises">
+<h2 id="ch09-exercises-heading">9.7 Exercises with worked solutions</h2>
+<ol>
+<li><p><strong>Conceptual — keep or remove?</strong> A valid delivery stop has high Cook distance. Does the diagnostic justify removing it?</p><details class="solution"><summary>Solution</summary><p>No. Cook distance says the fit is sensitive to the row, not that the row is incorrect. Check its measurement, operational context, representativeness, and the prediction objective. Report a sensitivity refit. If unusual valid stops occur in deployment, removing them can make the fitted population less relevant. A different mean, variance model, or operating-regime analysis may be preferable.</p></details></li>
+<li><p><strong>Conceptual — why two residual scalings?</strong> Explain why internal and external studentization differ even for the same residual.</p><details class="solution"><summary>Solution</summary><p>The internal variance estimate includes the row being assessed. A large discrepancy can inflate that denominator and mask its own magnitude. The external version estimates variance after deleting the row. Under the Gaussian model, the deleted variance has the independence needed for an exact t calibration. The two formulas measure the same discrepancy against different estimates of its scale.</p></details></li>
+<li><p><strong>Derivation — average leverage.</strong> Derive $\sum_i h_{ii}=q$ and explain why an equally distributed leverage assumption is unnecessary.</p><details class="solution"><summary>Solution</summary><p>Cyclic invariance of trace gives $\operatorname{tr}[X(X^{\mathsf T}X)^{-1}X^{\mathsf T}]=\operatorname{tr}[(X^{\mathsf T}X)^{-1}X^{\mathsf T}X]=\operatorname{tr}(I_q)=q$. Dividing by $n$ gives the mean $q/n$. Individual entries can vary substantially while retaining this sum, so an equal-leverage assumption is neither used nor implied.</p></details></li>
+<li><p><strong>Derivation — an internal residual cannot have an ordinary t law.</strong> Use the deleted sum of squares to bound $r_i^2$.</p><details class="solution"><summary>Solution</summary><p>Nonnegativity in (9.6) gives $e_i^2/(1-h_{ii})\leq\mathrm{SSE}$. Divide by $s^2=\mathrm{SSE}/(n-q)&gt;0$ to obtain $r_i^2\leq n-q$. Ordinary Student t variables have unbounded support, so this internally scaled statistic cannot have that exact distribution. A degenerate zero variance makes the diagnostic undefined rather than proving a distributional result.</p></details></li>
+<li><p><strong>Computation — direct refits.</strong> Recompute observation 9's held-out error by deleting that row. Compare with $e_i/(1-h_{ii})$ and verify Cook distance by the norm of the full fitted-vector change.</p><details class="solution"><summary>Solution</summary><p>The laboratory deletes each of the 25 rows in turn. It asserts equality between the direct held-out error and (9.5), and between direct coefficient changes and (9.4), at absolute tolerance $10^{-10}$. Substituting the recorded row-9 residual and leverage into (9.7) yields Cook distance $3.419318411$. This verifies the numerical method on these data; it is not a statistical test that the row is erroneous.</p></details></li>
+<li><p><strong>Computation — compare the two flagged stops.</strong> Run the laboratory with <code>--plots assets</code>. Explain why observation 22 can cross the Cook screen while remaining inside a magnitude-two residual screen.</p><details class="solution"><summary>Solution</summary><p>Its internal residual is $-1.449995414$, whose magnitude is below two. Its leverage is $0.391575218$, which magnifies a deletion effect through $h/(1-h)$. Equation (9.7) gives Cook distance $0.451045451$, exceeding the $0.16$ screen. The different flags follow the different definitions. The DFBETAS panels show which coefficients are most sensitive; they do not create a separate automatic-deletion instruction.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch09.py"><code>labs/ch09.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Python conversion of the robustbase delivery outlier demonstration.
+
+Data: 25 factual triples from robustbase::delivery,
+distributed by the Rdatasets mirror; primary CRAN manual identifies the same
+variables, dimensions, and Montgomery-Peck source. No R runtime is required;
+fresh-R comparisons are in validation/chapters/ch07-09-r-comparison.json.
+&quot;&quot;&quot;
+import argparse
+from pathlib import Path
+
+import numpy as np
+import statsmodels.api as sm
+
+DATA = np.array([
+    [7, 560, 16.68], [3, 220, 11.50], [3, 340, 12.03], [4, 80, 14.88],
+    [6, 150, 13.75], [7, 330, 18.11], [2, 110, 8.00], [7, 210, 17.83],
+    [30, 1460, 79.24], [5, 605, 21.50], [16, 688, 40.33], [10, 215, 21.00],
+    [4, 255, 13.50], [6, 462, 19.75], [9, 448, 24.00], [10, 776, 29.00],
+    [6, 200, 15.35], [7, 132, 19.00], [3, 36, 9.50], [17, 770, 35.10],
+    [10, 140, 17.90], [26, 810, 52.32], [9, 450, 18.75], [8, 635, 19.83],
+    [4, 150, 10.75],
+])
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        &quot;--plots&quot;, help=&quot;Output folder for Python diagnostic plots&quot;)
+    args = parser.parse_args()
+    np.set_printoptions(precision=9, suppress=True)
+    design = sm.add_constant(DATA[:, :2])
+    y = DATA[:, 2]
+    fit = sm.OLS(y, design).fit()
+    influence = fit.get_influence()
+    h = influence.hat_matrix_diag
+    e = fit.resid
+    n, q = design.shape
+    inverse = np.linalg.inv(design.T @ design)
+    internal = e/np.sqrt(fit.mse_resid*(1-h))
+    deleted_variance = ((n-q)*fit.mse_resid-e**2/(1-h))/(n-q-1)
+    external = e/np.sqrt(deleted_variance*(1-h))
+    cook = internal**2*h/(q*(1-h))
+    dffits = external*np.sqrt(h/(1-h))
+    np.testing.assert_allclose(internal, influence.resid_studentized_internal)
+    np.testing.assert_allclose(external, influence.resid_studentized_external)
+    np.testing.assert_allclose(cook, influence.cooks_distance[0])
+    np.testing.assert_allclose(dffits, influence.dffits[0])
+    np.testing.assert_allclose(h.sum(), q)
+    for i in range(n):
+        keep = np.arange(n) != i
+        deleted = sm.OLS(y[keep], design[keep]).fit()
+        change = inverse @ design[i]*e[i]/(1-h[i])
+        np.testing.assert_allclose(
+            fit.params-deleted.params, change, atol=1e-10)
+        np.testing.assert_allclose(y[i]-design[i] @ deleted.params,
+                                   e[i]/(1-h[i]), atol=1e-10)
+        dfbetas = change/np.sqrt(deleted.mse_resid*np.diag(inverse))
+        np.testing.assert_allclose(dfbetas, influence.dfbetas[i], atol=1e-10)
+    print(&quot;data: robustbase delivery, original order, 25 rows&quot;)
+    print(&quot;intercept products distance:&quot;, np.round(fit.params, 9))
+    print(&quot;n q df SSE:&quot;, n, q, int(fit.df_resid), round(fit.ssr, 9))
+    print(&quot;leverage_sum mean:&quot;, np.round([h.sum(), h.mean()], 9))
+    print(&quot;Cook screening threshold4/n:&quot;, round(4/n, 9))
+    print(&quot;Cook-screen rows,1-based:&quot;, (np.flatnonzero(cook &gt; 4/n)+1).tolist())
+    for i in [8, 21]:
+        diagnostic = [h[i], e[i], internal[i], external[i], cook[i], dffits[i]]
+        print(&quot;row leverage residual internal external Cook DFFITS:&quot;, i+1,
+              np.round(diagnostic, 9))
+        print(&quot;row DFBETAS intercept products distance:&quot;, i+1,
+              np.round(influence.dfbetas[i], 9))
+    if args.plots:
+        import matplotlib
+        matplotlib.use(&quot;Agg&quot;)
+        import matplotlib.pyplot as plt
+        target = Path(args.plots)
+        target.mkdir(parents=True, exist_ok=True)
+        rows = np.arange(1, n+1)
+        panels = [(external, &quot;Externally studentized residual&quot;, [-2, 2]),
+                  (internal, &quot;Internally standardized residual&quot;, [-2, 2]),
+                  (h, &quot;Leverage&quot;, [2*q/n]),
+                  (dffits, &quot;DFFITS&quot;, [-2*np.sqrt(q/n), 2*np.sqrt(q/n)]),
+                  (cook, &quot;Cook distance&quot;, [4/n])]
+        with plt.style.context(&quot;dark_background&quot;):
+            fig, axes = plt.subplots(3, 2, figsize=(10, 10))
+            for axis, (values, label, cutoffs) in zip(axes.flat, panels):
+                axis.stem(rows, values)
+                axis.set_title(label)
+                axis.set_xlabel(&quot;Observation, original1-based order&quot;)
+                for cutoff in cutoffs:
+                    axis.axhline(cutoff, color=&quot;tomato&quot;, linestyle=&quot;--&quot;)
+                for row in [9, 22]:
+                    axis.annotate(str(row), (row, values[row-1]))
+            axes.flat[-1].plot(rows, cook, &quot;o-&quot;)
+            axes.flat[-1].axhline(4/n, color=&quot;tomato&quot;, linestyle=&quot;--&quot;)
+            axes.flat[-1].set_title(&quot;Cook distance, chart form&quot;)
+            axes.flat[-1].set_xlabel(&quot;Observation&quot;)
+            fig.tight_layout()
+            fig.savefig(target / &quot;ch09-delivery-diagnostics.svg&quot;)
+            plt.close(fig)
+            fig, axes = plt.subplots(3, 1, figsize=(8, 8))
+            for j, axis in enumerate(axes):
+                axis.stem(rows, influence.dfbetas[:, j])
+                axis.set_title([&quot;Intercept&quot;, &quot;Products&quot;, &quot;Distance&quot;][j])
+                for cutoff in [-2/np.sqrt(n), 2/np.sqrt(n)]:
+                    axis.axhline(cutoff, color=&quot;tomato&quot;, linestyle=&quot;--&quot;)
+            axes[-1].set_xlabel(&quot;Observation, original1-based order&quot;)
+            fig.tight_layout()
+            fig.savefig(target / &quot;ch09-delivery-dfbetas.svg&quot;)
+            plt.close(fig)
+    print(&quot;all assertions passed, including all25 explicit deleted refits&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>data: robustbase delivery, original order, 25 rows
+intercept products distance: [2.341231145 1.615907211 0.014384826]
+n q df SSE: 25 3 22 233.731677421
+leverage_sum mean: [3.   0.12]
+Cook screening threshold4/n: 0.16
+Cook-screen rows,1-based: [9, 22]
+row leverage residual internal external Cook DFFITS: 9 [0.498292159 7.419706203 3.213762784 4.310780119 3.419318411 4.296080927]
+row DFBETAS intercept products distance: 9 [-2.575739806  0.928743342  1.507550618]
+row leverage residual internal external Cook DFFITS: 22 [ 0.391575218 -3.686527888 -1.449995414 -1.489624732  0.451045451
+ -1.195036104]
+row DFBETAS intercept products distance: 22 [ 0.398566309 -1.02541407   0.57314024 ]
+all assertions passed, including all25 explicit deleted refits
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-08.html">← Previous chapter</a><a href="chapter-10.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

@@ -1,0 +1,112 @@
+{
+  "number": 11,
+  "title": "Nonlinear features and interaction effects",
+  "source_videos": [
+    "HMpiRyz2c9c"
+  ],
+  "reading_records": [
+    {
+      "video_id": "HMpiRyz2c9c",
+      "read_full": true,
+      "transcript_sha256": "e131c4fab302d59fe99c03c965f9b177e7695d89524c6a14d146c2fbc8189b25",
+      "limitations": "Full English captions read; no exhaustive visual command transcription."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch11-Credit-additive",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 243,
+      "source_method": "lm(Balance~Income+Student)",
+      "python_method": "statsmodels formula OLS",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch11-Credit-interaction",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 364,
+      "source_method": "lm(Balance~Income*Student), expanded colon formula",
+      "python_method": "statsmodels/Patsy star and explicit expanded formulas",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch11-Credit-interaction-plots",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 494,
+      "source_method": "group regression-line plots",
+      "python_method": "Matplotlib scatter and same fitted functions",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "implemented_and_verified_fitted_quantities",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch11-Boston-linear",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 849,
+      "source_method": "lm(medv~lstat)",
+      "python_method": "statsmodels formula OLS",
+      "data_status": "Actual MASS Boston source columns lstat/medv",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch11-Boston-scatter-diagnostics",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 901,
+      "source_method": "scatterplot and plot(lm) residual diagnostics",
+      "python_method": "Matplotlib scatter, residual, normal-quantile, scale-location and leverage displays",
+      "data_status": "Actual MASS Boston source columns lstat/medv",
+      "status": "implemented_and_verified_fitted_quantities",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch11-Boston-quadratic",
+      "video_id": "HMpiRyz2c9c",
+      "start_seconds": 1093,
+      "source_method": "lm(medv~lstat+I(lstat^2))",
+      "python_method": "statsmodels OLS with I(lstat**2)",
+      "data_status": "Actual MASS Boston source columns lstat/medv",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch11.py",
+    "stdout_path": "labs/ch11-output.txt",
+    "execution": "passed; Python assertions and fresh R coefficient comparisons"
+  },
+  "fresh_r_comparison": {
+    "record": "validation/chapters/ch10-11-r-comparison.json",
+    "status": "passed"
+  },
+  "word_count": 1937,
+  "source_limitations": [
+    "Actual Credit contains400 rows; source/help wording about10000 does not match primary package object.",
+    "Labels and reference levels are preserved explicitly.",
+    "No comprehensive audiovisual audit."
+  ],
+  "body_sha256": "0c4e2333f0867279b9be4d0cf24ea191433e3804d43f680b70300d4578bd8a1a",
+  "code_validation": "validation/chapters/ch07-12-code-checks.json",
+  "data": [
+    {
+      "path": "labs/data/ch10-credit.csv",
+      "description": "Actual primary-verified ISLR Credit rows, shared with chapter10."
+    },
+    {
+      "path": "labs/data/ch11-boston.csv",
+      "description": "lstat and medv exported from installed MASS::Boston, all506 rows.",
+      "source": "https://stat.ethz.ch/R-manual/R-devel/library/MASS/html/Boston.html",
+      "sha256": "b4aa670ad618b5cf186e7baed8fb6e5aa477ddae45619ed92bcbd17252c585b1"
+    }
+  ]
+}

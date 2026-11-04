@@ -1,0 +1,545 @@
+{
+  "phase": "complete_reviewed_edition",
+  "planned_chapters": 18,
+  "written_chapters": 18,
+  "accepted_chapters": 18,
+  "teaching_recordings": 39,
+  "playlist_entries": 40,
+  "written_recording_coverage": 39,
+  "words_approx": 43866,
+  "solved_exercises": 108,
+  "labs_present": 18,
+  "r_examples_inventoried": 79,
+  "chapters": [
+    {
+      "number": 1,
+      "title": "Data, prediction, and correlation",
+      "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533",
+      "words_approx": 2905,
+      "solved_exercises": 6,
+      "source_videos": [
+        "aF8LvZhelzw",
+        "pi-nFW0SOV8"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 2,
+      "title": "Principal components: variance, geometry, and reconstruction",
+      "body_sha256": "c2df83f909f5b2a9e80c777968e5c3e05eea361d7efc05631d16c7e7276394da",
+      "words_approx": 2666,
+      "solved_exercises": 6,
+      "source_videos": [
+        "Zq7WPJprL8o",
+        "RbPOCNjJNlE",
+        "BwZuubr6_-c"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 3,
+      "title": "Factor analysis and the limits of latent explanations",
+      "body_sha256": "f199c8c7d4e41e5b51c8144e2aac748939f5473a0c22b079a5ad176824379545",
+      "words_approx": 2999,
+      "solved_exercises": 6,
+      "source_videos": [
+        "hLVE1-3632M",
+        "w6xUwBqBmQI",
+        "_gpVmTEUJ8Y"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 4,
+      "title": "Clustering and hierarchical linkage",
+      "body_sha256": "3cb272dbd173eba55af6b02d210cc8a81bc85a641c6db28991f969cb13363966",
+      "words_approx": 2350,
+      "solved_exercises": 6,
+      "source_videos": [
+        "AZ6KZikxguU",
+        "G83gaUNketk"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 5,
+      "title": "Ward clustering, dendrograms, and reproducible implementations",
+      "body_sha256": "a7b9bf12e178eb4cf021cc5d1d21d9f68453060af60152742bc036e34b13485d",
+      "words_approx": 2736,
+      "solved_exercises": 6,
+      "source_videos": [
+        "ybgCUIU1isY",
+        "JgFfF_ysuNo"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 6,
+      "title": "K-means as alternating optimization",
+      "body_sha256": "319809c0c238abe601b7dd860d770f0b1004fdabd9e148b76895583f250b882e",
+      "words_approx": 3497,
+      "solved_exercises": 6,
+      "source_videos": [
+        "6qNLWCODvz0"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 7,
+      "title": "Simple linear regression: fitting and uncertainty",
+      "body_sha256": "377dbc94233c5e10b6ddc4a9b9af760574b2a5866de4d20ab85f0b11dbb97c42",
+      "words_approx": 2424,
+      "solved_exercises": 6,
+      "source_videos": [
+        "znWxD_73rtg",
+        "j35ZjlaXpPs"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 8,
+      "title": "Multiple regression and projection geometry",
+      "body_sha256": "b6e36093340d1eaeeb197bc09f3efc450845ecb3e8b44b4d4227a2f9ce3b8ca5",
+      "words_approx": 2314,
+      "solved_exercises": 6,
+      "source_videos": [
+        "BSk7RaB4kbk",
+        "dK7LyVwHlyo",
+        "rLXNVsz9qwo"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 9,
+      "title": "Outliers, leverage, and influence",
+      "body_sha256": "90be5a6e79b40144d0b00b8f787fba852015e659970ba0f8d95e3e919ec04b69",
+      "words_approx": 2240,
+      "solved_exercises": 6,
+      "source_videos": [
+        "3EX388b-7s4",
+        "Cn572X5kKKA",
+        "la5PiJboaoo"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 10,
+      "title": "Categorical predictors and interpretable contrasts",
+      "body_sha256": "d4f00fc7bbe7964db059e80b9df914ec7a970ead667e377ef187b29f7128de22",
+      "words_approx": 1991,
+      "solved_exercises": 6,
+      "source_videos": [
+        "vgvKOKD-daM"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 11,
+      "title": "Nonlinear features and interaction effects",
+      "body_sha256": "0c4e2333f0867279b9be4d0cf24ea191433e3804d43f680b70300d4578bd8a1a",
+      "words_approx": 1937,
+      "solved_exercises": 6,
+      "source_videos": [
+        "HMpiRyz2c9c"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 12,
+      "title": "Autocorrelated errors and dependent observations",
+      "body_sha256": "5b2ea2b317a261d3b9965d1ef4c3f5e38dfc688cf5cafc9ded184988eff27591",
+      "words_approx": 2249,
+      "solved_exercises": 6,
+      "source_videos": [
+        "oWddrGt3xJA",
+        "WLXxjZPbRg0"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 13,
+      "title": "Normality checks and the assumptions behind inference",
+      "body_sha256": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d",
+      "words_approx": 2789,
+      "solved_exercises": 6,
+      "source_videos": [
+        "C7ihAtunKro",
+        "D_oscdlZD40"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 14,
+      "title": "Multicollinearity, identifiability, and conditioning",
+      "body_sha256": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69",
+      "words_approx": 2224,
+      "solved_exercises": 6,
+      "source_videos": [
+        "vqPB9ZDECaw",
+        "AokQyy_Pt5o",
+        "n8yN78mF9qw"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 15,
+      "title": "Heteroscedasticity and variance-aware regression",
+      "body_sha256": "fc548ae6e3fd639d92431c8a5926f9a6ca8cfd22e395b0104741175f98e34d11",
+      "words_approx": 2192,
+      "solved_exercises": 6,
+      "source_videos": [
+        "-K6Nqjr9eTA",
+        "KMRZHOGE1aQ",
+        "_gooKHbGkS0"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 16,
+      "title": "Model selection, evaluation, and an end-to-end case study",
+      "body_sha256": "0ace45891ef6be3e67b36670e876646951c808b9ecaa9468e8daa1343270b45c",
+      "words_approx": 2158,
+      "solved_exercises": 6,
+      "source_videos": [
+        "c1MST7rrPIw",
+        "s9U_b3hOs5A"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 17,
+      "title": "Odds ratios and logistic regression",
+      "body_sha256": "98de7aaf9c6e8c8c8ec856a83c8b2af0bcb64d10312daff2dcf30a585d6a2caa",
+      "words_approx": 2187,
+      "solved_exercises": 6,
+      "source_videos": [
+        "ZJsfDrVT8CE",
+        "BQBpBFFsHyI",
+        "7wq85IH9sDY"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    },
+    {
+      "number": 18,
+      "title": "Regression discontinuity and local causal identification",
+      "body_sha256": "356368caf046f37251cd14c328b53f3b9cba02d6c2477ff09d7d46e06fd5fd14",
+      "words_approx": 2008,
+      "solved_exercises": 6,
+      "source_videos": [
+        "9qR4g3nkpis"
+      ],
+      "review": {
+        "rounds": [
+          {
+            "round": 1,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          },
+          {
+            "round": 2,
+            "verdict": "accept",
+            "current_digest": true,
+            "accepted": true
+          }
+        ],
+        "accepted": true
+      },
+      "lab_present": true
+    }
+  ],
+  "publication_performed": false,
+  "limitations": [
+    "Machine-caption source text requires correction; selected frames are not a comprehensive audiovisual audit.",
+    "Independent AI reviews are not human certification or formal proof verification."
+  ]
+}

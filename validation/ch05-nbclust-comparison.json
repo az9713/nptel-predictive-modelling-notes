@@ -1,0 +1,816 @@
+{
+  "status": "complete_for_exact_course_workflow",
+  "scope": "Average-linkage 26-index course workflow validated here; kmeans extension separately validated in ch06-hartigan-wong-comparison.json",
+  "reference_r": "4.5.1",
+  "reference_package": "NbClust 3.0.1",
+  "reference_process_exit_codes": [
+    0,
+    0
+  ],
+  "python_helper_sha256": "0d1c08ebbbb828a7fac5edfa497b60b48dec1fb4f46e94c6b1670c59d1d41165",
+  "python_execution_exit_code": 0,
+  "source_r_sha256": "34803b595963ec26ea1bc0e4b9fd42b4961e6d900564c1ad6dc1ccdf09819a93",
+  "checks": [
+    {
+      "fixture": "course_nutrient",
+      "rows": 27,
+      "features": 5,
+      "input_sha256": "74397fd7fae9e6e148073cd2c7f8356cfb6c31fe8e7fcab30647d29afaba4d1d",
+      "range": [
+        2,
+        15
+      ],
+      "tables": [
+        {
+          "table": "All.index",
+          "shape": [
+            14,
+            26
+          ],
+          "entries_compared": 364,
+          "all_match": true,
+          "reference_sha256": "f7f8874583b010478075725946de09dc9610fa83e57ba5cb50a41ddc3e839815",
+          "columns": [
+            {
+              "name": "KL",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CH",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hartigan",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CCC",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Scott",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Marriot",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TrCovW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TraceW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Friedman",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Rubin",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Cindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "DB",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Silhouette",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Pseudot2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ratkowsky",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ball",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ptbiserial",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Frey",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "McClain",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dunn",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hubert",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDbw",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        },
+        {
+          "table": "All.CriticalValues",
+          "shape": [
+            14,
+            3
+          ],
+          "entries_compared": 42,
+          "all_match": true,
+          "reference_sha256": "ec392af763e177e309dd5d59f00b144f1adf2f3285d678956c9d581533ab81d4",
+          "columns": [
+            {
+              "name": "CritValue_Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CritValue_PseudoT2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Fvalue_Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        },
+        {
+          "table": "Best.nc",
+          "shape": [
+            2,
+            26
+          ],
+          "entries_compared": 52,
+          "all_match": true,
+          "reference_sha256": "ce83a932515f74497492f106c506d88a9659b60e531ab1da52557b5132b97549",
+          "columns": [
+            {
+              "name": "KL",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CH",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hartigan",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CCC",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Scott",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Marriot",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TrCovW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TraceW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Friedman",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Rubin",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Cindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "DB",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Silhouette",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "PseudoT2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ratkowsky",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ball",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "PtBiserial",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Frey",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "McClain",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dunn",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hubert",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDbw",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        }
+      ],
+      "selected_partition_labels_identical": true,
+      "selected_k": 2,
+      "votes": {
+        "2": 4,
+        "3": 4,
+        "4": 2,
+        "5": 4,
+        "9": 1,
+        "10": 1,
+        "13": 2,
+        "14": 1,
+        "15": 4
+      },
+      "tied_pluralities": [
+        2,
+        3,
+        5,
+        15
+      ]
+    },
+    {
+      "fixture": "independent_three_group_fixture",
+      "rows": 36,
+      "features": 3,
+      "input_sha256": "0a72760989ab1594910cb763add052d9da394a0a9f8c0a87159663d385271cb6",
+      "range": [
+        2,
+        8
+      ],
+      "tables": [
+        {
+          "table": "All.index",
+          "shape": [
+            7,
+            26
+          ],
+          "entries_compared": 182,
+          "all_match": true,
+          "reference_sha256": "a823973e11f9fc1a65c6000f45f1fe8c5dd91dd725163280addd7e6c677f3590",
+          "columns": [
+            {
+              "name": "KL",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CH",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hartigan",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CCC",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Scott",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Marriot",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TrCovW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TraceW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Friedman",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Rubin",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Cindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "DB",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Silhouette",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Pseudot2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ratkowsky",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ball",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ptbiserial",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Frey",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "McClain",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dunn",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hubert",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDbw",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        },
+        {
+          "table": "All.CriticalValues",
+          "shape": [
+            7,
+            3
+          ],
+          "entries_compared": 21,
+          "all_match": true,
+          "reference_sha256": "72e7ce256a6a922dfe11211f2461b5cc5931298263be4e0a9c32231b63730294",
+          "columns": [
+            {
+              "name": "CritValue_Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CritValue_PseudoT2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Fvalue_Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        },
+        {
+          "table": "Best.nc",
+          "shape": [
+            2,
+            26
+          ],
+          "entries_compared": 52,
+          "all_match": true,
+          "reference_sha256": "00ee9cdac2956ebd0efd142b25fbad5d3cc42a0968fefc44d05fc4fa1ead75bd",
+          "columns": [
+            {
+              "name": "KL",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CH",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hartigan",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "CCC",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Scott",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Marriot",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TrCovW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "TraceW",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Friedman",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Rubin",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Cindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "DB",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Silhouette",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Duda",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "PseudoT2",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Beale",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ratkowsky",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Ball",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "PtBiserial",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Frey",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "McClain",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dunn",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Hubert",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "Dindex",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            },
+            {
+              "name": "SDbw",
+              "max_abs_error": 0.0,
+              "nan_mask_identical": true,
+              "infinity_mask_identical": true
+            }
+          ]
+        }
+      ],
+      "selected_partition_labels_identical": true,
+      "selected_k": 3,
+      "votes": {
+        "2": 2,
+        "3": 19,
+        "7": 1,
+        "8": 1
+      },
+      "tied_pluralities": [
+        3
+      ]
+    }
+  ],
+  "all_comparisons_passed": true,
+  "total_index_curve_values_compared": 546,
+  "total_critical_values_compared": 63,
+  "total_best_table_values_compared": 104,
+  "limitations": [
+    "Validation compares source-returned four-decimal tables, not a theorem of equivalence for arbitrary data.",
+    "The independent fixture is 36 observations in three generated Gaussian groups with NumPy seed726, not a course dataset.",
+    "Missing rows follow R na.omit; constant features, singular within-scatter matrices and degenerate distances are outside this demonstrated input domain.",
+    "Only course-used average and Hartigan-Wong kmeans Euclidean all-index workflows are implemented, not other distances/methods or alllong.",
+    "Package quirks are intentionally retained: singleton silhouette1; n-k Hartigan factor; extrema Cindex; diagonal elementwise Friedman; singleton dimension-drop WSS in Duda family.",
+    "Hubert and Dindex are graphical-only with sentinel zero recommendations; Frey can return sentinel1. Votes outside tested k range are excluded.",
+    "The nutrient recommendation2 is a smallest-k tie break among2,3,5,15, each receiving4votes; this is not a unique majority or calibrated confidence."
+  ],
+  "license": "GPL-2; full license adjacent to helper",
+  "extension_evidence": "ch06-hartigan-wong-comparison.json"
+}

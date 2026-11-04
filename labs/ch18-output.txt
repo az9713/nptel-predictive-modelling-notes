@@ -1,0 +1,10 @@
+Original synthetic sharp design; seed=1801, n=1200
+True treatment effect at cutoff=2.000000
+h=0.25, nLeft=144, nRight=165, jump=2.022091069, conventional HC3SE=0.092379442
+h=0.50, nLeft=279, nRight=305, jump=1.998572802, conventional HC3SE=0.067265349
+h=0.75, nLeft=452, nRight=437, jump=2.014904482, conventional HC3SE=0.054722497
+h=1.00, nLeft=612, nRight=588, jump=2.019623690, conventional HC3SE=0.047499259
+HC3 values are conventional demo standard errors, not RD bias-corrected inference.
+Untreated-mean violation adds=0.800000 to observed jump, without changing treatment effect.
+Continuous nonlinear mean, true jump=0: h1fit=0.714900377, h0.25fit=0.084937885
+Local WLS/direct-whitening and nuisance-jump assertions: passed

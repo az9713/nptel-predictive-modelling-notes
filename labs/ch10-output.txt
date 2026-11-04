@@ -1,0 +1,15 @@
+data: ISLR Credit, 400 rows; Gender whitespace normalized
+Student levels: ['No', 'Yes']
+Student group_means: [480.36944444 876.825     ]
+Student coefficients: [480.36944444 396.45555556]
+Gender levels: ['Male', 'Female']
+Gender group_means: [509.80310881 529.53623188]
+Gender coefficients: [509.80310881  19.73312308]
+Ethnicity levels: ['African American', 'Asian', 'Caucasian']
+Ethnicity group_means: [531.         512.31372549 518.49748744]
+Ethnicity coefficients: [531.         -18.68627451 -12.50251256]
+female1_male0 coefficients: [509.80310881  19.73312308]
+male1_female0 coefficients: [529.53623188 -19.73312308]
+female_plus1_male_minus1 coefficients: [519.66967035   9.86656154]
+three_categories: redundant_columns rank: 4 3
+all assertions passed: group means, coding invariance, rank

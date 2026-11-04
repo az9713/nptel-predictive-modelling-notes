@@ -1,0 +1,48 @@
+{
+  "chapter": 16,
+  "round": 2,
+  "verdict": "ACCEPT",
+  "body_sha256": "0ace45891ef6be3e67b36670e876646951c808b9ecaa9468e8daa1343270b45c",
+  "lab_sha256": "bcb09a7ab861ba87801a371ddc5a085df55bc1131ab2a7ef915efb9eab836a74",
+  "stdout_sha256": "e2981898d76fee8d1699a5e7e2a11e544587e195fbecacb949dda81ae7f0fdd7",
+  "findings": [
+    {
+      "severity": "minor",
+      "location": "chapters/ch16.html, section16.2 introduction and R-squared paragraph",
+      "quote": "Substituting the maximum-likelihood estimator into the Gaussian log likelihood gives",
+      "issue": "The formula presumes a positive residual sum of squares; exact fits have no positive finite variance maximizer. R-squared also requires a nonconstant response. State these domains explicitly.",
+      "replacement": "Add: Assume $n>q$ and $S>0$, so the fitted variance is positive and the maximized likelihood is finite. Before the R-squared definitions add: Assume $S_{tot}>0$.",
+      "status": "resolved",
+      "resolution": "Actual repaired chapter text inspected; all laboratory numerical reruns passed."
+    },
+    {
+      "severity": "minor",
+      "location": "chapters/ch16.html, section16.4 paragraph beginning The laboratory includes",
+      "quote": "component-plus-residual plots ... Mallows' C_p",
+      "issue": "Two named diagnostic quantities are introduced without definitions for the intended reader. The companion lab supplies the formulas but the chapter does not explain what is plotted or scored.",
+      "replacement": "<p>For predictor $j$, a component-plus-residual plot places $e_i+\\widehat\\beta_jx_{ij}$ against $x_{ij}$. Adding back its fitted component helps expose departures from a straight partial relation. For a candidate with $q_C$ coefficients including its intercept, use $C_p=S_C/s_F^2-n+2q_C$, where $S_C$ is the candidate residual sum of squares and $s_F^2$ is the full-model residual variance estimate. A correctly specified homoscedastic full mean model provides the variance reference. This is a selection criterion, not a causal test.</p>",
+      "status": "resolved",
+      "resolution": "Actual repaired chapter text inspected; all laboratory numerical reruns passed."
+    }
+  ],
+  "scope": "Independent full science-editor round2: complete chapter fragment, all six solved exercises, complete laboratory and stdout, metadata/conversion evidence, mathematical derivations, meaningful fresh Python numerical rerun; independent of author and full round1 reviewer. Lab stdout matches saved output after newline normalization; figure saving suppressed to preserve owned files.",
+  "checks": [
+    "Derived fixed-design optimism 2q sigma-squared; clearly separated fixed-model identity from data-dependent selection and outer-test evaluation.",
+    "Verified Gaussian maximized-likelihood/AIC/BIC constants, extractAIC rank convention, adjusted R-squared and nested F projection reference; requested explicit nondegenerate score domains.",
+    "Checked single-column greedy search implementation and complete backward/forward paths; paths reproduce source retained subsets and full score439.787096634.",
+    "Verified women polynomial fits, state nested F=.006108462/p=.993910981, Nevada external-t/Bonferroni, order-qualified DW, conditional Box\u2013Cox Jacobian and refitted-residual Student Q-Q simulation. All six solutions checked. Requested definitions for two additional diagnostics."
+  ],
+  "source_evidence": [
+    "Focused c1MST7rrPIw972\u20131065s and s9U_b3hOs5A1030\u20131190s checked for data/search/transformation scope; stored fresh-R paths and state/women references inspected.",
+    "Primary R extractAIC manual and car::qqPlot source independently inspected; stochastic source seed, robust-fit defaults and exact source powerTransform settings remain qualified."
+  ],
+  "limitations": [
+    "No comprehensive audiovisual/on-screen-command audit or full independent re-reading of every source recording; exact caption coverage is listed separately.",
+    "Fresh-R output is inspected existing project evidence; this reviewer did not launch another R runtime. Same-input agreement is distinct from lecturer-file identity.",
+    "No formal proof-assistant verification or human expert certification. Root owns reader rendering, mechanical checks and export validation."
+  ],
+  "date": "2026-11-04",
+  "repair_confirmation": "Focused repair inspection confirmed n>q and positive SSE for finite likelihood; positive total sum of squares for R-squared; local definitions of component-plus-residual plots and C_p match the actual lab.",
+  "reviewer": "/root/review_07_12_r1",
+  "independence": "This reviewer did not author the chapter or its laboratory and performed this full second-round review independently of the chapter author and full first-round reviewer."
+}

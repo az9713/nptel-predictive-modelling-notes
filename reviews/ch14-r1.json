@@ -1,0 +1,33 @@
+{
+  "chapter": 14,
+  "round": 1,
+  "verdict": "ACCEPT",
+  "body_sha256": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69",
+  "lab_sha256": "96cba16f5db89cf8d04fd9a5e08201f114e62e0e2dd08926b3afed5b988868fe",
+  "stdout_sha256": "567e0e3a38c078de6e761b030ad681ce221b5fb585008b24faec209603b6da81",
+  "findings": [],
+  "scope": "Full authored chapter, all six solved exercises, laboratory source and saved output; mathematical derivations assessed independently; fresh Python laboratory execution matched saved stdout; focused source-caption demonstration read and primary package implementation/documentation checked.",
+  "limitations": [
+    "No comprehensive audiovisual review or independent full re-reading of every source recording.",
+    "No claim of formal proof-assistant verification or human expert certification."
+  ],
+  "verified_topics": [
+    "Rank deficiency and estimable combinations",
+    "SVD inverse amplification, condition-number square, partial-regression VIF derivation",
+    "PCR construction and counterexample; ridge bias/covariance/limits under declared conditioning",
+    "Actual longley response and predictor order; freeny reconstruction limits",
+    "Automatic corrForm ridge path against primary package source and independent fixed-penalty sklearn check"
+  ],
+  "primary_sources_checked": [
+    "https://raw.githubusercontent.com/cran/ridge/master/R/linearRidge.R"
+  ],
+  "focused_confirmation_history": [
+    {
+      "previous_body_sha256": "51f269bf250bcc978273079af179a07d22b70830a94ce2fc528193cc20971e36",
+      "confirmed_body_sha256": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69",
+      "verification": "Focused confirmation of revised exercise 5: explicitly conceptual counterfactual about changing Longley response/predictor matrix; no unexecuted numerical result is claimed."
+    }
+  ],
+  "reviewer": "/root/review_13_18_r1",
+  "independence": "Independent reviewer context; not the author of this chapter. No authorship edits were made during this review."
+}

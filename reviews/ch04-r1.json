@@ -1,0 +1,31 @@
+{
+  "chapter": 4,
+  "round": 1,
+  "reviewer": "review_01_06_r1 independent full-edition science editor",
+  "skill": "science-editor",
+  "body_sha256": "3cb272dbd173eba55af6b02d210cc8a81bc85a641c6db28991f969cb13363966",
+  "verdict": "ACCEPT",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [],
+  "checks": [
+    "Complete chapter fragment read, including all six exercise statements and worked solutions.",
+    "Local notation and assumptions audited against EDITOR_DOMAIN.md, plan/notation.md and house style.",
+    "Main Python lab independently executed with project .venv; exit0 and saved stdout matched exactly.",
+    "Review is independent of chapter authorship; no chapter or lab edits performed.",
+    "Checked metric definitions and triangle proofs, r<1/profile-correlation counterexamples, Mahalanobis whitening and mixed-distance example.",
+    "Verified all six solutions, size-weighted average-linkage recurrence, threshold connectivity interpretation and limits of greedy cuts.",
+    "Read complete main lab; direct numerical distances/linkage calculations match saved independent SciPy witness.",
+    "No source R code asserted for the theory recordings; Gower scope confined to complete numeric/nominal data."
+  ],
+  "limits": [
+    "No complete independent audiovisual audit: focused source captions, selected code frames and primary documentation support checks.",
+    "No formal proof-assistant or human certification.",
+    "Shared reader/browser rendering and portable-export checks are outside this fragment review.",
+    "Finite numerical agreement does not prove universal algorithmic equivalence or model adequacy."
+  ],
+  "lab_sha256": "4b84d3acfc7dd7e242dabf421b90c1c23721f18da2ce41596a7d25a1d626be4f",
+  "stdout_sha256": "0a2ea40c827993d858a946e86dd86e4dcea82de55105fd2073bdc5988e01781d",
+  "scope": "Entire chapter fragment, all six worked exercises, main lab/output, source metadata and targeted source verification."
+}

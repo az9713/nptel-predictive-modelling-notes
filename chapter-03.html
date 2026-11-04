@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Factor analysis and the limits of latent explanations — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a aria-current="page" href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Factor analysis and the limits of latent explanations</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch03-task-heading">3.1 Common variation is a model, not a discovered cause</a></li><li><a href="#ch03-covariance-heading">3.2 The covariance decomposition and communalities</a></li><li><a href="#ch03-rotation-heading">3.3 Rotation changes interpretation without changing fitted common covariance</a></li><li><a href="#ch03-estimation-heading">3.4 Principal-axis extraction and the meaning of convergence</a></li><li><a href="#ch03-conversion-heading">3.5 Two converted examples, with a failed-fit warning preserved</a></li><li><a href="#ch03-limits-heading">3.6 What the model captures and what it misses</a></li><li><a href="#ch03-exercises-heading">3.7 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 3 · <a href="https://www.youtube.com/watch?v=hLVE1-3632M">Recording 1</a> · <a href="https://www.youtube.com/watch?v=w6xUwBqBmQI">Recording 2</a> · <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y">Recording 3</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch03-task">
+<h2 id="ch03-task-heading">3.1 Common variation is a model, not a discovered cause</h2>
+<p>A group of bank-stock returns may move together while another group of energy-stock returns follows a different pattern. A compact representation can describe those shared movements. Calling two extracted coordinates “bank” and “energy” may help interpretation, but the names do not prove that two independently existing economic causes have been identified. Factor analysis makes a particular covariance model explicit; its fit and its interpretation are separate questions.</p>
+<p>For one observational unit, let $\mathbf{x}\in\mathbb{R}^d$ be a real feature vector and let $\boldsymbol\mu=\mathbb{E}[\mathbf{x}]$ be its mean. An <dfn>orthogonal common-factor model</dfn> writes</p>
+$$\mathbf{x}=\boldsymbol\mu+\boldsymbol\Lambda\mathbf{f}+\mathbf{u}. \tag{3.1}$$
+<p>The vector $\mathbf{f}\in\mathbb{R}^k$ contains $k&lt;d$ latent common factors. The loading matrix $\boldsymbol\Lambda\in\mathbb{R}^{d\times k}$ relates them to observed features. The vector $\mathbf{u}\in\mathbb{R}^d$ contains feature-specific contributions. The model assumes $\mathbb{E}[\mathbf{f}]=\mathbf{0}$, $\mathbb{E}[\mathbf{u}]=\mathbf{0}$, $\operatorname{Cov}(\mathbf{f})=\mathbf{I}_k$, $\operatorname{Cov}(\mathbf{u})=\boldsymbol\Psi$, and $\operatorname{Cov}(\mathbf{f},\mathbf{u})=\mathbf{0}$. The uniqueness matrix $\boldsymbol\Psi$ is diagonal with nonnegative entries $\psi_1,\ldots,\psi_d$.</p>
+<p>“Orthogonal” here means uncorrelated unit-variance factors. It does not require their statistical independence. A diagonal uniqueness matrix also means uncorrelated specific contributions, rather than independence without an additional distributional assumption. Centering observed columns does not prove any of these latent covariance restrictions. They are modeling assumptions that must be assessed through their observable implications and the scientific context.</p>
+<p>The model is not a partition of variables into disjoint factor groups. A measured feature can load on several common factors. Nor does the loading matrix guarantee that each resulting direction has a unique verbal interpretation. Exploratory factor analysis estimates a covariance representation with relatively few common coordinates. Confirmatory factor analysis adds specified restrictions from a proposed structure; that broader model-testing topic is outside the present course.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=hLVE1-3632M&amp;t=764">observed variables as functions of latent factors, 12:44</a> and <a href="https://www.youtube.com/watch?v=w6xUwBqBmQI&amp;t=16">factor-model assumptions, 0:16</a>. The illustrative source claims about academic and athletic performance are not needed to establish the mathematics and are not treated as verified population facts.</p>
+</section>
+<section id="ch03-covariance">
+<h2 id="ch03-covariance-heading">3.2 The covariance decomposition and communalities</h2>
+<div class="prop"><strong>Proposition 3.1 — observable covariance.</strong> Under the assumptions of (3.1), the feature covariance matrix is
+$$\boldsymbol\Sigma=\operatorname{Cov}(\mathbf{x})=\boldsymbol\Lambda\boldsymbol\Lambda^{\mathsf T}+\boldsymbol\Psi. \tag{3.2}$$
+The feature–factor covariance is $\operatorname{Cov}(\mathbf{x},\mathbf{f})=\boldsymbol\Lambda$.</div>
+<div class="proof"><p>Substitute $\mathbf{x}-\boldsymbol\mu=\boldsymbol\Lambda\mathbf{f}+\mathbf{u}$ into $\mathbb{E}[(\mathbf{x}-\boldsymbol\mu)(\mathbf{x}-\boldsymbol\mu)^{\mathsf T}]$. Expanding gives $\boldsymbol\Lambda\mathbb{E}[\mathbf{f}\mathbf{f}^{\mathsf T}]\boldsymbol\Lambda^{\mathsf T}$, two cross terms, and $\mathbb{E}[\mathbf{u}\mathbf{u}^{\mathsf T}]$. Unit factor covariance gives the first term $\boldsymbol\Lambda\boldsymbol\Lambda^{\mathsf T}$. Zero factor–specific covariance eliminates both cross terms, and the final term is $\boldsymbol\Psi$. Similarly, $\mathbb{E}[(\boldsymbol\Lambda\mathbf{f}+\mathbf{u})\mathbf{f}^{\mathsf T}]=\boldsymbol\Lambda$. <span class="qed">∎</span></p></div>
+<p>For feature $j$, the <dfn>communality</dfn> is $h_j^2=\sum_{a=1}^k\Lambda_{ja}^2$, its variance contributed by common factors. Its total variance is $\Sigma_{jj}=h_j^2+\psi_j$. If features have unit variance, the decomposition becomes $1=h_j^2+\psi_j$. A loading equals a feature–factor covariance under this model. It equals a correlation only when that feature also has unit variance, since the factor already does.</p>
+<p>For different features $j$ and $\ell$, the diagonal uniqueness assumption gives $\Sigma_{j\ell}=\sum_a\Lambda_{ja}\Lambda_{\ell a}$. Common factors explain the off-diagonal relationships. A positive uniqueness allows a variable to have substantial variation that is not shared with the others. If a fitted unit-variance model produces $h_j^2&gt;1$, its implied uniqueness is negative. Such a <dfn>Heywood case</dfn> is not a permissible variance decomposition and requires investigation rather than literal interpretation.</p>
+<p>This distinguishes common-factor analysis from PCA. PCA forms linear combinations of observed variables and optimizes total projected variance or reconstruction error. A low-rank PCA loading product approximates the whole observed covariance, including its diagonal. A common-factor model additionally fits a diagonal uniqueness term, so the common component need not explain every marginal variance. Taking a full spectral square root of a covariance matrix with $d$ directions gives an exact product with zero uniqueness, but that construction alone does not establish a low-dimensional common-factor explanation.</p>
+<p>A factor count must also respect identifiability. An unrestricted $d\times k$ loading matrix contains $dk$ entries and the diagonal uniqueness adds $d$, but orthogonal rotations contribute $k(k-1)/2$ equivalent coordinates. A necessary parameter-count condition is $dk+d-k(k-1)/2\leq d(d+1)/2$. This count is not a sufficient identifiability theorem. It does expose why attempting many factors from a small covariance matrix can leave insufficient independent information.</p>
+<p class="source-note">Source derivation: <a href="https://www.youtube.com/watch?v=w6xUwBqBmQI&amp;t=214">the covariance expansion, 3:34</a> and <a href="https://www.youtube.com/watch?v=w6xUwBqBmQI&amp;t=579">communalities and specific variances, 9:39</a>. The parameter count is an explicit dimensional check, not a claim of unique factor identification.</p>
+</section>
+<section id="ch03-rotation">
+<h2 id="ch03-rotation-heading">3.3 Rotation changes interpretation without changing fitted common covariance</h2>
+<div class="prop"><strong>Proposition 3.2 — rotational nonidentification.</strong> Let $\mathbf{Q}$ be any orthogonal $k\times k$ matrix. Set $\boldsymbol\Lambda_* =\boldsymbol\Lambda\mathbf{Q}$ and $\mathbf{f}_*=\mathbf{Q}^{\mathsf T}\mathbf{f}$. These replacements preserve the common term in (3.1), the identity factor covariance, and the covariance decomposition (3.2).</div>
+<div class="proof"><p>Orthogonality gives $\mathbf{Q}\mathbf{Q}^{\mathsf T}=\mathbf{I}$. Therefore $\boldsymbol\Lambda_*\mathbf{f}_*=\boldsymbol\Lambda\mathbf{f}$ and $\boldsymbol\Lambda_*\boldsymbol\Lambda_*^{\mathsf T}=\boldsymbol\Lambda\boldsymbol\Lambda^{\mathsf T}$. The factor covariance becomes $\mathbf{Q}^{\mathsf T}\mathbf{I}\mathbf{Q}=\mathbf{I}$. The remaining zero means and cross covariances are preserved by the same linear transformations. <span class="qed">∎</span></p></div>
+<p>Each row of the loading matrix retains its squared length under this rotation, so each communality stays fixed. Column sums of squared loadings may change. Thus the share assigned to a named factor can change even when the fitted common covariance is identical. A variable can move from a mixture of two factors toward a larger loading on one rotated factor, making a compact verbal description easier.</p>
+<p><dfn>Varimax</dfn> is an orthogonal-rotation criterion that favors uneven squared loadings within columns: many relatively small loadings and a smaller set of relatively large ones. For a loading matrix $\mathbf{A}$, its criterion is proportional to $\sum_a[\sum_j A_{ja}^4-d^{-1}(\sum_j A_{ja}^2)^2]$. When Kaiser normalization is enabled, rows are first divided by their common-factor lengths for the rotation search, and restored afterward. The laboratory states that normalization explicitly and implements the corresponding singular-value-based orthogonal updates.</p>
+<p>An <dfn>oblique</dfn> representation permits correlated factors with covariance $\boldsymbol\Phi$ instead of the identity. Its common covariance is $\boldsymbol\Lambda\boldsymbol\Phi\boldsymbol\Lambda^{\mathsf T}$. Dropping $\boldsymbol\Phi$ while retaining oblique pattern loadings would change the model. Orthogonal and oblique conventions must therefore remain visible when translating software output. The source stock code explicitly requests <code>rotate="none"</code> before <code>rotate="varimax"</code>; that first result is not a default oblimin fit.</p>
+<p>Factor scores add another layer of inference. Even if the population parameters were known, the factors are unobserved because specific variation remains. Among linear predictors $\widehat{\mathbf{f}}=\mathbf{A}(\mathbf{x}-\boldsymbol\mu)$ with positive definite $\boldsymbol\Sigma$, expected squared prediction error is minimized at $\mathbf{A}_*=\boldsymbol\Lambda^{\mathsf T}\boldsymbol\Sigma^{-1}$. To see this, use $\operatorname{Cov}(\mathbf{x},\mathbf{f})=\boldsymbol\Lambda$ and expand the quadratic expectation. Completing the square gives</p>
+$$E\|\mathbf{f}-\mathbf{A}(\mathbf{x}-\boldsymbol\mu)\|^2=\operatorname{tr}(\mathbf{I}_k-\boldsymbol\Lambda^{\mathsf T}\boldsymbol\Sigma^{-1}\boldsymbol\Lambda)+\operatorname{tr}\!\left[(\mathbf{A}-\mathbf{A}_*)\boldsymbol\Sigma(\mathbf{A}-\mathbf{A}_*)^{\mathsf T}\right].$$
+<p>Positive definiteness makes the second term nonnegative, uniquely zero at $\mathbf{A}=\mathbf{A}_*$. The prediction-error covariance is $\mathbf{I}_k-\boldsymbol\Lambda^{\mathsf T}\boldsymbol\Sigma^{-1}\boldsymbol\Lambda$. The matrix need not vanish. A calculated score is therefore an estimate of a latent coordinate, not a direct measurement of that coordinate.</p>
+<p class="source-note">Source rotation argument and example: <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y&amp;t=49">orthogonal invariance, 0:49</a> and <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y&amp;t=740">stock-factor rotation, 12:20</a>. Software normalization is checked against <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/varimax.html">the R varimax documentation</a>.</p>
+</section>
+<section id="ch03-estimation">
+<h2 id="ch03-estimation-heading">3.4 Principal-axis extraction and the meaning of convergence</h2>
+<p>The displayed R examples request <code>fm="pa"</code>, meaning principal-axis extraction. This is not the default minimum-residual method, and it is not an instruction to compute ordinary principal components. For a correlation matrix $\mathbf{R}$, principal-axis extraction replaces the diagonal ones by provisional communalities while retaining the observed off-diagonal correlations. An eigendecomposition of that reduced matrix then estimates its common component.</p>
+<p>One initialization uses squared multiple correlations. For invertible $\mathbf{R}$, the initial communality for variable $j$ is $1-1/(\mathbf{R}^{-1})_{jj}$. To interpret the expression, regress standardized variable $j$ linearly on the other standardized variables. The block-inverse identity gives residual variance $1/(\mathbf{R}^{-1})_{jj}$; subtracting from its unit total variance gives the variance fraction explained by that auxiliary regression.</p>
+<p>At iteration $m$, let $\mathbf{R}^{(m)}$ have the observed off-diagonal entries and current communality estimates on its diagonal. Retain its largest $k$ positive eigenvalues $\eta_a$ and corresponding unit eigenvectors $\mathbf{v}_a$. Form provisional loadings $\Lambda_{ja}^{(m+1)}=v_{ja}\sqrt{\eta_a}$ and replace the diagonal with $\sum_a(\Lambda_{ja}^{(m+1)})^2$. Repeating the update seeks a fixed point of this diagonal-replacement construction. It does not supply a general guarantee that a statistically acceptable model will result.</p>
+<p>The source package stops this principal-axis iteration when the absolute change in total communality falls below $0.001$, or when its default limit of 50 iterations is reached. The Python conversion implements those same choices. It also records iteration history so the two stopping reasons remain distinguishable. A program returning a loading matrix after the limit is reached is not evidence of convergence. Subsequent rotation cannot repair a failed variance decomposition because it preserves communalities.</p>
+<p>Minimum-residual extraction instead optimizes a residual criterion, and Gaussian maximum-likelihood extraction uses a distributional likelihood. Their finite estimates, constraints, and numerical behavior differ. It is therefore inappropriate to replace a source principal-axis call with a library's default factor-analysis method solely because both functions return a loading matrix. The parallel-analysis calls in this recording do use a separate default one-factor minimum-residual calculation for their factor reference spectrum. The laboratory preserves that distinction.</p>
+<p>Normality is not needed for the covariance identity or for running the algebraic principal-axis update. Normal-theory likelihood inference does require its distributional assumptions; interpreting a non-Gaussian quasi-likelihood fit would need a separate justification. There is no universal ordering under which one of these methods must always have smaller residuals or lower computational cost. Those comparisons depend on the criterion, the matrix, constraints, and convergence settings.</p>
+<p class="source-note">Displayed source commands and matrix inspected at <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y&amp;t=440">7:20</a>. Extraction and stopping conventions checked in <a href="https://raw.githubusercontent.com/cran/psych/master/R/fa.R">the primary psych implementation</a>; the Python minimum-residual interface is documented by <a href="https://factor-analyzer.readthedocs.io/en/latest/factor_analyzer.html">factor_analyzer</a>.</p>
+</section>
+<section id="ch03-conversion">
+<h2 id="ch03-conversion-heading">3.5 Two converted examples, with a failed-fit warning preserved</h2>
+<p>The first displayed program uses <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ability.cov.html">ability.cov</a>, a six-test covariance summary from 112 individuals. Dividing each covariance by the product of its two marginal standard deviations converts it to a correlation matrix. Python then reproduces the source's two-factor principal-axis extraction. It reaches the stated tolerance after 22 iterations. Its communalities range from approximately $0.202182$ to $0.910786$, and all six uniqueness estimates are positive. That numerical admissibility is necessary for interpreting a variance decomposition; it does not establish that the factors are unique psychological entities.</p>
+<p>The stock example loads a CSV whose numerical part is already a five-by-five correlation matrix. Selected on-screen code and output supply all 25 entries, retained with the notebook data. The three bank variables are JPMorgan, Citibank, and Wells Fargo; the two energy variables are Shell and Exxon. The correlation between Shell and Exxon is $0.683$, while correlations between the two groups are smaller in this supplied matrix. Matrix recognition matters: treating these five rows as five independent original return observations and computing another correlation matrix would analyze a different object.</p>
+<p>The source stock parallel-analysis call omits its original observation count. The R package recognizes a correlation matrix and falls back to an assumed count of 100. Python reproduces that assumption explicitly. It cannot determine the number of underlying trading observations from this matrix. Consequently, this simulated-null illustration is not a validated sampling analysis of the original returns. The ability example, in contrast, supplies its documented count of 112.</p>
+<p>The displayed stock extraction reaches its default limit of 50 principal-axis iterations before satisfying the tolerance. The final total-communality change is approximately $0.00273909$, above $0.001$. Its Shell uniqueness is already near zero, approximately $0.004479$. Continuing the same update for 100 diagnostic iterations gives a negative Shell uniqueness, approximately $-0.199958$. Those additional iterations are an authored investigation of the failure, not a recommended factor fit.</p>
+<p>This warning is reproduced in a fresh R run as well as in Python. The source method is convertible; its numerical model has a convergence problem. Both the unrotated and varimax loadings at the source's finite stopping point agree between the two implementations, up to sign and column permutation. Interpretable bank and energy loading patterns do not erase that failure. Rotation preserves the common covariance and therefore cannot convert the inadmissible continuation into a valid variance model.</p>
+<figure id="ch03-factor-figure"><img src="assets/ch03-factor-examples.svg" alt="Stock loadings before and after varimax rotation, and ability and stock observed PCA and common-factor spectra against simulated null cutoffs."><figcaption>Figure 3.1. Python conversion of the source factor examples. The left panel rotates the source's finite 50-iteration stock result; it must be read with its nonconvergence warning. The null spectra use 112 observations for ability and an explicitly assumed 100 for stocks. Negative tail eigenvalues belong to the reduced factor matrices, not to the original correlation matrices.</figcaption></figure>
+<p>The laboratory includes the covariance conversion, both PCA and one-factor minimum-residual spectra in the parallel analysis, principal-axis extraction, and Kaiser-normalized varimax. Fresh R 4.5.1 with psych 2.6.9 provides a separate implementation check. Loading and regression-weight arrays agree within $10^{-8}$ absolute tolerance after sign and permutation alignment; the one-factor minimum-residual spectra agree within $10^{-3}$, allowing for the different optimizers. These checks are recorded separately from the Monte Carlo null streams, which are not identical across languages.</p>
+<p>Neither summary matrix contains the individual observations needed to calculate each person's or each time point's factor score. Score-weight matrices are computable, but inventing individual rows would create a new example. All displayed source operations are converted in <a href="labs/ch03.py">the Python laboratory</a>; this information limit applies to possible further score calculations, not to a failure to translate the shown factor calls.</p>
+<p class="source-note">Source example: <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y&amp;t=324">stock matrix and program, 5:24</a>. Fresh-reference evidence: <a href="validation/ch03-fresh-r-comparison.json">R-to-Python array comparison</a>. The full stock return series and its original sample count were not supplied in the recording.</p>
+</section>
+<section id="ch03-limits">
+<h2 id="ch03-limits-heading">3.6 What the model captures and what it misses</h2>
+<p>The common-factor model captures a low-rank explanation of shared second moments plus feature-specific variance. It does not automatically capture nonlinear dependence, identify causal mechanisms, or validate verbal factor names. A fit should be examined through residual correlations, nonnegative uniquenesses, sensitivity to factor count and extraction method, convergence, and consistency with the measurement design. A plausible rotation cannot substitute for those checks.</p>
+<p>The source also discusses converting categorical features to indicator columns and weighting them by a category's frequency. Such a transformation is calculable, but its interpretation must be stated. For a binary indicator $B$ with probability $p$ of value one, the variance is $p(1-p)$ and its standard deviation is $\sqrt{p(1-p)}$. Dividing a centered indicator by $\sqrt{p}$, a weighting used in some categorical-data representations, is therefore not the same as ordinary unit-variance standardization. The two procedures optimize different geometries.</p>
+<p>All indicators for one categorical variable sum to one, so their centered columns sum to zero. The resulting covariance is singular if all categories are retained. Although numerical covariance calculations are still possible, a continuous Gaussian-factor likelihood is not justified merely by writing category membership as zeros and ones. A latent-variable model for categorical observations or a dedicated mixed-data representation requires its own assumptions. These notes preserve the source's computational idea while separating it from a claim that ordinary continuous-data factor analysis has become automatically appropriate.</p>
+<p>Factor analysis compresses relationships among variables. Clustering, developed next, assigns observations to groups under a dissimilarity. A group of variables sharing a factor is not the same object as a group of observations assigned a cluster. The distinction determines which rows or columns are being compared and which scientific question the method can answer.</p>
+<p class="source-note">Source scope and mixed-variable discussion: <a href="https://www.youtube.com/watch?v=_gpVmTEUJ8Y&amp;t=1008">16:48</a>. The Bernoulli variance calculation and the singular-indicator warning specify the limits of that proposed preprocessing.</p>
+</section>
+<section id="ch03-exercises">
+<h2 id="ch03-exercises-heading">3.7 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Centering is not a latent assumption.</strong> Does subtracting each observed feature's mean prove that the factors have identity covariance or that the specific contributions are uncorrelated with them?</p><details><summary>Worked solution</summary><p>No. Centering fixes observed first moments. Identity covariance and zero cross covariance concern second moments of unobserved components. For example, replacing a latent variable by twice itself changes its variance without changing its mean; the associated loading can be halved without changing the observed model. Factor scaling therefore needs an explicit convention. The zero cross-covariance restriction is another independent part of the model.</p></details></li>
+<li><p><strong>A small covariance model.</strong> Let the rows of a two-factor loading matrix be $(0.8,0)$, $(0.6,0)$, and $(0,0.7)$, and let the diagonal uniquenesses be $0.36,0.64,0.51$. Calculate the implied covariance and identify which pair shares common variation.</p><details><summary>Worked solution</summary><p>The common covariance is the loading product. Its diagonal is $0.64,0.36,0.49$, and its only nonzero off-diagonal pair is $0.8\cdot0.6=0.48$. Adding the specified uniquenesses makes every total variance one. The first and second observed variables share the first common factor. The third loads only on the second. This example does not imply that real data must have disjoint factor groups; nonzero cross-loadings would mix them.</p></details></li>
+<li><p><strong>Rotation audit.</strong> Given an orthogonal matrix $\mathbf{Q}$, prove that rotating a loading matrix preserves each communality. Explain why this also preserves a negative fitted uniqueness rather than fixing it.</p><details><summary>Worked solution</summary><p>For row $j$, its rotated squared length is $\boldsymbol\Lambda_j\mathbf{Q}\mathbf{Q}^{\mathsf T}\boldsymbol\Lambda_j^{\mathsf T}=\boldsymbol\Lambda_j\boldsymbol\Lambda_j^{\mathsf T}$. The uniqueness is the observed variance minus that common variance, so it is unchanged as well. Orthogonal rotation changes coordinates within an existing common subspace. It does not change the model's diagonal residual or repair an inadmissible variance estimate.</p></details></li>
+<li><p><strong>Scores from a summary.</strong> A covariance matrix and factor count are available, but the original participant rows are absent. Which operations can still be converted from R to Python, and which further request cannot be fulfilled exactly?</p><details><summary>Worked solution</summary><p>Covariance standardization, extraction, rotation, residual-correlation calculation, and score-weight estimation depend on summary moments and can be computed. Null simulations also need an explicit observation count. Listing the actual participant scores requires each original observation vector, so that further request cannot be satisfied by the summary alone. Simulating observations with the same covariance would create a different dataset and must not be labeled as recovered participants.</p></details></li>
+<li><p><strong>Reproduce and diagnose.</strong> Run the source stock principal-axis update with its default 50-iteration limit, and then inspect 100 iterations at a tighter tolerance. Does agreement with a fresh R implementation establish a valid fitted factor model?</p><details><summary>Worked solution</summary><p>The default result has total-communality change approximately $0.00273909$, so it has not reached $0.001$. After 100 diagnostic iterations, the Shell uniqueness is approximately $-0.199958$. The Python and fresh R finite-iteration results agree, showing that the translation preserves the source algorithm. The negative continuation demonstrates why implementation agreement is a different claim from model admissibility or convergence. Increasing an iteration limit without checking the variance decomposition is insufficient.</p></details></li>
+<li><p><strong>Indicator scaling.</strong> Derive the variance of a binary indicator with success probability $p$. Explain why dividing its centered values by $\sqrt{p}$ does not generally give unit variance, and why keeping every centered category indicator creates linear dependence.</p><details><summary>Worked solution</summary><p>Because $B^2=B$, $\operatorname{Var}(B)=\mathbb{E}[B^2]-\mathbb{E}[B]^2=p-p^2=p(1-p)$. After division by $\sqrt{p}$, the variance is $1-p$, not one. Ordinary standardization divides by $\sqrt{p(1-p)}$ when $0&lt;p&lt;1$. For mutually exclusive exhaustive categories, their indicators sum to one on every row. Their column means also sum to one, so subtracting those means makes the centered columns sum to zero. That is an exact linear dependency, independent of software.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch03.py"><code>labs/ch03.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Principal-axis factor analysis and conversion of all source R examples.&quot;&quot;&quot;
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from factor_analyzer import FactorAnalyzer
+
+from ch02 import varimax
+
+DATA = Path(__file__).resolve().parent / &quot;data&quot;
+
+
+def covariance_to_correlation(covariance):
+    &quot;&quot;&quot;Match stats::cov2cor for a positive-diagonal covariance matrix.&quot;&quot;&quot;
+    scales = np.sqrt(np.diag(covariance))
+    return np.asarray(covariance) / np.outer(scales, scales)
+
+
+def principal_axis(correlation, count=2, tolerance=0.001, max_iter=50):
+    &quot;&quot;&quot;psych fm=&#x27;pa&#x27;: SMC start; total-communality stopping rule.&quot;&quot;&quot;
+    matrix = np.asarray(correlation, dtype=float)
+    communalities = 1 - 1 / np.diag(np.linalg.inv(matrix))
+    reduced = matrix.copy()
+    np.fill_diagonal(reduced, communalities)
+    previous = communalities.sum()
+    history = []
+    for _ in range(max_iter):
+        values, vectors = np.linalg.eigh(reduced)
+        values, vectors = values[::-1], vectors[:, ::-1]
+        if np.any(values[:count] &lt; 0):
+            raise ValueError(
+                &quot;A retained principal-axis eigenvalue is negative&quot;
+            )
+        loadings = vectors[:, :count] * np.sqrt(values[:count])
+        communalities = np.sum(loadings**2, axis=1)
+        total = communalities.sum()
+        history.append(total)
+        difference = abs(total - previous)
+        np.fill_diagonal(reduced, communalities)
+        previous = total
+        if difference &lt;= tolerance:
+            break
+    for column in range(count):
+        if loadings[:, column].sum() &lt; 0:
+            loadings[:, column] *= -1
+    order = np.argsort(np.sum(loadings**2, axis=0))[::-1]
+    return loadings[:, order], np.array(history)
+
+
+def common_eigenvalues(correlation, use_smc=True):
+    &quot;&quot;&quot;One-factor MINRES reduced spectrum for parallel FA.&quot;&quot;&quot;
+    model = FactorAnalyzer(
+        n_factors=1,
+        rotation=None,
+        method=&quot;minres&quot;,
+        is_corr_matrix=True,
+        use_smc=use_smc,
+    )
+    model.fit(correlation)
+    reduced = np.asarray(correlation).copy()
+    np.fill_diagonal(reduced, model.get_communalities())
+    return np.linalg.eigvalsh(reduced)[::-1]
+
+
+def parallel_both(correlation, observations, iterations=100, seed=2026):
+    &quot;&quot;&quot;Convert matrix-input fa.parallel(...,fa=&#x27;both&#x27;) with explicit n.obs.&quot;&quot;&quot;
+    matrix = np.asarray(correlation)
+    rng = np.random.default_rng(seed)
+    pc_null, fa_null = [], []
+    for _ in range(iterations):
+        sample = rng.normal(size=(observations, len(matrix)))
+        null = np.corrcoef(sample, rowvar=False)
+        pc_null.append(np.linalg.eigvalsh(null)[::-1])
+        fa_null.append(common_eigenvalues(null, use_smc=False))
+    return {
+        &quot;pc_actual&quot;: np.linalg.eigvalsh(matrix)[::-1],
+        &quot;fa_actual&quot;: common_eigenvalues(matrix),
+        &quot;pc_cutoff&quot;: np.quantile(pc_null, 0.95, axis=0),
+        &quot;fa_cutoff&quot;: np.quantile(fa_null, 0.95, axis=0),
+    }
+
+
+def plot_factor_examples(
+    stock, unrotated, rotated, ability_parallel, stock_parallel
+):
+    &quot;&quot;&quot;Show preserved model covariance and the source factor comparisons.&quot;&quot;&quot;
+    import matplotlib
+
+    matplotlib.use(&quot;Agg&quot;)
+    import matplotlib.pyplot as plt
+
+    plt.style.use(&quot;dark_background&quot;)
+    figure, axes = plt.subplots(
+        1, 3, figsize=(13, 3.8), constrained_layout=True
+    )
+    for row, name in enumerate(stock.index):
+        axes[0].scatter(*unrotated[row], marker=&quot;x&quot;, color=&quot;#fbbf24&quot;)
+        axes[0].scatter(*rotated[row], marker=&quot;o&quot;, color=&quot;#6ee7d8&quot;)
+        axes[0].annotate(
+            name,
+            rotated[row],
+            xytext=(3, 3),
+            textcoords=&quot;offset points&quot;,
+            fontsize=7,
+        )
+    axes[0].axhline(0, color=&quot;#94a3b8&quot;, linewidth=0.5)
+    axes[0].axvline(0, color=&quot;#94a3b8&quot;, linewidth=0.5)
+    axes[0].set(
+        xlabel=&quot;Factor1 loading&quot;,
+        ylabel=&quot;Factor2 loading&quot;,
+        title=&quot;Stock loading rotation: crosses to dots&quot;,
+    )
+    axes[0].set_xlim(-0.1, 1.1)
+    axes[0].set_ylim(-0.55, 1.15)
+    for axis, result, title in zip(
+        axes[1:],
+        [ability_parallel, stock_parallel],
+        [&quot;Ability: n.obs=112&quot;, &quot;Stock: assumed n.obs=100&quot;],
+    ):
+        positions = np.arange(1, len(result[&quot;pc_actual&quot;]) + 1)
+        for key, style, color in [
+            (&quot;pc_actual&quot;, &quot;o-&quot;, &quot;#6ee7d8&quot;),
+            (&quot;fa_actual&quot;, &quot;s-&quot;, &quot;#c4b5fd&quot;),
+            (&quot;pc_cutoff&quot;, &quot;--&quot;, &quot;#fbbf24&quot;),
+            (&quot;fa_cutoff&quot;, &quot;:&quot;, &quot;#fb7185&quot;),
+        ]:
+            axis.plot(positions, result[key], style, color=color, label=key)
+        axis.set(xlabel=&quot;Ordered eigenvalue&quot;, ylabel=&quot;Eigenvalue&quot;, title=title)
+        axis.legend(fontsize=7)
+    figure.savefig(
+        DATA.parents[1] / &quot;assets&quot; / &quot;ch03-factor-examples.svg&quot;,
+        metadata={&quot;Date&quot;: None},
+    )
+    figure.savefig(
+        DATA.parents[1] / &quot;validation&quot; / &quot;chapters&quot; / &quot;ch03-figure.png&quot;,
+        dpi=120,
+    )
+    plt.close(figure)
+
+
+def main():
+    np.set_printoptions(precision=6, suppress=True)
+    fixture = np.array([[0.8, 0], [0.6, 0], [0, 0.7]])
+    fixture_cov = fixture @ fixture.T + np.diag([0.36, 0.64, 0.51])
+    assert np.allclose(fixture_cov, [[1, 0.48, 0], [0.48, 1, 0], [0, 0, 1]])
+    print(&quot;Three-variable exercise covariance:&quot;)
+    print(fixture_cov)
+    ability_cov = pd.read_csv(
+        DATA / &quot;ch03-ability-covariance.csv&quot;, index_col=0
+    )
+    ability = covariance_to_correlation(ability_cov)
+    stock = pd.read_csv(DATA / &quot;ch03-stock-correlation.csv&quot;, index_col=0)
+    print(&quot;Ability correlation matrix (converted cov2cor):&quot;)
+    print(ability)
+    results = {}
+    for name, correlation in [
+        (&quot;ability&quot;, ability),
+        (&quot;stock&quot;, stock.to_numpy()),
+    ]:
+        loadings, history = principal_axis(correlation)
+        rotated, rotation = varimax(loadings)
+        for column in range(2):
+            if rotated[:, column].sum() &lt; 0:
+                rotated[:, column] *= -1
+        order = np.argsort(np.sum(rotated**2, axis=0))[::-1]
+        rotated = rotated[:, order]
+        common = loadings @ loadings.T
+        uniqueness = np.diag(correlation - common)
+        assert np.allclose(common, rotated @ rotated.T, atol=1e-12)
+        assert np.allclose(rotation.T @ rotation, np.eye(2))
+        assert np.all(uniqueness &gt; 0)
+        offdiag = ~np.eye(len(correlation), dtype=bool)
+        rms = np.sqrt(np.mean((correlation - common)[offdiag] ** 2))
+        results[name] = (loadings, rotated)
+        print(f&quot;{name} principal-axis iterations: {len(history)}&quot;)
+        change = abs(history[-1] - history[-2])
+        print(f&quot;{name} final total-communality change: {change:.8f}&quot;)
+        print(f&quot;{name} source tolerance reached: {change &lt;= 0.001}&quot;)
+        print(f&quot;{name} unrotated loadings:&quot;)
+        print(loadings)
+        print(f&quot;{name} Kaiser-normalized varimax loadings:&quot;)
+        print(rotated)
+        print(f&quot;{name} communalities:&quot;, np.sum(loadings**2, axis=1))
+        print(f&quot;{name} uniquenesses:&quot;, uniqueness)
+        print(f&quot;{name} off-diagonal RMS residual: {rms:.8f}&quot;)
+        print(
+            f&quot;{name} score weights R^-1 L (individual rows unavailable):&quot;
+        )
+        print(np.linalg.solve(correlation, rotated))
+    ability_parallel = parallel_both(ability, 112)
+    stock_parallel = parallel_both(stock, 100)
+    for name, result in [
+        (&quot;ability&quot;, ability_parallel),
+        (&quot;stock&quot;, stock_parallel),
+    ]:
+        for key, values in result.items():
+            print(name, key, values)
+    loadings, rotated = results[&quot;stock&quot;]
+    plot_factor_examples(
+        stock, loadings, rotated, ability_parallel, stock_parallel
+    )
+    continued, _ = principal_axis(stock, tolerance=1e-8, max_iter=100)
+    continued_unique = 1 - np.sum(continued**2, axis=1)
+    print(&quot;Stock uniqueness after100 diagnostic iterations:&quot;, continued_unique)
+    assert continued_unique[3] &lt; 0
+    print(
+        &quot;Stock n unknown:100 is the source package fallback, not known n.&quot;
+    )
+    print(
+        &quot;Individual factor scores unavailable from summary matrices.&quot;
+    )
+    print(
+        &quot;Checks passed: covariance, principal-axis extraction, rotation.&quot;
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Three-variable exercise covariance:
+[[1.   0.48 0.  ]
+ [0.48 1.   0.  ]
+ [0.   0.   1.  ]]
+Ability correlation matrix (converted cov2cor):
+[[1.       0.466265 0.551663 0.340325 0.57648  0.514406]
+ [0.466265 1.       0.572436 0.193099 0.262923 0.239277]
+ [0.551663 0.572436 1.       0.44509  0.354025 0.356472]
+ [0.340325 0.193099 0.44509  1.       0.183964 0.218837]
+ [0.57648  0.262923 0.354025 0.183964 1.       0.791378]
+ [0.514406 0.239277 0.356472 0.218837 0.791378 1.      ]]
+ability principal-axis iterations: 22
+ability final total-communality change: 0.00092766
+ability source tolerance reached: True
+ability unrotated loadings:
+[[ 0.750625  0.067719]
+ [ 0.524771  0.319111]
+ [ 0.750748  0.519724]
+ [ 0.392938  0.218591]
+ [ 0.809291 -0.5058  ]
+ [ 0.731469 -0.389663]]
+ability Kaiser-normalized varimax loadings:
+[[0.494408 0.568844]
+ [0.157374 0.593674]
+ [0.181362 0.894898]
+ [0.131939 0.429854]
+ [0.934031 0.195887]
+ [0.797452 0.225728]]
+ability communalities: [0.568023 0.377216 0.833735 0.202182 0.910786 0.686884]
+ability uniquenesses: [0.431977 0.622784 0.166265 0.797818 0.089214 0.313116]
+ability off-diagonal RMS residual: 0.03223321
+ability score weights R^-1 L (individual rows unavailable):
+[[ 0.017703  0.215044]
+ [-0.007986  0.096877]
+ [-0.19831   0.793927]
+ [ 0.019156  0.030275]
+ [ 0.841777 -0.224042]
+ [ 0.190593 -0.020407]]
+stock principal-axis iterations: 50
+stock final total-communality change: 0.00273909
+stock source tolerance reached: False
+stock unrotated loadings:
+[[ 0.626096 -0.428835]
+ [ 0.776216 -0.340897]
+ [ 0.591501 -0.33184 ]
+ [ 0.702754  0.708278]
+ [ 0.508823  0.455247]]
+stock Kaiser-normalized varimax loadings:
+[[0.756998 0.053381]
+ [0.819904 0.215591]
+ [0.669598 0.107842]
+ [0.110068 0.991668]
+ [0.115489 0.672914]]
+stock communalities: [0.575896 0.718723 0.459992 0.995521 0.466151]
+stock uniquenesses: [0.424104 0.281277 0.540008 0.004479 0.533849]
+stock off-diagonal RMS residual: 0.01590018
+stock score weights R^-1 L (individual rows unavailable):
+[[ 0.31768   0.021794]
+ [ 0.535204 -0.115752]
+ [ 0.225084 -0.025288]
+ [-0.159197  1.039168]
+ [ 0.028119 -0.011869]]
+ability pc_actual [3.076824 1.139688 0.817187 0.411313 0.355074 0.199915]
+ability fa_actual [ 2.555073  0.557914  0.032351 -0.008786 -0.284328 -0.297151]
+ability pc_cutoff [1.435111 1.240739 1.099417 0.998431 0.911204 0.799192]
+ability fa_cutoff [ 1.09001   0.274431  0.137555  0.055212 -0.032934 -0.119793]
+stock pc_actual [2.437615 1.406261 0.500186 0.400033 0.255905]
+stock fa_actual [ 1.908715  0.641647 -0.019534 -0.086601 -0.535512]
+stock pc_cutoff [1.40359  1.235298 1.041111 0.944486 0.828283]
+stock fa_cutoff [ 1.093554  0.264155  0.097254  0.002696 -0.085087]
+Stock uniqueness after100 diagnostic iterations: [ 0.421984  0.283889  0.540155 -0.199958  0.60903 ]
+Stock n unknown:100 is the source package fallback, not known n.
+Individual factor scores unavailable from summary matrices.
+Checks passed: covariance, principal-axis extraction, rotation.
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-02.html">← Previous chapter</a><a href="chapter-04.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

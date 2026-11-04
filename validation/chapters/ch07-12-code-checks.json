@@ -1,0 +1,48 @@
+{
+  "status": "passed",
+  "checks": [
+    {
+      "chapter": 7,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "73c6a2d7557f237fbd104a5202bc782a1c1c96be01f2529f7d76ebdbded134da",
+      "stdout_sha256": "b182e7b4b62a5348990fee1632c89cb106367140b6257f4ce9f0cf822aeee4c1"
+    },
+    {
+      "chapter": 8,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "9b0b00a4fc800b013ead9df85ba75344b93db37a6c191ce6abe029186230cb67",
+      "stdout_sha256": "ca1d1c9a999977d1f48b487ef23049ad49f37f5271ed8db5028eef4a732ba3a3"
+    },
+    {
+      "chapter": 9,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "00403a215d4e06fda742211ea98b5f01424590904d59d79b0c36a6e5f9cbaea1",
+      "stdout_sha256": "e1d60826fc54321fb27019c44c5b8ae4f7c0cc6ae3db1b50de56bf4de0fee452"
+    },
+    {
+      "chapter": 10,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "dfce72144df3a0f5a919a170a4fe096decba68ad2ad9f573436671a97394f1b9",
+      "stdout_sha256": "09c732dc861721be8d0ef1dd088be77120f0923690774cf2ddf8add11be56cae"
+    },
+    {
+      "chapter": 11,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "6b8d8789f5c425dfc63bb2a46895271a2a48577ee15ec0f0c6f3c0149f600f64",
+      "stdout_sha256": "66a41677b21b3d64ab9bbe0ae308d277509bb535a7a953893487559e68e195fa"
+    },
+    {
+      "chapter": 12,
+      "exit_code": 0,
+      "stdout_matches_saved": true,
+      "source_sha256": "7d30e07d68ca44b5ddb7925db1bc5a27875c7485bf71699e7917e30fc63741c1",
+      "stdout_sha256": "5b938ac0de7b0bb6a161e9ae24320add61fe937b0fbe35a1184be099b1ba3d1a"
+    }
+  ],
+  "pycodestyle": "all six pass --ignore=E226, max79chars"
+}

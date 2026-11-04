@@ -1,0 +1,5 @@
+# Preserve exact bytes: review and source provenance digests bind to these files.
+* -text
+*.png binary
+*.zip binary
+*.mp4 binary

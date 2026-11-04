@@ -1,0 +1,62 @@
+{
+  "number": 13,
+  "title": "Normality checks and the assumptions behind inference",
+  "source_videos": [
+    "C7ihAtunKro",
+    "D_oscdlZD40"
+  ],
+  "reading_records": [
+    {
+      "video_id": "C7ihAtunKro",
+      "read_full": true,
+      "transcript_sha256": "730c19f9ef725db7112f5499991b6322ab47f56bdb6d9bf4a48711f870297058",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "D_oscdlZD40",
+      "read_full": true,
+      "transcript_sha256": "5c61602694d3f09a640b86a01f5e02bdc4b3a9f54bf0d5e7cb5343ddd5caf281",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch13-ToothGrowth-normality",
+      "video_id": "D_oscdlZD40",
+      "start_seconds": 755,
+      "source_method": "hist, qqnorm, qqline, car::qqPlot numeric vector, shapiro.test on ToothGrowth len",
+      "python_method": "numpy ppoints/type7 quartiles, matplotlib histogram/plot, inspected car envelope formula, scipy.stats.shapiro",
+      "data_status": "same public R ToothGrowth dataset; offline CSV",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Executed Python W=.967428644 p=.109100493 agrees with inspected source frame at1045s (R W=.96743 p=.1091). Frame1004s confirms car::qqPlot(ToothGrowth$len); formula translated from inspected car source; Fresh R4.5.1 W=.9674286439,p=.109100495 agrees within3e-9; same ToothGrowth values asserted.",
+      "limitations": "No exhaustive on-screen-code inspection. Interactive point identification and exact pretty-bin endpoints are not replicated."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch13.py",
+    "stdout_path": "labs/ch13-output.txt",
+    "execution": "passed",
+    "sha256": "4fa1438aebb7800a05116f0914d3f0d8ae84bc9f9f30bb9df60a63ff2587904e",
+    "stdout_sha256": "d3f932115e2cbdd6f9fd10e4a4281e25796ab6eebebe1e0c86a907c2184ba734",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2789,
+  "source_limitations": [
+    "Captions contain mathematical transcription errors; equations reconstructed under explicit assumptions.",
+    "Response normality in source is distinguished from conditional error normality.",
+    "car default envelope is pointwise and approximate."
+  ],
+  "data": [
+    {
+      "path": "labs/data/ch13-toothgrowth.csv",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/ToothGrowth.csv",
+      "documentation": "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ToothGrowth.html",
+      "sha256": "b35e084a98731429169eb9b216c9b904e8b9ea127707b741bb8fc146354c26fe"
+    }
+  ],
+  "selected_frames": [
+    "sources/private/frames/normality-1004.png",
+    "sources/private/frames/normality-1045.png"
+  ],
+  "body_sha256": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d"
+}

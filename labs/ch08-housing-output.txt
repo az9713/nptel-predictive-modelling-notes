@@ -1,0 +1,32 @@
+data: original construction, not source Toyota rows
+simple_slope adjusted_slope: [-0.2 -2. ]
+multiple_coefficients: [10. -2.  3.]
+n q residual_df: 8 3 5
+SSE unbiased_variance mle_variance: [8.  1.6 1. ]
+projection_trace residual_projection_trace: [3. 5.]
+partial_F p_value df_difference: [45.           0.001114438  1.         ]
+housing source rows residual_df: 2626 2619
+housing coefficients:
+Intercept 43.290862795
+C(Boro)[T.Brooklyn] 34.562149668
+C(Boro)[T.Manhattan] 130.992362857
+C(Boro)[T.Queens] 32.993674118
+C(Boro)[T.Staten Island] -3.630250589
+Units -0.188115072
+SqFt 0.000210323
+housing R_squared: 0.600903519
+housing coefficient_intervals:
+[[ 32.839710079  53.74201551 ]
+ [ 23.7085856    45.415713736]
+ [120.433786922 141.550938793]
+ [ 21.890122038  44.097226197]
+ [-23.225129168  15.96462799 ]
+ [ -0.231453787  -0.144776358]
+ [  0.000169403   0.000251243]]
+housing new rows: 100
+housing first2 predictions: mean mean_se mean_CI obs_CI
+[[ 75.417637834   2.103119641  71.293693226  79.541582441  -9.692148739
+  160.527424407]
+ [ 81.812037134   1.628792229  78.618187009  85.005887259  -3.257754978
+  166.881829246]]
+all executed assertions passed

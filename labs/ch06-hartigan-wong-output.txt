@@ -1,0 +1,13 @@
+R set.seed(123) first five uniforms: [0.2875775201, 0.7883051354, 0.4089769218, 0.883017404, 0.9404672843]
+R sample.int(50,4): [31 15 14  3]
+Raw wine k3 nstart1 seed278613:
+  sizes: [ 28  50 100]
+  total withinss: 2629315.1940180985
+Raw wine k3 nstart25 seed278613:
+  sizes: [62 69 47]
+  total withinss: 2370689.686782968
+Sample-SD standardized USArrests k4 nstart25 seed123:
+  withinss: [ 8.31606082 11.95246286 16.21221326 19.92243652]
+  total withinss: 56.40317345829281
+Unseeded source fits require a disclosed new reproducibility seed;
+their original RNG state is unavailable.

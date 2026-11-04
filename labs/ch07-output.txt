@@ -1,0 +1,13 @@
+data: original teaching construction; not course insurance data
+intercept slope: [2. 3.]
+Sxx SSE residual_variance: [17.5  4.   1. ]
+correlation R_squared: [0.987538454 0.975232198]
+slope_se t_statistic p_value: [ 0.239045722 12.549900398  0.000231968]
+95pct slope_interval: [2.336302676 3.663697324]
+at_x_mean: mean_interval prediction_interval: [11.366521032 13.633478968  9.501096535 15.498903465]
+slope_after_x_sign_reversal: -3.0
+no_intercept_slope residual_sum: [3.461538462 2.307692308]
+critical_t_df4: 2.776445105
+mean_interval_half_widths_at_3.5_and_8: [1.133478968 3.194492272]
+extrapolated_mean_and_mean_interval_at_8: [26.          22.805507728 29.194492272]
+all assertions passed

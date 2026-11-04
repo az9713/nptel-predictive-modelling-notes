@@ -1,0 +1,51 @@
+{
+  "chapter": 8,
+  "round": 2,
+  "verdict": "ACCEPT",
+  "body_sha256": "b6e36093340d1eaeeb197bc09f3efc450845ecb3e8b44b4d4227a2f9ce3b8ca5",
+  "lab_sha256": "9b0b00a4fc800b013ead9df85ba75344b93db37a6c191ce6abe029186230cb67",
+  "stdout_sha256": "ca1d1c9a999977d1f48b487ef23049ad49f37f5271ed8db5028eef4a732ba3a3",
+  "findings": [
+    {
+      "severity": "minor",
+      "location": "chapters/ch08.html:55, section8.4 nested F introduction",
+      "quote": "let their ranks be $q_R$ and $q_F$, with $r=q_F-q_R>0$",
+      "issue": "Positive full-model residual df is needed; the original condition allowed a saturated full design.",
+      "replacement": "let their ranks be $q_R&lt;q_F&lt;n$, with $r=q_F-q_R$",
+      "status": "resolved",
+      "verification": "Root applied the bounded rank-condition repair; reviewer inspected the actual current line and confirmed the F denominator/reference now have positive df."
+    }
+  ],
+  "scope": "Independent FULL round 2: entire authored chapter, all six worked solutions, full laboratory code, stored stdout and chapter metadata read; all substantive mathematical claims checked independently. Fresh project-Python execution reproduced saved stdout. Primary method/data documentation and targeted source captions checked; no reliance on round-1 verdict as mathematical evidence.",
+  "limitations": [
+    "No comprehensive audiovisual audit, full independent re-reading of every source transcript, proof-assistant verification or human expert certification.",
+    "Authentic Toyota 29-row subset and exact 20-row split are unavailable; optional method port is supplied without a source-output match claim.",
+    "Housing files are bundled public acquisitions; the exact lecturer file version is not independently certified.",
+    "Coefficient graphics use declared confidence intervals and Python styling, rather than asserting pixel-identical R output."
+  ],
+  "verified_topics": [
+    "Conditional coefficient interpretation, full-rank normal equations, global projection/uniqueness proof and rank-deficient fitted-vector versus coefficient distinction.",
+    "General A Omega A^T covariance, residual covariance versus expected squared norm, trace df and unbiased residual variance without Gaussianity.",
+    "Gaussian ML versus unbiased scale, zero-SSE nonattainment, normal/chi-square independence, coefficient t and nested F geometry, and mean versus observation intervals.",
+    "Construction recovers adjusted slopes and projection dimensions; optional bundled housing run reproduces every displayed numerical coefficient and interval exactly.",
+    "Fresh R coefficient/SE/interval records and reference script inspected; same public housing inputs are distinguished from uncertified lecturer file version.",
+    "Toyota source captions specify 29 observations and a 20-row random training subset; port requires actual row indices and does not equate R and NumPy random streams."
+  ],
+  "exercises_checked": [
+    "Adjustment and causal limitations",
+    "Matrix covariance versus scalar squared norm",
+    "Unbiased residual-variance trace proof",
+    "Invertible design basis transformation",
+    "Executed projection dimensions and variance estimates",
+    "Executed housing mean/observation intervals and cross-language prerequisites"
+  ],
+  "primary_sources_checked": [
+    "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html",
+    "https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html"
+  ],
+  "numerical_scope": "Default laboratory freshly executed with exact stdout comparison; mathematical formulas and all displayed numerical results checked against the supplied construction/data. Bundled real housing run also freshly executed and matched its separately saved stdout.",
+  "additional_stdout_sha256": "f464c16ae251a19adf6214b80a60aab863b701168c1044f067dcf4cfae1513df",
+  "initial_reviewed_body_sha256": "4718e08b370d59b5de3bd79db2f025d29b1926b9f1a3a034241aa1ffe527dad1",
+  "reviewer": "/root/review_13_18_r1",
+  "independence": "Independent reviewer context; not the author of this chapter. No authorship edits were made during this review."
+}

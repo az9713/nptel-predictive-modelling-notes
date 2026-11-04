@@ -1,0 +1,87 @@
+{
+  "number": 10,
+  "title": "Categorical predictors and interpretable contrasts",
+  "source_videos": [
+    "vgvKOKD-daM"
+  ],
+  "reading_records": [
+    {
+      "video_id": "vgvKOKD-daM",
+      "read_full": true,
+      "transcript_sha256": "7095c887191cc95945613c4eaf00b10325a5c87acb1728ffa81f3aaf5b514869",
+      "limitations": "Full English captions read; no exhaustive visual command transcription."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch10-Student",
+      "video_id": "vgvKOKD-daM",
+      "start_seconds": 349,
+      "source_method": "lm(Balance~Student)",
+      "python_method": "statsmodels OLS with No reference",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch10-Gender",
+      "video_id": "vgvKOKD-daM",
+      "start_seconds": 430,
+      "source_method": "lm(Balance~Gender)",
+      "python_method": "statsmodels OLS with Male reference and explicit whitespace cleanup",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch10-binary-recoding",
+      "video_id": "vgvKOKD-daM",
+      "start_seconds": 876,
+      "source_method": "reference reversal and -1/+1 coding",
+      "python_method": "Explicit NumPy indicator transformation and matrix OLS",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_independent_calculation",
+      "verification": "Python basis changes reproduce exact binary-group means and preserve fitted values at1e-10; original Gender reference fit separately matched fresh R. No claim of a separate R execution of each recoding.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    },
+    {
+      "id": "ch10-Ethnicity",
+      "video_id": "vgvKOKD-daM",
+      "start_seconds": 1379,
+      "source_method": "lm(Balance~Ethnicity)",
+      "python_method": "statsmodels OLS with African American reference",
+      "data_status": "Actual primary-checked Credit data",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R/Python coefficient comparison on identical inputs; independent group-mean/formula/basis checks where applicable. Figures use verified fitted models; no pixel-identical graphic claim.",
+      "limitations": "Graphics styles and interactive labels differ; no comprehensive on-screen-code transcription."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch10.py",
+    "stdout_path": "labs/ch10-output.txt",
+    "execution": "passed; Python assertions and fresh R coefficient comparisons"
+  },
+  "fresh_r_comparison": {
+    "record": "validation/chapters/ch10-11-r-comparison.json",
+    "status": "passed"
+  },
+  "word_count": 1991,
+  "source_limitations": [
+    "Actual Credit contains400 rows; source/help wording about10000 does not match primary package object.",
+    "Labels and reference levels are preserved explicitly.",
+    "No comprehensive audiovisual audit."
+  ],
+  "body_sha256": "d4f00fc7bbe7964db059e80b9df914ec7a970ead667e377ef187b29f7128de22",
+  "code_validation": "validation/chapters/ch07-12-code-checks.json",
+  "data": [
+    {
+      "path": "labs/data/ch10-credit.csv",
+      "source": "https://vincentarelbundock.github.io/Rdatasets/csv/ISLR/Credit.csv",
+      "primary_identity": "All400 rows/all12 original columns compared equal to https://github.com/cran/ISLR/blob/master/data/Credit.rda",
+      "sha256": "69de361e12ce747b6343a26a7f2933f9e9b9fa9bcdb71a61b8b74ad746c4b47e",
+      "description": "Simulated Credit data; not source Default dataset."
+    }
+  ]
+}

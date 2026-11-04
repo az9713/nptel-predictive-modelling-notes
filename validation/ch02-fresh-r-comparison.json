@@ -1,0 +1,15 @@
+{
+  "reference": "Fresh R4.5.1 psych2.6.9; recorded lecture package version not fixed",
+  "max_absolute_differences": {
+    "judge_loadings": 2.1094237467877974e-15,
+    "judge_score_weights": 8.737455203799982e-14,
+    "judge_scores": 2.3592239273284576e-14,
+    "harman_none_loadings": 8.881784197001252e-16,
+    "harman_none_weights": 5.9396931817445875e-15,
+    "harman_varimax_loadings": 1.304512053934559e-15,
+    "harman_varimax_weights": 5.745404152435185e-15
+  },
+  "tolerance": 1e-05,
+  "passed": true,
+  "scope": "All judge loadings, score weights and43scores; Harman none/varimax loadings and score weights after sign/permutation alignment; Monte Carlo streams excluded."
+}

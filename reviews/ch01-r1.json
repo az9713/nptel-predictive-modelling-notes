@@ -1,0 +1,75 @@
+{
+  "chapter": 1,
+  "round": 1,
+  "reviewer": "review_01_06_r1 independent full-edition science editor",
+  "skill": "science-editor",
+  "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533",
+  "verdict": "ACCEPT",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [
+    {
+      "severity": "minor",
+      "location": "chapters/ch01.html:36",
+      "quote": "the response has twice the centered variation of the predictor",
+      "issue": "Variation can be read as variance; the displayed variances are 68 and 17, so variance is four times, while centered deviations and standard deviation double.",
+      "replacement": "The relation is exactly $y_i=2x_i+3$, so each centered response is twice its corresponding centered predictor. The response standard deviation doubles, and its variance is four times the predictor variance.",
+      "status": "resolved_verified"
+    }
+  ],
+  "checks": [
+    "Complete chapter fragment read, including all six exercise statements and worked solutions.",
+    "Local notation and assumptions audited against EDITOR_DOMAIN.md, plan/notation.md and house style.",
+    "Main Python lab independently executed with project .venv; exit0 and saved stdout matched exactly.",
+    "Review is independent of chapter authorship; no chapter or lab edits performed.",
+    "Verified sample/data distinctions, conditional-MSE decomposition, covariance-unbiasedness derivation, Cauchy–Schwarz equality and affine invariance.",
+    "Recomputed all displayed source arithmetic and six exercise solutions; checked the complete correlation transcript.",
+    "No R demonstrations claimed in assigned tracks; visual inventory is explicitly limited."
+  ],
+  "limits": [
+    "No complete independent audiovisual audit: focused source captions, selected code frames and primary documentation support checks.",
+    "No formal proof-assistant or human certification.",
+    "Shared reader/browser rendering and portable-export checks are outside this fragment review.",
+    "Finite numerical agreement does not prove universal algorithmic equivalence or model adequacy."
+  ],
+  "lab_sha256": "6eb35d9e4a49639459b203e42f13f7917cd634866bebd194579e4f9f8bbdba16",
+  "stdout_sha256": "8af70d20f6e12bf9b3932d1c2035055407956b6bd0f4c997a93e90a361bd67b4",
+  "scope": "Entire chapter fragment, all six worked exercises, main lab/output, source metadata and targeted source verification.",
+  "pilot_review_history": {
+    "chapter": 1,
+    "round": 1,
+    "reviewer": "author_07_12 independent of chapter 1 authorship",
+    "skill": "science-editor",
+    "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533",
+    "verdict": "ACCEPT",
+    "blocking_findings": 0,
+    "major_findings": 0,
+    "minor_findings": 0,
+    "findings": [
+      {
+        "severity": "minor",
+        "location": "chapters/ch01.html:36",
+        "quote": "the response has twice the centered variation of the predictor",
+        "issue": "Variation can be read as variance; the displayed variances are 68 and 17, so variance is four times, while centered deviations and standard deviation double.",
+        "replacement": "The relation is exactly $y_i=2x_i+3$, so each centered response is twice its corresponding centered predictor. The response standard deviation doubles, and its variance is four times the predictor variance.",
+        "status": "resolved_verified"
+      }
+    ],
+    "checks": [
+      "Read complete chapter fragment and its six solutions",
+      "Checked source covariance and quadratic examples against full correlation transcript",
+      "Introductory source transcript was available in inherited full-source context",
+      "Executed labs/ch01.py independently; all assertions passed and output matched saved stdout",
+      "Checked covariance-divisor derivation, Cauchy-Schwarz equality, affine scaling, nonlinear dependence, and conditional-risk decomposition"
+    ],
+    "limits": [
+      "No comprehensive independent audiovisual audit",
+      "No formal proof-assistant verification",
+      "No complete browser rendering review at fragment stage",
+      "No R example claimed by the assigned caption tracks; cannot certify an exhaustive visual-code inventory"
+    ],
+    "original_body_sha256": "dde667dff5c98cc3273fda944cd1c2db43d6b020c9e80fe0608860171f6e854c",
+    "repair_verification": "Verified exact replacement and updated current fragment digest."
+  }
+}

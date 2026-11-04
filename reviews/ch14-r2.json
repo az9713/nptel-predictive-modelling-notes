@@ -1,0 +1,39 @@
+{
+  "chapter": 14,
+  "round": 2,
+  "verdict": "ACCEPT",
+  "body_sha256": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69",
+  "lab_sha256": "96cba16f5db89cf8d04fd9a5e08201f114e62e0e2dd08926b3afed5b988868fe",
+  "stdout_sha256": "567e0e3a38c078de6e761b030ad681ce221b5fb585008b24faec209603b6da81",
+  "findings": [
+    {
+      "severity": "minor",
+      "location": "chapters/ch14.html, exercise5",
+      "quote": "Run the Longley example with Employed as response instead.",
+      "issue": "The computational instruction is not completed by its conceptual solution; no alternate-response output is calculated.",
+      "replacement": "<strong>Conceptual: matching the source.</strong> If the Longley example were instead run with <code>Employed</code> as response, could its VIF list be compared directly with the source list?",
+      "status": "resolved",
+      "resolution": "Actual repaired chapter text inspected; all laboratory numerical reruns passed."
+    }
+  ],
+  "scope": "Independent full science-editor round2: complete chapter fragment, all six solved exercises, complete laboratory and stdout, metadata/conversion evidence, mathematical derivations, meaningful fresh Python numerical rerun; independent of author and full round1 reviewer. Lab stdout matches saved output after newline normalization; figure saving suppressed to preserve owned files.",
+  "checks": [
+    "Verified null-space nonidentification, estimable combination, SVD inverse amplification/covariance and squared normal-equation condition number.",
+    "Derived partial-regression coefficient and VIF identities with intercept/full-rank conditions; checked PCR projection and ridge normal equation, shrinkage, bias, covariance and limiting cases.",
+    "Independently read ridge::linearRidge source: corrForm unit-norm scaling, 90% candidate cutoff, PCR variance denominator, penalty path and effective-df selection agree with this scoped full-rank Python port.",
+    "Independent lab rerun reproduces all VIFs, condition numbers, automatic Longley penalty .0104691196008/two PCs and Freeny .000209640661493/one PC; independent sklearn fixed-penalty comparison passes. All six solution arguments checked; one task wording repair requested."
+  ],
+  "source_evidence": [
+    "Focused n8yN78mF9qw captions585\u2013650 and815\u2013970s checked for Longley/ridge/drop-three and Freeny counterpart.",
+    "Primary cran/ridge R/linearRidge.R independently inspected; stored fresh-R Longley/Freeny reference penalties and coefficients inspected. Exact Freeny source formula remains expressly uncertified."
+  ],
+  "limitations": [
+    "No comprehensive audiovisual/on-screen-command audit or full independent re-reading of every source recording; exact caption coverage is listed separately.",
+    "Fresh-R output is inspected existing project evidence; this reviewer did not launch another R runtime. Same-input agreement is distinct from lecturer-file identity.",
+    "No formal proof-assistant verification or human expert certification. Root owns reader rendering, mechanical checks and export validation."
+  ],
+  "date": "2026-11-04",
+  "repair_confirmation": "Focused repair inspection confirmed that exercise5 now asks a conceptual counterfactual matching its worked solution.",
+  "reviewer": "/root/review_07_12_r1",
+  "independence": "This reviewer did not author the chapter or its laboratory and performed this full second-round review independently of the chapter author and full first-round reviewer."
+}

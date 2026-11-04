@@ -1,0 +1,28 @@
+{
+  "chapter": 13,
+  "round": 2,
+  "verdict": "ACCEPT",
+  "body_sha256": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d",
+  "lab_sha256": "4fa1438aebb7800a05116f0914d3f0d8ae84bc9f9f30bb9df60a63ff2587904e",
+  "stdout_sha256": "d3f932115e2cbdd6f9fd10e4a4281e25796ab6eebebe1e0c86a907c2184ba734",
+  "findings": [],
+  "scope": "Independent full science-editor round2: complete chapter fragment, all six solved exercises, complete laboratory and stdout, metadata/conversion evidence, mathematical derivations, meaningful fresh Python numerical rerun; independent of author and full round1 reviewer. Lab stdout matches saved output after newline normalization; figure saving suppressed to preserve owned files.",
+  "checks": [
+    "Checked conditional response versus pooled response normality; residual covariance and singularity, iid-test calibration restrictions and leverage scaling.",
+    "Verified R plotting probabilities, type-7 quartile reference line and car numeric-vector pointwise envelope directly against package source.",
+    "Derived both sides of KS jumps, fully specified continuous null restriction, Shapiro weight normalization, affine invariance and Cauchy\u2013Schwarz bounds. All six solutions checked.",
+    "Independent lab rerun reproduces 60 rows, Shapiro W=.967428644, p=.109100493, quartile line19.175000+9.043874z and three-point KS=.174678079; residual test is correctly labeled nominal."
+  ],
+  "source_evidence": [
+    "Focused D_oscdlZD40 captions755\u2013875 and995\u20131055s independently read; ToothGrowth package/source normality claim and Q-Q/Shapiro calls are represented and misleading inference repaired.",
+    "Primary sources independently opened: R ToothGrowth manual and cran/car R/qqPlot.R; fresh-R stored witness ch13-15-reference-output.txt inspected."
+  ],
+  "limitations": [
+    "No comprehensive audiovisual/on-screen-command audit or full independent re-reading of every source recording; exact caption coverage is listed separately.",
+    "Fresh-R output is inspected existing project evidence; this reviewer did not launch another R runtime. Same-input agreement is distinct from lecturer-file identity.",
+    "No formal proof-assistant verification or human expert certification. Root owns reader rendering, mechanical checks and export validation."
+  ],
+  "date": "2026-11-04",
+  "reviewer": "/root/review_07_12_r1",
+  "independence": "This reviewer did not author the chapter or its laboratory and performed this full second-round review independently of the chapter author and full first-round reviewer."
+}

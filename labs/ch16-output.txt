@@ -1,0 +1,49 @@
+pollution full extractAIC: 439.787096634
+backward step path:
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] 439.787096634
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15] 437.790776077
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14] 435.804959057
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14] 433.823571622
+  [1, 2, 3, 4, 5, 6, 8, 9, 12, 13, 14] 432.056754904
+  [1, 2, 3, 4, 5, 6, 8, 9, 12, 13] 430.389380619
+  [1, 2, 3, 4, 5, 6, 9, 12, 13] 429.633968121
+Final adjusted R2=0.713883873
+forward step path:
+  [] 496.646285110
+  [9] 466.538100596
+  [9, 6] 451.019420723
+  [9, 6, 2] 441.491415908
+  [9, 6, 2, 14] 435.612858683
+  [9, 6, 2, 14, 1] 430.928880668
+  [9, 6, 2, 14, 1, 3] 429.001668811
+  [9, 6, 2, 14, 1, 3, 5] 428.828918239
+Final adjusted R2=0.709841820
+Authored held-out example MSE=1676.693423
+women polynomial fits; rows: 15
+Degree 1: adjusted R2=0.990318281, coefficients=[-87.516667   3.45    ]
+Degree 2: adjusted R2=0.999385928, coefficients=[ 2.618782e+02 -7.348319e+00  8.306399e-02]
+Degree 3: adjusted R2=0.999722156, coefficients=[-8.967476e+02  4.641079e+01 -7.461844e-01  4.252556e-03]
+state.x77 full coefficients: [1.234563411e+00 2.236753573e-04 6.442470152e-05 4.142836590e+00
+ 5.813055377e-04]
+State full 95% intervals:
+                    0         1
+const      -6.552191  9.021318
+Population  0.000041  0.000406
+Income     -0.001313  0.001441
+Illiteracy  2.381799  5.903874
+Frost      -0.019668  0.020830
+State VIF: [np.float64(1.245282), np.float64(1.345822), np.float64(2.165848), np.float64(2.082547)]
+Nevada external studentized residual=3.542928636, Bonferroni p=0.047544180
+State alphabetical-order DW=2.317691198
+State ordering is not a time index; serial interpretation is unsupported.
+Residual-resampling two-sided DW p (1000 draws)=0.252000
+Full versus reduced F=0.006108462, p=0.993910981, df difference=2
+State backward retained: ['Population', 'Illiteracy']
+Conditional Gaussian-regression Box-Cox profile power=0.865322
+Marginal normal-family Box-Cox power=0.605542
+Robust spread-level suggested response power=1.209266
+Best size 1 Cp: 6.562469 terms: ['Illiteracy']
+Best size 2 Cp: 1.012217 terms: ['Population', 'Illiteracy']
+Best size 3 Cp: 3.003343 terms: ['Population', 'Income', 'Illiteracy']
+Best size 4 Cp: 5.0 terms: ['Population', 'Income', 'Illiteracy', 'Frost']
+Source-step-path assertions and diagnostics: passed

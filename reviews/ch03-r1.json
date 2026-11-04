@@ -1,0 +1,41 @@
+{
+  "chapter": 3,
+  "round": 1,
+  "reviewer": "review_01_06_r1 independent full-edition science editor",
+  "skill": "science-editor",
+  "verdict": "ACCEPT",
+  "body_sha256": "f199c8c7d4e41e5b51c8144e2aac748939f5473a0c22b079a5ad176824379545",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [
+    {
+      "severity": "major",
+      "location": "chapters/ch03.html:30",
+      "quote": "This follows by expanding the error's quadratic expectation and completing the square.",
+      "issue": "The optimum is correct, but the stated proof suppresses the actual completion-square mechanism.",
+      "replacement": "<p>Factor scores add another layer of inference. Even if the population parameters were known, the factors are unobserved because specific variation remains. Among linear predictors $\\widehat{\\mathbf{f}}=\\mathbf{A}(\\mathbf{x}-\\boldsymbol\\mu)$ with positive definite $\\boldsymbol\\Sigma$, expected squared prediction error is minimized at $\\mathbf{A}_*=\\boldsymbol\\Lambda^{\\mathsf T}\\boldsymbol\\Sigma^{-1}$. To see this, use $\\operatorname{Cov}(\\mathbf{x},\\mathbf{f})=\\boldsymbol\\Lambda$ and expand the quadratic expectation. Completing the square gives</p>\n$$E\\|\\mathbf{f}-\\mathbf{A}(\\mathbf{x}-\\boldsymbol\\mu)\\|^2=\\operatorname{tr}(\\mathbf{I}_k-\\boldsymbol\\Lambda^{\\mathsf T}\\boldsymbol\\Sigma^{-1}\\boldsymbol\\Lambda)+\\operatorname{tr}\\!\\left[(\\mathbf{A}-\\mathbf{A}_*)\\boldsymbol\\Sigma(\\mathbf{A}-\\mathbf{A}_*)^{\\mathsf T}\\right].$$\n<p>Positive definiteness makes the second term nonnegative, uniquely zero at $\\mathbf{A}=\\mathbf{A}_*$. The prediction-error covariance is $\\mathbf{I}_k-\\boldsymbol\\Lambda^{\\mathsf T}\\boldsymbol\\Sigma^{-1}\\boldsymbol\\Lambda$. The matrix need not vanish. A calculated score is therefore an estimate of a latent coordinate, not a direct measurement of that coordinate.</p>",
+      "status": "resolved_verified"
+    }
+  ],
+  "checks": [
+    "Read entire chapter and all six worked solutions; checked covariance expansion, communality, rotation invariance, oblique covariance, parameter-count necessity and Bernoulli-indicator singularity.",
+    "Verified repaired linear-score completion-square identity, unique optimum under positive definiteness and residual covariance.",
+    "Read complete main lab and imported ch02 varimax; independently reran exit0, saved stdout exact.",
+    "Independently recomputed PA loadings and MINRES spectra against stored fresh R arrays: loading errors below9e-15; MINRES spectral differences below1.4e-5.",
+    "Inspected factor440 code/matrix frame: two-factor PA none/varimax; ability112; stock omitted n.obs.",
+    "Read primary psych fa/fa.parallel source and varimax conventions; checked ability22 iterations and stock50-iteration nonconvergence/negative Shell continuation.",
+    "Reviewed metadata and fresh-R reference scripts; summary moments do not identify original individual scores."
+  ],
+  "limits": [
+    "No comprehensive independent audiovisual review; selected frames/captions support targeted source checks.",
+    "No formal proof-assistant, legal or human certification.",
+    "Python rerun and stored fresh R scripts/arrays checked; R environments not independently rebuilt by this reviewer.",
+    "Finite fixtures do not prove arbitrary-input equivalence or recover unknown lecture versions/random states.",
+    "Shared reader/browser and export checks are outside fragment review."
+  ],
+  "scope": "Entire chapter, all six solutions, main lab/output, key helpers, metadata and targeted source evidence.",
+  "lab_sha256": "1d703afc8da066f180a87a706689fdcc142dcd79d52de7b3d6b8560882eaf4e3",
+  "stdout_sha256": "cb4a75e2b507b63fd6a685af3541c923a28318584f0f5e9ebcb3809ba119e0fb",
+  "repair_verification": "Root applied repairs; independently reread repaired paragraphs/adjacent context and hashed current raw fragment."
+}

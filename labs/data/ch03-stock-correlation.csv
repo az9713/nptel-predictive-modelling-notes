@@ -1,0 +1,6 @@
+stock,JPMorgan,Citibank,WellsFargo,Shell,Exxon
+JPMorgan,1.0,0.632,0.511,0.115,0.155
+Citibank,0.632,1.0,0.574,0.322,0.213
+WellsFargo,0.511,0.574,1.0,0.183,0.146
+Shell,0.115,0.322,0.183,1.0,0.683
+Exxon,0.155,0.213,0.146,0.683,1.0

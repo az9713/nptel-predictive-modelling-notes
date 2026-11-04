@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Categorical predictors and interpretable contrasts — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a aria-current="page" href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Categorical predictors and interpretable contrasts</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch10-labels-heading">10.1 A category is not a measurement scale</a></li><li><a href="#ch10-binary-heading">10.2 A binary-only fit estimates the two sample means</a></li><li><a href="#ch10-basis-heading">10.3 Different coefficients can represent the same fitted values</a></li><li><a href="#ch10-many-heading">10.4 Why an intercept uses one fewer indicator</a></li><li><a href="#ch10-conversion-heading">10.5 A faithful Python conversion preserves the design</a></li><li><a href="#ch10-exercises-heading">10.6 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 10 · <a href="https://www.youtube.com/watch?v=vgvKOKD-daM">Recording 1</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch10-labels">
+<h2 id="ch10-labels-heading">10.1 A category is not a measurement scale</h2>
+<p>A credit-balance model can include income and recorded student status. Income has a numerical unit; student status identifies groups. Replacing the labels No and Yes by numbers is a convenient representation, but it does not give the numbers an intrinsic quantitative meaning. The design matrix must describe which group comparisons the coefficients represent.</p>
+<p>The source uses the simulated <code>Credit</code> data distributed with R's ISLR package. Our downloaded file contains 400 rows and includes the numerical response <code>Balance</code>, measured in dollars, and the categorical predictors <code>Student</code>, <code>Gender</code>, and <code>Ethnicity</code>. A direct extraction of the primary package data was compared with the bundled file. These calculations concern that simulated dataset. They do not establish population facts about the recorded groups.</p>
+<p>Linear regression accommodates numerical responses and categorical predictors. A categorical response requires a suitable response model, such as the binary probability model developed in <a href="chapter-17.html">Chapter 17</a>. Predictor coding and response distribution are distinct choices. The presence of a category among the predictors does not require switching a numerical-response model to logistic regression.</p>
+<p>For a binary predictor, an indicator is sufficient. Define $d_i=1$ for one designated group and $d_i=0$ for the reference group. The conditional-mean model is $E(Y_i\mid d_i)=\beta_0+\beta_1d_i$. Thus the reference mean is $\beta_0$, the other group mean is $\beta_0+\beta_1$, and $\beta_1$ is the modeled difference between them. The error term in the full response model remains present even when a table lists only the mean equations.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=131">Credit data</a> and <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=526">indicator coding</a>. Data identity is determined by the actual package object and file, rather than the conflicting ten-thousand-observation description in the source/help text.</p>
+</section>
+<section id="ch10-binary">
+<h2 id="ch10-binary-heading">10.2 A binary-only fit estimates the two sample means</h2>
+<p>Suppose each group has at least one observation. Let $n_0,n_1$ be the group sizes and $\overline y_0,\overline y_1$ their response means. The least-squares criterion separates as
+$$Q(b_0,b_1)=\sum_{i:d_i=0}(y_i-b_0)^2+
+\sum_{i:d_i=1}(y_i-b_0-b_1)^2. \tag{10.1}$$
+Put $m_0=b_0$ and $m_1=b_0+b_1$. These are independent real coordinates: any pair of group means corresponds to one pair $(b_0,b_1)$. For either group, the identity $\sum(y_i-m)^2=\sum(y_i-\overline y)^2+n_g(m-\overline y)^2$ shows that its minimizing constant is its sample mean. Consequently,
+$$\widehat\beta_0=\overline y_0,\qquad
+\widehat\beta_1=\overline y_1-\overline y_0. \tag{10.2}$$
+This is a deterministic result. It does not assume Gaussian errors or equal group variances.</p>
+<p>For <code>Student</code>, the executed Python fit gives mean balances $480.369444$ for No and $876.825000$ for Yes. With No as the reference, the intercept is $480.369444$ and the coefficient of the Yes indicator is $396.455556$. It is a difference in fitted group averages, not a prediction that every student has exactly that additional balance. Individual deviations remain in the residuals.</p>
+<p>For the source <code>Gender</code> labels, explicitly taking Male as the reference gives means $509.803109$ and $529.536232$ for Male and Female. The Female indicator coefficient is $19.733123$. These are unadjusted comparisons. Adding income, credit limit, or another predictor changes the specified comparison, so the coefficient no longer equals a raw difference of marginal group means in general.</p>
+<p>With equal-variance independent errors, the variance of a binary-only difference is $\sigma^2(1/n_0+1/n_1)$. This follows by writing it as the difference of two independent group means. Under unequal group variances, it becomes $\sigma_0^2/n_0+\sigma_1^2/n_1$ instead. The numerical group-mean fit is unchanged by this distinction; its uncertainty is not. A categorical encoding does not supply homoscedasticity.</p>
+<p class="source-note">Source examples: <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=349">Balance on Student</a> and <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=430">Balance on Gender</a>. The independent group-mean derivation and variance distinction are developed here.</p>
+</section>
+<section id="ch10-basis">
+<h2 id="ch10-basis-heading">10.3 Different coefficients can represent the same fitted values</h2>
+<p>Swap the binary indicator by defining $d_i^*=1-d_i$. Substitution gives
+$$\beta_0+\beta_1d_i=(\beta_0+\beta_1)-\beta_1d_i^*. \tag{10.3}$$
+The new intercept is the other group mean and the new difference changes sign. The model space, fitted values, residuals, and sum of squared residuals remain unchanged. Changing the baseline changes the question named by an individual coefficient, even though all group comparisons can still be recovered.</p>
+<p>Another common coding uses $s_i=2d_i-1$, taking values $-1,+1$. Since $d_i=(s_i+1)/2$,
+$$\beta_0+\beta_1d_i=(\beta_0+\beta_1/2)+(\beta_1/2)s_i. \tag{10.4}$$
+The intercept is now the unweighted average of the two fitted group means, and the coefficient is half their difference. This intercept need not equal the overall sample mean when group sizes differ. A grand mean weights observations; the midpoint of group means weights the groups equally.</p>
+<p>The executed Gender recodings produce $(509.803109,19.733123)$ for Female $=1$, $(529.536232,-19.733123)$ for Male $=1$, and $(519.669670,9.866562)$ for Female $=+1$, Male $=-1$. The laboratory asserts that all three fitted-response vectors agree. Coefficient equality is therefore the wrong criterion for checking two programs that intentionally use different bases.</p>
+<div class="prop"><p><strong>Proposition 10.1 — basis invariance, proved here.</strong> For a full-rank design $X$ and an invertible square matrix $B$, designs $X$ and $XB$ give identical least-squares fitted vectors. Their unique coefficients satisfy $\widehat\gamma=B^{-1}\widehat\beta$.</p></div>
+<div class="proof"><p>Every vector $XB\gamma$ equals $X\beta$ for $\beta=B\gamma$, and the invertibility of $B$ makes this correspondence one-to-one. The two minimizations therefore search exactly the same set of fitted vectors. Substituting $\gamma=B^{-1}\widehat\beta$ reproduces the minimizing vector, and full rank gives uniqueness. <span class="qed">∎</span></p></div>
+<p>This argument explains equivalence of full-rank contrast systems. It does not justify replacing three categories by one arbitrary numerical score. A single score plus an intercept spans only a two-dimensional family of group means, whereas three unrestricted means require three independent coordinates. Not every recoding preserves the design-column space.</p>
+<p class="source-note">Source recodings: <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=876">swapping the reference and using minus/plus one</a>.</p>
+</section>
+<section id="ch10-many">
+<h2 id="ch10-many-heading">10.4 Why an intercept uses one fewer indicator</h2>
+<p>Let a categorical predictor have $K$ observed levels, each represented in at least one row. Write $I_{ig}=1$ if row $i$ belongs to group $g$, and zero otherwise. Each row belongs to exactly one group, so $\sum_{g=1}^K I_{ig}=1$. Including all $K$ indicator columns and an intercept therefore creates the column relation
+$$\mathbf1-\sum_{g=1}^K I_{\cdot g}=0. \tag{10.5}$$
+The resulting coefficient vector is not unique. Adding a constant to the intercept and subtracting it from every group coefficient preserves every fitted value.</p>
+<p>There are two convenient full-rank alternatives. Use all $K$ indicators without a separate intercept, so each coefficient is one group mean. Or use an intercept and $K-1$ indicators, taking the omitted group as the reference. The latter represents $\mu_1=\beta_0$ and $\mu_g=\beta_0+\beta_g$ for $g&gt;1$. If each group occurs, this representation is unique: the reference rows identify $\beta_0$, and each other group's rows identify its offset. It spans the same group-constant fitted vectors as the no-intercept representation.</p>
+<p>The source's three Ethnicity labels are African American, Asian, and Caucasian. With African American as reference, the fitted intercept is $531.000000$, the Asian offset is $-18.686275$, and the Caucasian offset is $-12.502513$. The resulting fitted group means are $531.000000$, $512.313725$, and $518.497487$. The baseline is included through the intercept; it has not been dropped from the dataset.</p>
+<p>For $K&gt;2$, replacing the category by the integers $1,\ldots,K$ imposes an equal-step linear trend on these group means. It can be appropriate for a justified score, but it is a different model from unrestricted categorical effects. Likewise, an ordered category does not by itself establish equal numerical distances between its levels.</p>
+<p class="source-note">Source multi-level example: <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=1136">three recorded categories</a> and <a href="https://www.youtube.com/watch?v=vgvKOKD-daM&amp;t=1379">coefficient interpretation</a>.</p>
+</section>
+<section id="ch10-conversion">
+<h2 id="ch10-conversion-heading">10.5 A faithful Python conversion preserves the design</h2>
+<p>The laboratory converts all three source fits: <code>Balance ~ Student</code>, <code>Balance ~ Gender</code>, and <code>Balance ~ Ethnicity</code>. It uses pandas categorical types with explicitly ordered levels, then statsmodels formula least squares. Patsy's <code>C(...)</code> marks a predictor as categorical and generates treatment-coded columns. The coefficient vector is checked independently against the group-mean formula, rather than only comparing formatted summaries.</p>
+<p>The original file contains a leading space in the Male label. The program strips whitespace from this label and explicitly preserves the source reference order Male, Female. Without that order, trimming could change an alphabetically selected baseline. Student uses No, Yes; Ethnicity uses the three levels in the source order. These choices preserve the intended comparisons while cleaning a representation detail.</p>
+<p>A fresh R fit on identical category levels and observations agrees with the Python estimates at the recorded numerical tolerance. The Python program also checks reference reversal, minus/plus-one coding, and equivalence between the full-indicator and reference-indicator fits. In the three-category example, an intercept plus all indicators creates four columns with rank three. The redundant representation does not become identified merely because a solver returns some coefficient vector.</p>
+<p>With an additional numerical predictor $x$, a treatment-coded additive model has mean $\beta_0+\beta_xx+\sum_{g&gt;1}\beta_g I_g$. Each group shares slope $\beta_x$ and differs by an offset. The baseline intercept is the reference-group mean at $x=0$, not necessarily that group's observed average. If all values of $x$ are constant within each group, its column may already be in the indicator span, so checking group counts alone is insufficient to ensure the expanded design has full rank.</p>
+<p>At prediction time, preserve the fitted design's levels and contrast convention. A new category absent from training has no estimated group offset. Silently encoding it as the reference group assigns an unsupported mean. Either reject the unsupported input, define a justified pooling strategy before training, or collect the information required to estimate the additional level. The same rule applies when an apparently harmless data-cleaning step changes category spelling.</p>
+<p class="source-note">Implementation references: <a href="https://patsy.readthedocs.io/en/latest/categorical-coding.html">Patsy categorical coding</a> and <a href="https://search.r-project.org/CRAN/refmans/ISLR/html/Credit.html">ISLR Credit documentation</a>. The bundled data were retrieved from <a href="https://vincentarelbundock.github.io/Rdatasets/csv/ISLR/Credit.csv">the Credit CSV mirror</a> and checked against <a href="https://github.com/cran/ISLR/blob/master/data/Credit.rda">the primary package object</a>. All displayed values are computed in <a href="#python-laboratory">the chapter laboratory</a>.</p>
+</section>
+<section id="ch10-exercises">
+<h2 id="ch10-exercises-heading">10.6 Exercises with worked solutions</h2>
+<ol>
+<li><p><strong>Conceptual — missing coefficient or missing group?</strong> A summary lists an intercept and only two coefficients for a three-level category. Has the reference group been omitted?</p><details class="solution"><summary>Solution</summary><p>No. Its predicted mean is represented by the intercept. The other two coefficients are differences from that mean. Omitting a redundant indicator avoids the exact column relation in (10.5); it does not remove any reference-group rows from the fit.</p></details></li>
+<li><p><strong>Conceptual — unseen level.</strong> A deployed model receives a category never observed in training. Why is coding it as all-zero indicators generally unsupported?</p><details class="solution"><summary>Solution</summary><p>The all-zero vector encodes a specific known reference group. An unseen group has no estimated offset or evidence that its mean equals the reference mean. A deliberate pooling rule can define such behavior, but it must be part of the model and evaluation. An accidental encoding fallback is a new unsupported assumption.</p></details></li>
+<li><p><strong>Derivation — group-mean minimizers.</strong> Derive (10.2) without differentiating a matrix criterion.</p><details class="solution"><summary>Solution</summary><p>For each group, expand $\sum(y_i-m)^2$ about its sample mean. The cross term vanishes because centered responses sum to zero, leaving a fixed within-group sum plus $n_g(m-\overline y_g)^2$. With $n_g&gt;0$, each term has its unique minimum at that group's sample mean. Solve $\beta_0=m_0$ and $\beta_1=m_1-m_0$.</p></details></li>
+<li><p><strong>Derivation — a general binary code.</strong> A binary category is coded as two distinct real values $a,b$. Find the line whose fitted means are $\mu_0,\mu_1$ at those codes.</p><details class="solution"><summary>Solution</summary><p>Solve $\alpha+\gamma a=\mu_0$ and $\alpha+\gamma b=\mu_1$. Subtraction gives $\gamma=(\mu_1-\mu_0)/(b-a)$, and $\alpha=\mu_0-a\gamma$. Distinct codes preserve the two-dimensional group-mean space. If $a=b$, group membership disappears and the difference is unidentified. This argument does not generalize to an arbitrary single score for more than two unrestricted group means.</p></details></li>
+<li><p><strong>Computation — reproduce every source category fit.</strong> Run the laboratory and compare its coefficients with direct means for Student, Gender, and Ethnicity.</p><details class="solution"><summary>Solution</summary><p>For each factor, the program computes the reference mean and subtracts it from every other group mean. It asserts equality with formula-model coefficients at absolute tolerance $10^{-10}$. Student's fitted difference is $396.455556$, Gender's is $19.733123$, and the two nonreference Ethnicity offsets are $-18.686275$ and $-12.502513$. These reproduce the source examples on the actual Credit observations rather than substitute data.</p></details></li>
+<li><p><strong>Computation — compare bases rather than coefficient strings.</strong> Fit the three binary encodings and both full-rank three-category designs. What numerical invariants should agree?</p><details class="solution"><summary>Solution</summary><p>The program compares fitted vectors at tolerance $10^{-10}$. Residuals and SSE then agree as well. The category-only group means also agree, although coefficients use different bases. For the redundant three-category design it reports four columns and rank three, exposing nonuniqueness. Comparing coefficient arrays without transforming their bases would falsely label equivalent fits as different.</p></details></li>
+</ol>
+<p>Indicator coding makes group offsets explicit. It also reveals what the additive model omits: different groups may have different slopes for a numerical predictor. <a href="chapter-11.html">Interactions and nonlinear features</a> extend the design to represent that possibility.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch10.py"><code>labs/ch10.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Convert source ISLR Credit categorical-predictor examples to Python.&quot;&quot;&quot;
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+
+def main():
+    here = Path(__file__).resolve().parent
+    data = pd.read_csv(here / &quot;data/ch10-credit.csv&quot;)
+    data[&quot;Gender&quot;] = pd.Categorical(data[&quot;Gender&quot;].str.strip(),
+                                    categories=[&quot;Male&quot;, &quot;Female&quot;])
+    data[&quot;Student&quot;] = pd.Categorical(data[&quot;Student&quot;], categories=[&quot;No&quot;, &quot;Yes&quot;])
+    data[&quot;Ethnicity&quot;] = pd.Categorical(
+        data[&quot;Ethnicity&quot;],
+        categories=[&quot;African American&quot;, &quot;Asian&quot;, &quot;Caucasian&quot;])
+    assert len(data) == 400
+    print(&quot;data: ISLR Credit, 400 rows; Gender whitespace normalized&quot;)
+    for name in [&quot;Student&quot;, &quot;Gender&quot;, &quot;Ethnicity&quot;]:
+        fit = smf.ols(f&quot;Balance ~ C({name})&quot;, data=data, missing=&quot;raise&quot;).fit()
+        means = data.groupby(name, observed=True).Balance.mean()
+        labels = data[name].cat.categories
+        expected = np.r_[means.iloc[0],
+                         means.iloc[1:].to_numpy()-means.iloc[0]]
+        np.testing.assert_allclose(fit.params.to_numpy(), expected, atol=1e-10)
+        print(name, &quot;levels:&quot;, list(labels))
+        print(name, &quot;group_means:&quot;, np.round(means.to_numpy(), 9))
+        print(name, &quot;coefficients:&quot;, np.round(fit.params.to_numpy(), 9))
+    female = (data.Gender == &quot;Female&quot;).astype(float).to_numpy()
+    y = data.Balance.to_numpy()
+    fitted = []
+    for name, code in [(&quot;female1_male0&quot;, female),
+                       (&quot;male1_female0&quot;, 1-female),
+                       (&quot;female_plus1_male_minus1&quot;, 2*female-1)]:
+        fit = sm.OLS(y, sm.add_constant(code)).fit()
+        print(name, &quot;coefficients:&quot;, np.round(fit.params, 9))
+        fitted.append(fit.fittedvalues)
+    np.testing.assert_allclose(fitted[0], fitted[1], atol=1e-10)
+    np.testing.assert_allclose(fitted[0], fitted[2], atol=1e-10)
+    indicators = pd.get_dummies(data.Ethnicity, dtype=float).to_numpy()
+    redundant = np.column_stack([np.ones(len(data)), indicators])
+    print(&quot;three_categories: redundant_columns rank:&quot;, redundant.shape[1],
+          np.linalg.matrix_rank(redundant))
+    reduced = np.column_stack([np.ones(len(data)), indicators[:, 1:]])
+    fit1 = np.linalg.lstsq(reduced, y, rcond=None)[0]
+    fit2 = np.linalg.lstsq(indicators, y, rcond=None)[0]
+    np.testing.assert_allclose(reduced @ fit1, indicators @ fit2, atol=1e-10)
+    print(&quot;all assertions passed: group means, coding invariance, rank&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>data: ISLR Credit, 400 rows; Gender whitespace normalized
+Student levels: [&#x27;No&#x27;, &#x27;Yes&#x27;]
+Student group_means: [480.36944444 876.825     ]
+Student coefficients: [480.36944444 396.45555556]
+Gender levels: [&#x27;Male&#x27;, &#x27;Female&#x27;]
+Gender group_means: [509.80310881 529.53623188]
+Gender coefficients: [509.80310881  19.73312308]
+Ethnicity levels: [&#x27;African American&#x27;, &#x27;Asian&#x27;, &#x27;Caucasian&#x27;]
+Ethnicity group_means: [531.         512.31372549 518.49748744]
+Ethnicity coefficients: [531.         -18.68627451 -12.50251256]
+female1_male0 coefficients: [509.80310881  19.73312308]
+male1_female0 coefficients: [529.53623188 -19.73312308]
+female_plus1_male_minus1 coefficients: [519.66967035   9.86656154]
+three_categories: redundant_columns rank: 4 3
+all assertions passed: group means, coding invariance, rank
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-09.html">← Previous chapter</a><a href="chapter-11.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

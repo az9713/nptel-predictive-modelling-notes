@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Study guide — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Study guide</h1><p>The sequence follows the official teaching order. Each chapter combines a statistical problem, explicit assumptions, a mathematical development, an executable laboratory, and exercises with worked solutions.</p>
+<h2 id="prerequisites">Prerequisites and working method</h2>
+<p>Review matrix multiplication, rank, orthogonal projections, symmetric eigenproblems, derivatives, expectation, variance, and covariance. Keep the <a href="notation.html">notation reference</a> nearby. A symbol table supplements a local definition; it does not replace one.</p>
+<p>Read the derivation before running the laboratory. Change one assumption or input, predict the effect, and compare your prediction with the calculation. Solve an exercise before opening its solution. When a computed value differs from a recording, check the input rows, centering, scaling, model matrix, algorithm, and default settings before deciding that one implementation is wrong.</p>
+<h2 id="routes">Routes through the course</h2>
+<table><thead><tr><th>Goal</th><th>Route</th><th>Result to demonstrate</th></tr></thead><tbody>
+<tr><td>Understand multivariate structure</td><td>Chapters 1–6</td><td>Derive PCA, explain factor-model nonidentifiability, and compare clustering objectives.</td></tr>
+<tr><td>Build interpretable regression models</td><td>Chapter 1, then 7–11</td><td>Construct a design matrix, derive least squares, explain uncertainty, and interpret contrasts and interactions.</td></tr>
+<tr><td>Diagnose and assess a fitted model</td><td>Chapters 8–16</td><td>Separate model misspecification, influential observations, invalid uncertainty, and poor new-data prediction.</td></tr>
+<tr><td>Classify binary outcomes</td><td>Chapters 7–8, 16–17</td><td>Derive the logistic likelihood, interpret an odds ratio, and assess probabilities and decisions separately.</td></tr>
+<tr><td>Understand a causal cutoff design</td><td>Chapters 8, 10–11, 15–16, 18</td><td>State the identification assumptions and distinguish an observed jump from an identified treatment effect.</td></tr>
+</tbody></table>
+<h2 id="three-questions">Three questions to carry through every chapter</h2>
+<p><strong>Prediction:</strong> how well will the complete fitted procedure perform on new observations drawn from the relevant population? <strong>Inference:</strong> what parameter or uncertainty statement is supported by the sampling model? <strong>Causality:</strong> which intervention is being compared, and which assumptions identify its effect? These questions can use similar equations while requiring different evidence.</p>
+<h2 id="capstone">A capstone for independent work</h2>
+<p>Choose a documented, redistributable dataset. State its sampling unit, outcome, intended prediction population, and plausible sources of dependence. Reserve an assessment sample, fit all preprocessing and model selection on training data, examine diagnostics, and report predictive performance with its limitations. A causal claim additionally needs an identification argument; a predictive score cannot supply it.</p>
+
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

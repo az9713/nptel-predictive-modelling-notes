@@ -1,0 +1,29 @@
+{
+  "chapter": 15,
+  "round": 2,
+  "verdict": "ACCEPT",
+  "body_sha256": "fc548ae6e3fd639d92431c8a5926f9a6ca8cfd22e395b0104741175f98e34d11",
+  "lab_sha256": "9f01d7cfcc27b5197aaf56610197c0739ae85bff88c95095ce457a04bfd08535",
+  "stdout_sha256": "021a1a017d59868a7dd523de34cffdedaf537e28dc464dddf48ae7487084377d",
+  "findings": [],
+  "scope": "Independent full science-editor round2: complete chapter fragment, all six solved exercises, complete laboratory and stdout, metadata/conversion evidence, mathematical derivations, meaningful fresh Python numerical rerun; independent of author and full round1 reviewer. Lab stdout matches saved output after newline normalization; figure saving suppressed to preserve owned files.",
+  "checks": [
+    "Verified unbiased OLS with arbitrary covariance, M Omega M-transpose residual-square expectation and either-sign heteroscedastic discrepancy.",
+    "Derived whitening, inverse-variance weights, common-weight scaling, GLS covariance and PSD covariance-dominance proof; feasible weights are appropriately distinguished.",
+    "Checked GQ independent Gaussian quadratic-form argument, block rank/positive-df restrictions and tail choice. HC0 is correctly presented as an estimator with asymptotic independent-observation assumptions.",
+    "Verified lognormal retransformation and changed per-capita specification. Independent lab rerun reproduces all printed home/market/GAS10 and constructed results, including GQ10.129821645 and GLS slope variance .022485608. All six solutions checked."
+  ],
+  "source_evidence": [
+    "Focused _gooKHbGkS0 captions15\u201380,140\u2013290,450\u2013590s checked; missing expenditure inputs, scale-change interpretation and promotion encoding distinguished.",
+    "Current fresh-R witness sources/private/ch15-recovered-reference-output.txt inspected, rather than obsolete Penn State home counterpart in older combined reference log. It supports current522-row home, aliased market equivalent fitted basis and publisher GAS10."
+  ],
+  "limitations": [
+    "No comprehensive audiovisual/on-screen-command audit or full independent re-reading of every source recording; exact caption coverage is listed separately.",
+    "Fresh-R output is inspected existing project evidence; this reviewer did not launch another R runtime. Same-input agreement is distinct from lecturer-file identity.",
+    "No formal proof-assistant verification or human expert certification. Root owns reader rendering, mechanical checks and export validation."
+  ],
+  "date": "2026-11-04",
+  "repair_confirmation": "Current text inspected after HTML entity escaping: residual-square covariance is M Omega M-transpose, either-sign discrepancy is explicit and both GQ block residual degrees of freedom are positive.",
+  "reviewer": "/root/review_07_12_r1",
+  "independence": "This reviewer did not author the chapter or its laboratory and performed this full second-round review independently of the chapter author and full first-round reviewer."
+}

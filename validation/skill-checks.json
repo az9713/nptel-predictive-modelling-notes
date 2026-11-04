@@ -1,0 +1,388 @@
+{
+  "checks": [
+    {
+      "file": "chapters\\ch01.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch01.html: 115 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch01.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch01.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch01.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch01.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch02.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch02.html: 126 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch02.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch02.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch02.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch02.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch03.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch03.html: 105 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch03.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch03.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch03.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch03.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch04.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch04.html: 99 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch04.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch04.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch04.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch04.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch05.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch05.html: 62 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch05.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch05.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch05.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch05.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch06.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch06.html: 96 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch06.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch06.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch06.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch06.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch07.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch07.html: 123 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch07.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch07.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch07.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch07.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch08.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch08.html: 138 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch08.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch08.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch08.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch08.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch09.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch09.html: 114 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch09.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch09.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch09.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch09.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch10.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch10.html: 90 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch10.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch10.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch10.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch10.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch11.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch11.html: 74 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch11.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch11.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch11.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch11.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch12.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch12.html: 104 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch12.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch12.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch12.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch12.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch13.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch13.html: 110 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch13.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch13.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch13.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch13.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch14.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch14.html: 85 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch14.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch14.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch14.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch14.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch15.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch15.html: 74 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch15.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch15.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch15.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch15.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch16.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch16.html: 75 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch16.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch16.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch16.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch16.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch17.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch17.html: 87 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch17.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch17.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch17.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch17.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch18.html",
+      "validator": "checktex.py",
+      "exit_code": 0,
+      "stdout": "[checktex] chapters\\ch18.html: 75 math segment(s), 0 issue(s)\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch18.html",
+      "validator": "checklt.py",
+      "exit_code": 0,
+      "stdout": "[checklt] chapters\\ch18.html: 0 math segment(s) with raw < or >\n",
+      "stderr": ""
+    },
+    {
+      "file": "chapters\\ch18.html",
+      "validator": "check_proofs.py",
+      "exit_code": 0,
+      "stdout": "[check_proofs] chapters\\ch18.html: 0 asserted proposition(s) (no adjacent .proof)\n  every proposition/theorem/lemma is proved. (Still eyeball boxed .keyresult siblings \u2014 an unproved sibling law is a judgement call this can't see.)\n",
+      "stderr": ""
+    }
+  ],
+  "all_exit_codes_zero": true,
+  "scope": "TeX delimiters, literal less-than, advisory proposition adjacency; independent reviews supply proof assessment.",
+  "pep8_labs": {
+    "passed": true,
+    "command": "python -m pycodestyle labs --max-line-length=99"
+  }
+}

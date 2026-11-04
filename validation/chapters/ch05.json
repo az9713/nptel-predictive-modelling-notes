@@ -1,0 +1,136 @@
+{
+  "number": 5,
+  "title": "Ward clustering, dendrograms, and reproducible implementations",
+  "source_videos": [
+    "ybgCUIU1isY",
+    "JgFfF_ysuNo"
+  ],
+  "reading_records": [
+    {
+      "video_id": "ybgCUIU1isY",
+      "read_full": true,
+      "transcript_sha256": "0fa118a1839a5ef825f82a8fd6da71cad2a368c720f63ede28590b78b6713c04",
+      "limitations": "Full English automatic captions read; selected 720p code/matrix frames inspected, not a complete audiovisual audit."
+    },
+    {
+      "video_id": "JgFfF_ysuNo",
+      "read_full": true,
+      "transcript_sha256": "11d4380662d0e43eb07548316560e7ed70c7d7c5e3b95d5dc8a0a85dabef2cd2",
+      "limitations": "Full English automatic captions read; selected 720p code/matrix frames inspected, not a complete audiovisual audit."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "nutrient-average",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 420,
+      "source_method": "flexclust::nutrient; dist; scale; hclust(method=average); cutree(k=5); aggregate(median); plot/rect.hclust",
+      "python_method": "pandas; sample-SD standardization; scipy.pdist/linkage/cut_tree; groupby.median; matplotlib",
+      "data_status": "Canonical flexclust nutrient 27x5 recovered from primary package data.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-agglomerative-comparison.json: full distances/cophenetic values and cut5 match; lab prints raw and standardized medians.",
+      "limitations": "Display colors and leaf ordering can differ without changing hierarchy."
+    },
+    {
+      "id": "nutrient-nbclust-all26",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 790,
+      "source_method": "NbClust(nutrient.scaled,distance=euclidean,min.nc=2,max.nc=15,method=average), default index=all; Dindex curves; Best.nc votes",
+      "python_method": "ch05_nbclust.nbclust_average; literal 26-index source-behavior port; matplotlib",
+      "data_status": "Same canonical nutrient table, sample-SD standardized.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-nbclust-comparison.json: all index/critical/Best.nc tables and selected partitions match fresh R on source and independent fixtures.",
+      "limitations": "The largest vote count is tied among 2,3,5,15; R selects smallest2; not a unique majority. GPL-2 helper notice retained."
+    },
+    {
+      "id": "utilities-hierarchies",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 970,
+      "source_method": "read.csv Utilities.csv; scale; dist(columns6,8); hclust(single/average); cutree3/5/6; dendextend branch displays",
+      "python_method": "pandas; sample-SD scaling; scipy linkage on Sales/Fuel_Cost; matplotlib dendrogram cuts",
+      "data_status": "Canonical 22-company book-author Utilities.csv from gedeck/dmba primary repository.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-agglomerative-comparison.json: complete single/average cophenetic matrices and cut4 partitions agree.",
+      "limitations": "Source uses only standardized Sales and Fuel_Cost for clustering, all8 for display."
+    },
+    {
+      "id": "utilities-pca-heatmap",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1110,
+      "source_method": "fviz_cluster(all8 standardized variables, cutree average k4); heatmap(norm,Colv=NA,hclustfun=hclust)",
+      "python_method": "NumPy SVD display; row-standardized heatmap with complete-linkage row tree computed from original all8 standardized features",
+      "data_status": "Same canonical22x8 table.",
+      "status": "converted_with_explicit_display_conventions",
+      "verification": "labs/ch05-output.txt: PCA fractions27.16/23.75 percent; generated figures inspected; heatmap primary R defaults audited.",
+      "limitations": "Plot geometry and heatmap colors are different from the two-feature clustering geometry. Pixel equality/leaf reordering not asserted."
+    },
+    {
+      "id": "usarrests-diana",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1170,
+      "source_method": "diana(USArrests,stand=TRUE); fviz_dend(k4)",
+      "python_method": "ch05_diana.diana_from_data; mean-absolute-deviation scaling; scipy/matplotlib display",
+      "data_status": "Canonical R datasets::USArrests exported from installed R4.5.1.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-diana-comparison.json: full distance and cophenetic matrices, cut2, and divisive coefficient match fresh cluster::diana.",
+      "limitations": "stand=TRUE uses mean absolute deviation about mean, not sampleSD; plot style differs."
+    },
+    {
+      "id": "votes-diana-manhattan",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1320,
+      "source_method": "diana(votes.repub,metric=manhattan,stand=TRUE); cutree(k2); plot banner/dendrogram",
+      "python_method": "ch05_diana missing-distance rescaling; Manhattan DIANA; matplotlib",
+      "data_status": "Canonical cluster::votes.repub 50x31 with original missing entries.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-diana-comparison.json: complete pairwise/cophenetic matrices, cut2 and coefficient agree.",
+      "limitations": "Missing pairwise distances rescaled by total/available feature count; banner leaf order need not be identical."
+    },
+    {
+      "id": "votes-diana-euclidean",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1450,
+      "source_method": "diana(votes.repub,stand=TRUE); cutree(k2)",
+      "python_method": "ch05_diana Euclidean variant",
+      "data_status": "Same canonical votes.repub table.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-diana-comparison.json: all matrices and cut2 match; lab confirms8/42 split same as Manhattan.",
+      "limitations": "Agreement at cut2 does not mean complete hierarchies agree."
+    },
+    {
+      "id": "agriculture-takehome",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1500,
+      "source_method": "data(agriculture); diana(agriculture) take-home",
+      "python_method": "ch05_diana raw Euclidean variant",
+      "data_status": "Canonical cluster::agriculture12x2.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-diana-comparison.json: cophenetic matrix, coefficient and cut2 agree.",
+      "limitations": "No standardization requested in source default call."
+    },
+    {
+      "id": "clustlearn-six-databases",
+      "video_id": "JgFfF_ysuNo",
+      "start_seconds": 1530,
+      "source_method": "clustlearn::divisive_clustering(db1..db6,max_iterations=5)",
+      "python_method": "ch05_clusterlearn.divisive_clustering; literal bisecting-Lloyd hierarchy",
+      "data_status": "All six exact500x2 source datasets bundled; MIT notice retained.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "validation/ch05-clustlearn-reference.json: all six complete499-split merge arrays and leaf orders identical; maxheight difference4.8e-14; clean R/Python exit0.",
+      "limitations": "R-selected initial centers replayed for exact reference; independent Python RNG mode differs in random starts. This wrapper is not DIANA."
+    }
+  ],
+  "r_inventory_scope": "All demonstrations and take-home datasets identified in full captions plus inspected on-screen code frames; no claim of exhaustive recovery of every unseen editor line.",
+  "lab": {
+    "path": "labs/ch05.py",
+    "stdout_path": "labs/ch05-output.txt",
+    "execution": "passed project .venv; source-data hierarchies, literal NbClust26 and DIANA outputs validated against fresh R"
+  },
+  "word_count": 3026,
+  "source_limitations": [
+    "Selected source-code frames retained privately; remote local filenames replaced by recovered canonical package/publisher datasets.",
+    "Manual source complete-linkage intermediate verbal slip corrected from actual matrix.",
+    "Identical numerical hierarchy does not imply identical graphic styling or default random streams."
+  ],
+  "body_sha256": "a7b9bf12e178eb4cf021cc5d1d21d9f68453060af60152742bc036e34b13485d"
+}

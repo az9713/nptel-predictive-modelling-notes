@@ -1,0 +1,20 @@
+{
+  "datasets": [
+    {
+      "name": "USJudgeRatings",
+      "path": "labs/data/ch02-USJudgeRatings.csv",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/USJudgeRatings.csv",
+      "primary_documentation": "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/USJudgeRatings.html",
+      "note": "Mirror of R datasets; first CSV column contains row names; first numeric column CONT is retained in canonical data.",
+      "sha256": "2e0ce4f8e26d41eafb90713582651c46819845377b649d4480de22b579bc9d73"
+    },
+    {
+      "name": "Harman23.cor",
+      "path": "labs/data/ch02-Harman23-correlation.csv",
+      "url": "https://raw.githubusercontent.com/wch/r-source/trunk/src/library/datasets/data/Harman23.cor.R",
+      "primary_documentation": "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/Harman23.cor.html",
+      "note": "Eight-by-eight correlation matrix, n.obs=305; no individual measurements or scores supplied.",
+      "sha256": "5981120e6d5d3bbc59892af8d6c75f1393389b68f408bdf79c8ef5ab1e425c95"
+    }
+  ]
+}

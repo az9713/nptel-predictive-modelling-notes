@@ -1,0 +1,89 @@
+{
+  "number": 14,
+  "title": "Multicollinearity, identifiability, and conditioning",
+  "source_videos": [
+    "vqPB9ZDECaw",
+    "AokQyy_Pt5o",
+    "n8yN78mF9qw"
+  ],
+  "reading_records": [
+    {
+      "video_id": "vqPB9ZDECaw",
+      "read_full": true,
+      "transcript_sha256": "bb8d10750230e092d79b9cb7e4e1a01b4c053bc95c537c6677abc1840662ab98",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "AokQyy_Pt5o",
+      "read_full": true,
+      "transcript_sha256": "7bcea4995c6ff2f2d1c9bf5e4e7bdb23472e221893c5d80c9101c18f29c17baf",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "n8yN78mF9qw",
+      "read_full": true,
+      "transcript_sha256": "c0f680fe13c832e6c3ce97901098edf4901bbe475c21b37deb6522823fc92459",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch14-longley-diagnostics",
+      "video_id": "n8yN78mF9qw",
+      "start_seconds": 597,
+      "source_method": "correlation, OLS, VIF and dropping GNP/Population/Year",
+      "python_method": "labs/ch14.py explicit design, statsmodels auxiliary VIF, translated automatic ridge and sklearn independent check",
+      "data_status": "canonical public R dataset bundled offline",
+      "status": "verified_against_independent_calculation",
+      "verification": "labs/ch14-output.txt; fresh R sources/private/ch13-15-reference-output.txt where applicable",
+      "limitations": "Predictor/response identities clear in spoken source; VIF independently calculated; no full screen audit."
+    },
+    {
+      "id": "ch14-longley-ridge",
+      "video_id": "n8yN78mF9qw",
+      "start_seconds": 824,
+      "source_method": "ridge::linearRidge automatic corrForm",
+      "python_method": "labs/ch14.py explicit design, statsmodels auxiliary VIF, translated automatic ridge and sklearn independent check",
+      "data_status": "canonical public R dataset bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "labs/ch14-output.txt; fresh R sources/private/ch13-15-reference-output.txt where applicable",
+      "limitations": "Exact on-screen options not comprehensively audited; inspected package-default path reproduced in R/Python."
+    },
+    {
+      "id": "ch14-freeny-ridge",
+      "video_id": "n8yN78mF9qw",
+      "start_seconds": 932,
+      "source_method": "freeny y~. and linearRidge",
+      "python_method": "labs/ch14.py explicit design, statsmodels auxiliary VIF, translated automatic ridge and sklearn independent check",
+      "data_status": "canonical public R dataset bundled offline",
+      "status": "verified_against_fresh_r_run",
+      "verification": "labs/ch14-output.txt; fresh R sources/private/ch13-15-reference-output.txt where applicable",
+      "limitations": "Caption additional dataset name is imperfect; canonical freeny counterpart supplied; on-screen exact formula not independently certified."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch14.py",
+    "stdout_path": "labs/ch14-output.txt",
+    "execution": "passed",
+    "sha256": "96cba16f5db89cf8d04fd9a5e08201f114e62e0e2dd08926b3afed5b988868fe",
+    "stdout_sha256": "567e0e3a38c078de6e761b030ad681ce221b5fb585008b24faec209603b6da81",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2222,
+  "body_sha256": "080a7cc6c0116c1fedc33d8d8c25db617cc360aaecebaf3fe9fad171a3abaa69",
+  "source_limitations": [
+    "Caption-grounded exposition, selected source settings unverified; no exhaustive frame audit."
+  ],
+  "data": [
+    {
+      "path": "labs/data/ch14-freeny.csv",
+      "sha256": "e630eb1e47206f83b07e6bae2c3f512fb0ff30563bc3ec394acb97b38ceddb6d",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/freeny.csv"
+    },
+    {
+      "path": "labs/data/ch14-longley.csv",
+      "sha256": "1283706d84cb7697111b42a6aed3aca222df1cda2ed1c3d4913b713b94a5e516",
+      "url": "https://vincentarelbundock.github.io/Rdatasets/csv/datasets/longley.csv"
+    }
+  ]
+}

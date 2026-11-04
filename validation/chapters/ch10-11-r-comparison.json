@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "reference": "Fresh R4.5.1 base lm on primary ISLR Credit object and MASS Boston object",
+  "absolute_tolerance": 1e-08,
+  "max_absolute_errors": {
+    "ch10_Student": 1.0800249583553523e-12,
+    "ch10_Gender": 3.979039320256561e-13,
+    "ch10_Ethnicity": 7.212008767965017e-13,
+    "ch11_additive": 1.7053025658242404e-12,
+    "ch11_interaction": 1.332978172285948e-11,
+    "ch11_linear": 2.1316282072803006e-14,
+    "ch11_quadratic": 7.815970093361102e-14
+  },
+  "data_identity": "All400 Credit rows/all12 original columns equal primary CRAN RDA extraction; Boston columns exported from MASS."
+}

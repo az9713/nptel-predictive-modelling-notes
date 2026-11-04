@@ -1,0 +1,35 @@
+{
+  "chapter": 8,
+  "round": 1,
+  "verdict": "ACCEPT",
+  "body_sha256": "b6e36093340d1eaeeb197bc09f3efc450845ecb3e8b44b4d4227a2f9ce3b8ca5",
+  "lab_sha256": "9b0b00a4fc800b013ead9df85ba75344b93db37a6c191ce6abe029186230cb67",
+  "stdout_sha256": "ca1d1c9a999977d1f48b487ef23049ad49f37f5271ed8db5028eef4a732ba3a3",
+  "findings": [],
+  "scope": "Independent science-editor FULL scientific/pedagogical round 1: complete current HTML fragment, full Python lab, executed stdout, chapter metadata/conversion ledger, all six solved exercises, mathematical derivations and stated assumptions. Default labs independently rerun in project .venv, exit0, saved stdout reproduced after newline normalization. Shared reader shell, browser rendering and export are handled by root.",
+  "mathematical_and_numerical_checks": [
+    "Verified H/M symmetry, idempotence, image/kernel/trace facts, OLS unbiasedness/covariance, E(SSE)=sigma\u00b2(n-q), marginal residual variance sigma\u00b2(1-hii) and off-diagonal dependence.",
+    "Checked Gaussian likelihood/MLE with SSE>0, nested F rank/normality restrictions, adjusted versus marginal slope interpretation, and new-independent-observation intervals.",
+    "Default lab numerical checks reproduce exact coefficients[10,-2,3], SSE 8, rank/trace 3. Housing workflow and existing R comparison separately inspected;2,626-row fit and first prediction correctly scoped as public canonical-data execution, not certified lecture-file version. All six exercise solutions checked."
+  ],
+  "source_evidence": [
+    "dK7LyVwHlyo captions653\u2013830s:29Toyota rows and random20-row training selection; exact subset/split honestly unavailable.",
+    "dK7LyVwHlyo1016\u20131157s and rLXNVsz9qwo935\u20131119s: borough model, coefficient extraction/interval graphics, new-data confidence/prediction workflow.",
+    "Existing ch07-09 R comparison max errors below 1e-8 on identical housing inputs.",
+    "Reviewer independently recomputed Python housing coefficients against the stored fresh-R witness: max absolute discrepancy 1.0348912837798707e-9; this is same-input agreement, not lecture-version certification."
+  ],
+  "limitations": [
+    "No comprehensive every-frame audiovisual or on-screen-code transcription; selected timestamped caption passages independently checked.",
+    "Fresh R witness files/comparison records are existing project evidence; this reviewer did not start a new R runtime. Same-input agreement is distinguished from original source-data reproduction.",
+    "This is an independent scientific editorial review, not formal proof verification or human certification."
+  ],
+  "reviewer": "Independent science-editor; not chapter author",
+  "review_date": "2026-11-04",
+  "repair_confirmation": "Focused repair confirmation: public housing files exist, are byte-identical to the inspected private acquisitions, and the advertised offline command independently reproduces labs/ch08-housing-output.txt. Exercise6 and local-file links now refer to those actual bundled files; exact lecture-version uncertainty remains explicit.",
+  "optional_housing_stdout_sha256": "f464c16ae251a19adf6214b80a60aab863b701168c1044f067dcf4cfae1513df",
+  "public_data_sha256": {
+    "labs/data/ch08-housing.csv": "6984574e6e1f13592bd78310d6e706bc07cd0ac705566c8d8b8e49d0da696b75",
+    "labs/data/ch08-housingNew.csv": "fe9a58520fcf90e958a67907cd7d4f42e410eac3a4eced6f73ba4071d613e40c"
+  },
+  "final_rank_condition_confirmation": "Final focused rank-condition confirmation: actual section8.4 nested-F paragraph now requires q_R<q_F<n and defines r=q_F-q_R. Both chi-square degrees of freedom are positive, matching the stated F reference and adjacent orthogonal-projection proof. This bounded mathematical clarification is accepted; no laboratory or numerical result changed."
+}

@@ -1,0 +1,21 @@
+ISLR Default is simulated; rows: 10000 defaults: 333
+Balance-only coefficients: [-1.065133062e+01  5.498916935e-03]
+Balance1000/2000 default probabilities: [0.005752145 0.58576937 ]
+Student-only coefficients: [-3.504127762  0.404887081]
+Student0/1 marginal probabilities: [0.029195011 0.043138587]
+Adjusted coefficients (const,student,balance,income): [-1.086904521e+01 -6.467758082e-01  5.736505266e-03  3.033450119e-06]
+Default null deviance=2920.649711346, residual=1571.544827579, AIC=1579.544827579
+Independent Newton/GLM coefficient agreement: passed
+Finite-difference likelihood score check: passed
+Source illustrative table OR=2.973772894, logOR SE=0.259923354
+Smarket coefficients: [-0.126000259 -0.073073747 -0.042301345  0.011085108  0.009358938
+  0.010313069  0.135440661]
+Smarket null deviance=1731.174769116, residual=1727.584094203, LR=3.590674913, p=0.731869315
+Confusion matrix rows=actualDown/Up, columns=predictedDown/Up:
+ [[145 457]
+ [141 507]]
+Training accuracy=0.521600, error=0.478400, always-Up=0.518400
+Authored chronological2005 lag-only confusion:
+ [[ 35  76]
+ [ 35 106]]
+Chronological2005 accuracy=0.559523810

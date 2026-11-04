@@ -1,0 +1,126 @@
+{
+  "number": 15,
+  "title": "Heteroscedasticity and variance-aware regression",
+  "source_videos": [
+    "-K6Nqjr9eTA",
+    "KMRZHOGE1aQ",
+    "_gooKHbGkS0"
+  ],
+  "reading_records": [
+    {
+      "video_id": "-K6Nqjr9eTA",
+      "read_full": true,
+      "transcript_sha256": "e33927d94698520cf850d6282eb876911a38d70efcad0c82386fbef664c8842e",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "KMRZHOGE1aQ",
+      "read_full": true,
+      "transcript_sha256": "55a1740791c12780a4d4f1e0a8b2ffb28e0a284ae8d555b6a3957a9af56c9944",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "_gooKHbGkS0",
+      "read_full": true,
+      "transcript_sha256": "6bb00e979f8b038c01a5697a76824262d3ddd28b288012dd4c91553433b14d20",
+      "limitations": "Full English captions read; no comprehensive audiovisual review."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch15-home-price-log-WLS",
+      "video_id": "_gooKHbGkS0",
+      "start_seconds": 26,
+      "source_method": "home-price-log-WLS",
+      "python_method": "labs/ch15.py statsmodels OLS/WLS/GQ, numpy transforms",
+      "data_status": "Source-matching522-row Monash realestate; firstrows/df/OLScoefficients verified against selected lecture frame",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Python and freshR OLS/WLS same recovered data and weights; source OLS coefficients match home-model frame.",
+      "limitations": "Exact source home-weight construction not comprehensively frame-transcribed; explicit absolute-residual feasible weights used."
+    },
+    {
+      "id": "ch15-market-share-WLS",
+      "video_id": "_gooKHbGkS0",
+      "start_seconds": 452,
+      "source_method": "market-share-WLS",
+      "python_method": "labs/ch15.py statsmodels OLS/WLS/GQ, numpy transforms",
+      "data_status": "Recovered36-row data; source firstrows and formula/weights frame-verified",
+      "status": "verified_against_fresh_r_run",
+      "verification": "FreshR/Python identical fitted-value basis and group-variance WLS; source rank-deficient factor design converted to equivalent full-rank indicators.",
+      "limitations": "R aliases redundant Promotion2; coefficient vector representation differs, fitted values agree."
+    },
+    {
+      "id": "ch15-petroleum-percapita-GQ",
+      "video_id": "_gooKHbGkS0",
+      "start_seconds": 246,
+      "source_method": "petroleum-percapita-GQ",
+      "python_method": "labs/ch15.py statsmodels OLS/WLS/GQ, numpy transforms",
+      "data_status": "Exact publisher GAS10 table,50rows,source firstrows match",
+      "status": "verified_against_fresh_r_run",
+      "verification": "FreshR/Python total/percapita coefficients and gqtest F4.537989153,p.000389445259 agree.",
+      "limitations": "Original row-order GQ preserved; ordering carries statistical meaning."
+    },
+    {
+      "id": "ch15-consumption-expenditure-log",
+      "video_id": "_gooKHbGkS0",
+      "start_seconds": 145,
+      "source_method": "consumption-expenditure-log",
+      "python_method": "labs/ch15.py statsmodels OLS/WLS/GQ, numpy transforms",
+      "data_status": "original source observations missing",
+      "status": "method_converted_exact_source_numbers_not_reproduced",
+      "verification": "Reusable raw/log CSV conversion and explicitly synthetic schema check executed; original source rows remain incomplete.",
+      "limitations": "Original lecturer-local expenditure CSV not recovered; Python raw/log function and synthetic checks implemented, but exact source-data numerical reproduction cannot be claimed."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch15.py",
+    "stdout_path": "labs/ch15-output.txt",
+    "execution": "passed",
+    "sha256": "9f01d7cfcc27b5197aaf56610197c0739ae85bff88c95095ce457a04bfd08535",
+    "stdout_sha256": "021a1a017d59868a7dd523de34cffdedaf537e28dc464dddf48ae7487084377d",
+    "pep8": "pycodestyle --ignore=E226: passed"
+  },
+  "word_count": 2147,
+  "body_sha256": "fc548ae6e3fd639d92431c8a5926f9a6ca8cfd22e395b0104741175f98e34d11",
+  "source_limitations": [
+    "Consumption-expenditure original20-row CSV incomplete; method converted with labeled synthetic check.",
+    "No comprehensive audiovisual audit; selected model/data frames inspected."
+  ],
+  "data": [
+    {
+      "path": "labs/data/ch15-gas10.csv",
+      "sha256": "ecc5aab43df8a081e572ce7ee7d0550ce705b8a9c3c079c107f9f397da923125",
+      "url": "https://media.pearsoncmg.com/ph/bp/bp_studenmund_econometrics_7/data/Ch10ASCII.zip"
+    },
+    {
+      "path": "labs/data/ch15-homeprice-522.csv",
+      "sha256": "f946284310671b3c4a766f5d608a9f8d56a3f4d9a857ae7a0e682d1a5a937cd6",
+      "url": "https://raw.githubusercontent.com/dicook/Monash-R/master/4-Modelling/data/realestate.csv"
+    },
+    {
+      "path": "labs/data/ch15-homeprice-source.csv",
+      "sha256": "bb76068b34d9bea93171e95d92aeaf4348d89c923e8131e903a2a4160863a1f7",
+      "url": "https://raw.githubusercontent.com/dicook/Monash-R/master/4-Modelling/data/realestate.csv",
+      "transformation": "Extract price,sqft,lot from recovered 522-row file; rename SalePrice,SqFeet,Lot without rescaling."
+    },
+    {
+      "path": "labs/data/ch15-marketshare.txt",
+      "sha256": "59712fca093edb72250bc4e4e57db614beaa9f15532d5c502b1a6dad83ef7d00",
+      "url": "https://online.stat.psu.edu/stat462/sites/onlinecourses.science.psu.edu.stat462/files/data/marketshare/index.txt"
+    },
+    {
+      "path": "labs/data/ch15-realestate.txt",
+      "sha256": "7699e8ecc4490d0e648ed409a861d2174518ed403feb2c449486e990728ca260",
+      "url": "https://online.stat.psu.edu/stat462/sites/onlinecourses.science.psu.edu.stat462/files/data/realestate/index.txt"
+    }
+  ],
+  "selected_frames": [
+    "sources/private/frames/home-table.png",
+    "sources/private/frames/home-model.png",
+    "sources/private/frames/petroleum-table.png",
+    "sources/private/frames/marketshare-table.png",
+    "sources/private/frames/marketshare-wls.png"
+  ],
+  "lab_sha256": "9f01d7cfcc27b5197aaf56610197c0739ae85bff88c95095ce457a04bfd08535",
+  "stdout_sha256": "021a1a017d59868a7dd523de34cffdedaf537e28dc464dddf48ae7487084377d"
+}

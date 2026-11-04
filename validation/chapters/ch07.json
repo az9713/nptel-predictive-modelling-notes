@@ -1,0 +1,55 @@
+{
+  "number": 7,
+  "title": "Simple linear regression: fitting and uncertainty",
+  "source_videos": [
+    "znWxD_73rtg",
+    "j35ZjlaXpPs"
+  ],
+  "reading_records": [
+    {
+      "video_id": "znWxD_73rtg",
+      "read_full": true,
+      "transcript_sha256": "3ae8e85db2eb462cfbb81f373ab2ca4e21d2849382357573028dfeea16564284",
+      "limitations": "English machine captions read fully; selected insurance spreadsheet frame inspected, not comprehensive audiovisual review."
+    },
+    {
+      "video_id": "j35ZjlaXpPs",
+      "read_full": true,
+      "transcript_sha256": "253c8cd30835f742ed9fd57d5c1ea00fd617075c70e9018f7f4a89312d4b056a",
+      "limitations": "English machine captions read fully; selected insurance spreadsheet frame inspected, not comprehensive audiovisual review."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch07-insurance-lm",
+      "video_id": "j35ZjlaXpPs",
+      "start_seconds": 1232,
+      "source_method": "read.csv; lm(male ~ Age, data=insurance)",
+      "python_method": "pandas.read_csv; statsmodels.OLS with explicit constant; optional --csv input",
+      "data_status": "Original CSV unavailable; independent1334s and1420s frame inspection by root also failed because source screen crop excludes age/male columns.",
+      "status": "method_converted_exact_source_numbers_not_reproduced",
+      "verification": "Python and fresh R agree on the explicitly original construction; centered-sum checks independent of both libraries. Exact insurance dataset remains unavailable.",
+      "limitations": "Original-source R numerical reproduction unavailable because original insurance rows are not recoverable; fresh constructed-data R/Python check passed."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch07.py",
+    "stdout_path": "labs/ch07-output.txt",
+    "execution": "passed in project .venv with independent numerical assertions"
+  },
+  "word_count": 2410,
+  "source_limitations": [
+    "All assigned caption text read, but all slide formulas and R code not visually transcribed.",
+    "Historical anecdotes omitted rather than repeated unverified.",
+    "Normal-theory intervals are explicitly authored extensions."
+  ],
+  "body_sha256": "377dbc94233c5e10b6ddc4a9b9af760574b2a5866de4d20ab85f0b11dbb97c42",
+  "fresh_r_comparison": {
+    "record": "validation/chapters/ch07-09-r-comparison.json",
+    "status": "passed",
+    "source_data_limits_preserved": true
+  },
+  "code_validation": "validation/chapters/ch07-12-code-checks.json",
+  "lab_sha256": "7b3ad8b04a8ce87602761c27f17a6ecdd5cdfd1477fddc8e2271e4f936979b3c",
+  "stdout_sha256": "7c784a203acbc820652cfddac0c57dd27506e2df6a668b16de2e7ffadfa54b2e"
+}

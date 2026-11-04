@@ -1,0 +1,7 @@
+db1: n=500; 499 splits; root height=31.62277660; cut 2 sizes=[242, 258]
+db2: n=500; 499 splits; root height=31.62277660; cut 2 sizes=[247, 253]
+db3: n=500; 499 splits; root height=31.62277660; cut 3 sizes=[108, 191, 201]
+db4: n=500; 499 splits; root height=31.62277660; cut 3 sizes=[151, 172, 177]
+db5: n=500; 499 splits; root height=31.62277660; cut 3 sizes=[166, 167, 167]
+db6: n=500; 499 splits; root height=31.62277660; cut 3 sizes=[122, 132, 246]
+Duplicate-row safeguard and all six linkage structures passed.

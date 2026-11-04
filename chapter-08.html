@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Multiple regression and projection geometry — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a aria-current="page" href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Multiple regression and projection geometry</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch08-adjustment-heading">8.1 A coefficient is conditional on a specified model</a></li><li><a href="#ch08-projection-heading">8.2 Least squares is an orthogonal projection</a></li><li><a href="#ch08-moments-heading">8.3 What unbiasedness actually assumes</a></li><li><a href="#ch08-likelihood-heading">8.4 Gaussian likelihood and exact inference</a></li><li><a href="#ch08-python-heading">8.5 Python ports of the car and housing analyses</a></li><li><a href="#ch08-exercises-heading">8.6 Exercises with worked solutions</a></li><li><a href="#ch08-limits-heading">8.7 A fitted surface still needs diagnostic checks</a></li></ul></nav><p class="meta">Chapter 8 · <a href="https://www.youtube.com/watch?v=BSk7RaB4kbk">Recording 1</a> · <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo">Recording 2</a> · <a href="https://www.youtube.com/watch?v=rLXNVsz9qwo">Recording 3</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch08-adjustment">
+<h2 id="ch08-adjustment-heading">8.1 A coefficient is conditional on a specified model</h2>
+<p>A used car's mileage and age both help predict its price. A simple mileage slope averages over the observed ages at different mileages. A multiple-regression mileage slope instead describes a comparison at the same modeled age and other included predictors. These need not be the same comparison, so different coefficient values do not by themselves indicate software disagreement.</p>
+<p>Let $y\in\mathbb R^n$ collect observed responses. Let $X\in\mathbb R^{n\times q}$ be the <dfn>design matrix</dfn>, with row $x_i^{\mathsf T}$ describing observation $i$. An intercept is represented by a column of ones. With $p$ nonintercept columns, $q=p+1$ coefficients are collected in $\beta\in\mathbb R^q$. The model is
+$$y=X\beta+\varepsilon, \tag{8.1}$$
+where $\varepsilon\in\mathbb R^n$ is the unobserved error vector. Each column must have a defined measurement scale or encoding. A categorical predictor can contribute several indicator columns, so counting named variables is not always counting coefficients.</p>
+<p>When $E(\varepsilon\mid X)=0$, the model specifies the conditional response mean $X\beta$. In an additive model, a slope compares a one-unit change in its design coordinate while the other coordinates are fixed. Whether such a comparison exists in the observed data is a separate question. For strongly dependent features, holding one fixed and moving another can describe combinations with little support. The coefficient then extrapolates within the model even if it is algebraically identified.</p>
+<p>The laboratory constructs two correlated predictors with response coefficients $-2$ and $3$. Its simple first-predictor slope is $-0.2$, whereas the adjusted slope is $-2$. Both calculations use the same response rows. The difference occurs because the simple model incorporates the second predictor's association with the first. It is an illustration of adjustment, not a causal estimate or a reconstruction of the source Toyota dataset.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=BSk7RaB4kbk&amp;t=86">several factors affecting a price</a> and <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo&amp;t=745">simple and adjusted Toyota regressions</a>.</p>
+</section>
+<section id="ch08-projection">
+<h2 id="ch08-projection-heading">8.2 Least squares is an orthogonal projection</h2>
+<p>Minimize $Q(b)=\|y-Xb\|^2$, where $\|v\|^2=v^{\mathsf T}v$ is the squared Euclidean norm. Differentiation gives the normal equations
+$$X^{\mathsf T}X\widehat\beta=X^{\mathsf T}y. \tag{8.2}$$
+Assume $X$ has full column rank $q\leq n$. Then $X^{\mathsf T}X$ is positive definite: for any nonzero $a$, $a^{\mathsf T}X^{\mathsf T}Xa=\|Xa\|^2&gt;0$. Consequently the unique solution is
+$$\widehat\beta=(X^{\mathsf T}X)^{-1}X^{\mathsf T}y. \tag{8.3}$$
+The inverse is a mathematical expression, not a recommended computational recipe. A QR factorization or a singular-value decomposition solves the least-squares problem without explicitly forming the inverse of a potentially ill-conditioned cross-product matrix.</p>
+<div class="prop"><p><strong>Proposition 8.1 — projection decomposition, proved here.</strong> Define $H=X(X^{\mathsf T}X)^{-1}X^{\mathsf T}$ and $M=I_n-H$. The fitted response is $\widehat y=Hy$, the residual is $e=My$, and $X^{\mathsf T}e=0$. Both $H$ and $M$ are symmetric and idempotent, meaning $H^2=H$ and $M^2=M$.</p></div>
+<div class="proof"><p>Transpose $H$ and use symmetry of $(X^{\mathsf T}X)^{-1}$ to obtain $H^{\mathsf T}=H$. Multiplication gives
+$$H^2=X(X^{\mathsf T}X)^{-1}(X^{\mathsf T}X)(X^{\mathsf T}X)^{-1}X^{\mathsf T}=H.$$
+It follows that $M^{\mathsf T}=M$ and $M^2=I_n-2H+H^2=M$. Also $HX=X$ and $MX=0$, so $X^{\mathsf T}My=0$. Equation (8.3) yields $X\widehat\beta=Hy$, and subtraction yields $e=My$. Finally $HM=0$ makes fitted and residual components orthogonal. <span class="qed">∎</span></p></div>
+<p>For any other coefficients $b$, write $y-Xb=e+X(\widehat\beta-b)$. Orthogonality makes its squared norm equal to $\|e\|^2+\|X(\widehat\beta-b)\|^2$. Full rank makes the second term strictly positive unless $b=\widehat\beta$. This proves global minimality and uniqueness without appealing to a local derivative test alone.</p>
+<p>The column space $\operatorname{col}(X)$ is the set of all response vectors representable by this design. A rank-deficient matrix still has a unique projection onto that space, but several coefficient vectors may represent the same projected vector. Software can select a pseudoinverse solution or omit redundant coefficients. Such a convention cannot create unique scientific identification where the design lacks it.</p>
+<p class="source-note">Source derivation: <a href="https://www.youtube.com/watch?v=BSk7RaB4kbk&amp;t=695">matrix least squares</a> and <a href="https://www.youtube.com/watch?v=BSk7RaB4kbk&amp;t=1266">residual projection</a>. This edition uses $q$ for the full coefficient count, including any intercept.</p>
+</section>
+<section id="ch08-moments">
+<h2 id="ch08-moments-heading">8.3 What unbiasedness actually assumes</h2>
+<p>Keep $X$ fixed and full rank. Put $A=(X^{\mathsf T}X)^{-1}X^{\mathsf T}$. Substituting (8.1) into (8.3) gives the exact identity $\widehat\beta-\beta=A\varepsilon$. Hence
+$$E(\widehat\beta\mid X)=\beta+A E(\varepsilon\mid X). \tag{8.4}$$
+Conditional mean-zero errors therefore imply conditional unbiasedness. The sample normal equations do not imply this assumption: a least-squares residual is orthogonal to the design by construction, even if omitted features make $E(\varepsilon\mid X)$ nonzero.</p>
+<p>Let $\Omega=\operatorname{Cov}(\varepsilon\mid X)$ be the conditional error covariance matrix. Linear transformation of a random vector gives
+$$\operatorname{Cov}(\widehat\beta\mid X)=A\Omega A^{\mathsf T}. \tag{8.5}$$
+When $\Omega=\sigma^2I_n$, this reduces to $\sigma^2(X^{\mathsf T}X)^{-1}$. Gaussianity has not entered either derivation. Unequal variances or correlated errors change the covariance formula; they need not change the coefficient expectation if the conditional mean remains zero.</p>
+<p>The residual is $e=M(X\beta+\varepsilon)=M\varepsilon$. It therefore has conditional mean zero and covariance
+$$\operatorname{Cov}(e\mid X)=\sigma^2M \tag{8.6}$$
+in the equal-variance, uncorrelated-error model. This is an $n\times n$ matrix. The scalar expected residual squared length is different:
+$$E(e^{\mathsf T}e\mid X)=E[\operatorname{tr}(\varepsilon\varepsilon^{\mathsf T}M)\mid X]
+=\operatorname{tr}(\sigma^2I_n M)=\sigma^2(n-q). \tag{8.7}$$
+The trace of $H$ is $\operatorname{tr}[(X^{\mathsf T}X)^{-1}X^{\mathsf T}X]=q$, so $\operatorname{tr}(M)=n-q$. Symmetric idempotent matrices have only zero and unit eigenvalues, identifying these traces as the projection dimensions.</p>
+<p>For $n&gt;q$, the residual variance estimator $s^2=e^{\mathsf T}e/(n-q)$ is thus unbiased for $\sigma^2$. Even with independent errors, residuals are generally dependent because (8.6) contains off-diagonal entries. Their individual variances are $\sigma^2(1-h_{ii})$, where $h_{ii}$ is the corresponding diagonal element of $H$. This fact is central to the different residual scalings in <a href="chapter-09.html">influence diagnostics</a>.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=BSk7RaB4kbk&amp;t=904">coefficient moments</a> and <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo&amp;t=13">residual squared length</a>. Covariance of a vector and expectation of its squared length are kept separate here.</p>
+</section>
+<section id="ch08-likelihood">
+<h2 id="ch08-likelihood-heading">8.4 Gaussian likelihood and exact inference</h2>
+<p>Now impose $\varepsilon\mid X\sim N(0,\sigma^2I_n)$, with $\sigma^2&gt;0$. Apart from an additive constant, the log likelihood is
+$$\ell(\beta,\sigma^2)=-\frac n2\log(\sigma^2)-\frac{(y-X\beta)^{\mathsf T}(y-X\beta)}{2\sigma^2}. \tag{8.8}$$
+For any fixed positive variance, maximizing this expression minimizes the same least-squares criterion. Thus the coefficient maximum-likelihood estimator is (8.3). For positive residual sum of squares, differentiating the likelihood in $v=\sigma^2$ after fitting the coefficients gives $-n/(2v)+\mathrm{SSE}/(2v^2)=0$, and therefore
+$$\widehat\sigma^2_{\mathrm{ML}}=\frac{\mathrm{SSE}}n
+=\frac{n-q}{n}s^2. \tag{8.9}$$
+The coefficient estimators coincide under this Gaussian model, but the unbiased and likelihood variance estimators differ. If the residual sum of squares is zero, the likelihood increases as the variance approaches zero; the stated positive-variance parameter space has no finite maximizer.</p>
+<p>Under the Gaussian model, $\widehat\beta\mid X$ is multivariate normal. Orthogonal projection makes $e$ independent of $\widehat\beta$, and $\mathrm{SSE}/\sigma^2\sim\chi^2_{n-q}$. For coefficient index $j$, the exact null statistic for $H_0:\beta_j=b_j$ is
+$$T_j=\frac{\widehat\beta_j-b_j}{s\sqrt{[(X^{\mathsf T}X)^{-1}]_{jj}}}\sim t_{n-q}. \tag{8.10}$$
+The degrees of freedom count all estimated coefficients, including the intercept. A multiple-regression prediction does not automatically use the simple-model value $n-2$.</p>
+<p>A two-sided p-value is the null-model tail probability $\Pr(|T_{n-q}|\geq|T_j^{\mathrm{obs}}|)$. It is not the probability that $H_0$ is true. Failure to reject does not establish an absent association; rejection does not establish a causal effect or a useful predictive improvement. The confidence interval describes uncertainty for the coefficient of this specified model under its assumptions.</p>
+<p>For a reduced design nested inside a full design, let their ranks be $q_R&lt;q_F&lt;n$, with $r=q_F-q_R$. Under the Gaussian model and the null that the reduced mean is correct,
+$$F=\frac{(\mathrm{SSE}_R-\mathrm{SSE}_F)/r}{\mathrm{SSE}_F/(n-q_F)}\sim F_{r,n-q_F}. \tag{8.11}$$
+The additional fitted subspace has dimension $r$ and is orthogonal to the full residual space. Their independent normal squared lengths produce the numerator and denominator chi-squares. This identifies both why the statistic is nonnegative for truly nested models and why the calibration fails if the candidate models were chosen adaptively without accounting for selection.</p>
+<p>For a new design row $x_0^{\mathsf T}$, the fitted mean is $x_0^{\mathsf T}\widehat\beta$. Its estimated variance is $s^2x_0^{\mathsf T}(X^{\mathsf T}X)^{-1}x_0$. An independent new observation adds $s^2$ to that quantity for a prediction interval. Rebuild the new design with exactly the training encoding: a changed category baseline or missing interaction column changes the meaning of $x_0$.</p>
+<p class="source-note">Source discussions: <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo&amp;t=246">Gaussian likelihood</a>, <a href="https://www.youtube.com/watch?v=rLXNVsz9qwo&amp;t=297">coefficient tests</a>, and <a href="https://www.youtube.com/watch?v=rLXNVsz9qwo&amp;t=1001">new-data prediction</a>. Nested-model geometry is an authored extension.</p>
+</section>
+<section id="ch08-python">
+<h2 id="ch08-python-heading">8.5 Python ports of the car and housing analyses</h2>
+<p>The source Toyota demonstration fits price on mileage, adds age, and then uses R's <code>Price ~ .</code> formula to include the other columns. It samples a training subset and holds the remaining rows out. The Python port implements all three fits, expands the all-predictor formula explicitly, and predicts the held-out rows. It accepts exact zero-based training-row indices rather than pretending that an identical seed generates the same sample in R and NumPy. A small sample is still vulnerable to overfitting; its size is a reason for careful assessment, not an exemption from it.</p>
+<p>The original course car file is a small subset, and the caption text does not identify every row or the selected split. Therefore its exact numerical output cannot currently be reproduced. The conversion of the methods is supplied as <code>--toyota FILE --training-rows ...</code>, with the data and split requirement stated explicitly. A differently sampled public Toyota dataset would not authenticate the source run.</p>
+<p>The housing demonstration uses a borough category, building units, and floor area to model market value per square foot. A canonical dataset is available from the statistical author Jared Lander, together with new observations. The local Python run uses these downloaded files, renames the descriptive source columns to <code>Units</code>, <code>SqFt</code>, and <code>ValuePerSqFt</code>, and fits <code>ValuePerSqFt ~ Units + SqFt + C(Boro)</code>. The default reference borough is Bronx. The source caption's spelling or decimal renderings are not used as numerical ground truth.</p>
+<table><caption>Executed Python housing analysis on Jared Lander's downloaded data; coefficients and intervals also checked against a fresh R fit on identical inputs.</caption><thead><tr><th>Quantity</th><th>Executed value</th></tr></thead><tbody>
+<tr><td>Observations; residual degrees of freedom</td><td>$2626;\ 2619$</td></tr>
+<tr><td>Intercept</td><td>$43.290862795$</td></tr>
+<tr><td>Units coefficient</td><td>$-0.188115072$</td></tr>
+<tr><td>Floor-area coefficient</td><td>$0.000210323$</td></tr>
+<tr><td>Manhattan offset from Bronx</td><td>$130.992362857$</td></tr>
+<tr><td>In-sample $R^2$</td><td>$0.600903519$</td></tr>
+<tr><td>First new-row fitted mean</td><td>$75.417637834$</td></tr>
+<tr><td>First new-row mean interval, 95%</td><td>$[71.293693226,79.541582441]$</td></tr>
+<tr><td>First new-row observation interval, 95%</td><td>$[-9.692148739,160.527424407]$</td></tr>
+</tbody></table>
+<p>The negative lower prediction bound is mathematically possible under the Gaussian linear model even though a market value cannot be negative. This reveals a limitation of that response-scale model. It is not a reason to delete the reported bound or to reinterpret it as a guaranteed economic range. A different response transformation or likelihood would need a new model and assessment.</p>
+<p>R's coefficient extraction becomes <code>fit.params</code>; coefficient standard errors become <code>fit.bse</code>; confidence limits become <code>fit.conf_int()</code>; and new-observation summaries come from <code>fit.get_prediction(new).summary_frame(alpha=0.05)</code>. A coefficient plot must state whether its bars show one standard error or a confidence interval. These are different quantities. Histograms and faceted borough displays compare observed distributions; they do not establish that borough is causally responsible for price differences.</p>
+<p>Default laboratory execution uses the original finite construction. The two publicly obtained housing files are also bundled for offline use: <a href="labs/data/ch08-housing.csv">housing observations</a> and <a href="labs/data/ch08-housingNew.csv">new observations</a>. Run <code>python labs/ch08.py --housing labs/data/ch08-housing.csv --new labs/data/ch08-housingNew.csv</code> for the converted real-data analysis. Its <a href="labs/ch08-housing-output.txt">saved execution output</a> is recorded separately, preserving the distinction between the original teaching construction and the recovered course example.</p>
+<p class="source-note">Source R examples: <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo&amp;t=653">Toyota fitting and split</a>, <a href="https://www.youtube.com/watch?v=dK7LyVwHlyo&amp;t=1016">housing exploration and model</a>, <a href="https://www.youtube.com/watch?v=rLXNVsz9qwo&amp;t=935">coefficient extraction and plots</a>, and <a href="https://www.youtube.com/watch?v=rLXNVsz9qwo&amp;t=1001">prediction intervals</a>. Data: <a href="https://www.jaredlander.com/data/housing.csv">housing.csv</a> and <a href="https://www.jaredlander.com/data/housingNew.csv">housingNew.csv</a>. Implementation conventions: <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/lm.html">R lm</a> and <a href="https://www.statsmodels.org/stable/generated/statsmodels.regression.linear_model.OLS.html">statsmodels OLS</a>.</p>
+</section>
+<section id="ch08-exercises">
+<h2 id="ch08-exercises-heading">8.6 Exercises with worked solutions</h2>
+<ol>
+<li><p><strong>Conceptual — what is fixed?</strong> Why can a mileage coefficient change after adding age, and why is the adjusted coefficient not automatically causal?</p><details class="solution"><summary>Solution</summary><p>The simple coefficient summarizes the response change over the ages associated with observed mileage. The adjusted coefficient describes a model comparison at fixed age. Correlation between age and mileage lets an omitted age contribution enter the simple coefficient. Adjustment only concerns included columns; unmeasured confounding, selection, and lack of supported predictor combinations can still defeat a causal interpretation.</p></details></li>
+<li><p><strong>Conceptual — vector covariance or squared length?</strong> Are $\operatorname{Cov}(e\mid X)$ and $E(e^{\mathsf T}e\mid X)$ interchangeable?</p><details class="solution"><summary>Solution</summary><p>No. The covariance is the matrix $\sigma^2M$, encoding each residual's variance and every pair's covariance. The expected squared length is the scalar trace $\sigma^2(n-q)$ because the residual mean is zero. A scalar cannot replace a matrix in a covariance propagation calculation.</p></details></li>
+<li><p><strong>Derivation — unbiased residual variance.</strong> Starting from $e=M\varepsilon$, derive $E(s^2\mid X)=\sigma^2$ without Gaussianity.</p><details class="solution"><summary>Solution</summary><p>Under conditional mean-zero errors with covariance $\sigma^2I_n$, $E(\varepsilon\varepsilon^{\mathsf T}\mid X)=\sigma^2I_n$. Since $M$ is symmetric and idempotent, $e^{\mathsf T}e=\operatorname{tr}(M\varepsilon\varepsilon^{\mathsf T})$. Conditional expectation gives $\sigma^2\operatorname{tr}(M)=\sigma^2(n-q)$. Division by $n-q&gt;0$ proves the claim. Gaussianity is needed later for the exact chi-square law, not this expectation.</p></details></li>
+<li><p><strong>Derivation — coefficient basis change.</strong> If $B$ is an invertible $q\times q$ matrix and $X_*=XB$, show the fitted values are unchanged and derive the transformed coefficient.</p><details class="solution"><summary>Solution</summary><p>The two designs span the same column space, so their unique orthogonal projection of $y$ is identical. Set $\widehat\beta_*=B^{-1}\widehat\beta$; then $X_*\widehat\beta_*=XBB^{-1}\widehat\beta=X\widehat\beta$. Full rank ensures this is the unique transformed least-squares coefficient. Coefficients depend on coordinates, whereas fitted vectors depend on the represented space.</p></details></li>
+<li><p><strong>Computation — verify the projections.</strong> Run the default laboratory and independently check the projection dimensions and the two variance estimates.</p><details class="solution"><summary>Solution</summary><p>The run has $n=8$, $q=3$, trace $H=3$, and trace $M=5$. The constructed discrepancy lies in the residual space and has squared length $8$. Consequently the unbiased variance estimate is $8/5=1.6$ and its Gaussian likelihood counterpart is $8/8=1$. The program asserts idempotence, $MX=0$, and agreement between two least-squares solvers.</p></details></li>
+<li><p><strong>Computation — reproduce and audit new-data intervals.</strong> Use the two bundled housing files to run the real-data analysis. Compare mean and observation intervals for the first row, and state what would invalidate a cross-language comparison.</p><details class="solution"><summary>Solution</summary><p>The first fitted mean is $75.417637834$. The mean interval is $[71.293693226,79.541582441]$, and the wider observation interval is $[-9.692148739,160.527424407]$. An authentic comparison must match rows, missing-value handling, column names, factor levels and contrasts, intercept, confidence level, and interval type. Agreement on a different dataset or a different training split would not reproduce the source run. A fresh R fit on the downloaded housing files agrees with Python at an absolute tolerance of $10^{-8}$; this checks the conversion while preserving the separate uncertainty about the source file's exact version.</p></details></li>
+</ol>
+</section>
+<section id="ch08-limits">
+<h2 id="ch08-limits-heading">8.7 A fitted surface still needs diagnostic checks</h2>
+<p>Multiple regression captures additive conditional associations in a chosen design space. Nonlinear features and interactions can enlarge that space while retaining linear coefficients. Neither full rank nor a small residual sum of squares guarantees an adequate error model, supported extrapolation, or stable coefficients. A single influential row can materially change the fitted surface, and a small residual does not by itself exclude influence. The next chapter separates residual size, predictor geometry, and deletion effects.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch08.py"><code>labs/ch08.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Multiple regression checks and ports of source car/housing workflows.
+
+Default: original deterministic construction. Optional CSV paths execute the
+source methods on supplied authentic files without inventing data.
+&quot;&quot;&quot;
+import argparse
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+
+
+def construction():
+    x1 = np.arange(-3.5, 4.0)
+    x2 = 0.6*x1 + np.array([-1., 1., -1., 1., 1., -1., 1., -1.])
+    noise = np.array([1., 1., -1., -1., -1., -1., 1., 1.])
+    design = np.column_stack([np.ones(8), x1, x2])
+    y = design @ np.array([10., -2., 3.]) + noise
+    fit = sm.OLS(y, design).fit()
+    simple = sm.OLS(y, sm.add_constant(x1)).fit()
+    q = design.shape[1]
+    projection = design @ np.linalg.pinv(design)
+    complement = np.eye(len(y)) - projection
+    np.testing.assert_allclose(fit.params, [10., -2., 3.], atol=1e-12)
+    np.testing.assert_allclose(projection @ projection, projection, atol=1e-12)
+    np.testing.assert_allclose(complement @ design, 0, atol=1e-12)
+    np.testing.assert_allclose(design.T @ fit.resid, 0, atol=1e-12)
+    np.testing.assert_allclose(np.trace(projection), q, atol=1e-12)
+    independent = np.linalg.lstsq(design, y, rcond=None)[0]
+    np.testing.assert_allclose(fit.params, independent, atol=1e-12)
+    print(&quot;data: original construction, not source Toyota rows&quot;)
+    print(&quot;simple_slope adjusted_slope:&quot;,
+          np.round([simple.params[1], fit.params[1]], 9))
+    print(&quot;multiple_coefficients:&quot;, np.round(fit.params, 9))
+    print(&quot;n q residual_df:&quot;, len(y), q, int(fit.df_resid))
+    print(&quot;SSE unbiased_variance mle_variance:&quot;,
+          np.round([fit.ssr, fit.mse_resid, fit.ssr/len(y)], 9))
+    print(&quot;projection_trace residual_projection_trace:&quot;,
+          np.round([np.trace(projection), np.trace(complement)], 9))
+    print(&quot;partial_F p_value df_difference:&quot;,
+          np.round(fit.compare_f_test(simple), 9))
+
+
+def toyota(path, training_rows=None):
+    data = pd.read_csv(path)
+    data = data.rename(columns={&quot;Age_08_04&quot;: &quot;Age&quot;})
+    if training_rows is None:
+        raise ValueError(&quot;Supply exact zero-based source training row indices&quot;)
+    indices = np.asarray(training_rows, dtype=int)
+    if len(np.unique(indices)) != len(indices):
+        raise ValueError(&quot;Training rows must be unique&quot;)
+    train = data.iloc[indices]
+    validation = data.drop(data.index[indices])
+    simple = smf.ols(&quot;Price ~ KM&quot;, data=train, missing=&quot;raise&quot;).fit()
+    adjusted = smf.ols(&quot;Price ~ KM + Age&quot;, data=train, missing=&quot;raise&quot;).fit()
+    predictors = [c for c in data.columns if c != &quot;Price&quot;]
+    all_formula = &quot;Price ~ &quot; + &quot; + &quot;.join(f&quot;Q({c!r})&quot; for c in predictors)
+    complete = smf.ols(all_formula, data=train, missing=&quot;raise&quot;).fit()
+    print(&quot;Toyota training validation rows:&quot;, len(train), len(validation))
+    print(&quot;Toyota simple adjusted KM:&quot;, simple.params[&quot;KM&quot;],
+          adjusted.params[&quot;KM&quot;])
+    print(&quot;Toyota all predictor coefficients:&quot;, complete.params.to_dict())
+    print(&quot;Toyota validation predictions:&quot;,
+          complete.predict(validation).to_numpy())
+
+
+def housing(path, new_path=None, plots=None):
+    data = pd.read_csv(path).rename(columns={
+        &quot;Total.Units&quot;: &quot;Units&quot;, &quot;Gross.SqFt&quot;: &quot;SqFt&quot;,
+        &quot;Market.Value.per.SqFt&quot;: &quot;ValuePerSqFt&quot;})
+    formula = &quot;ValuePerSqFt ~ Units + SqFt + C(Boro)&quot;
+    fit = smf.ols(formula, data=data, missing=&quot;raise&quot;).fit()
+    print(&quot;housing source rows residual_df:&quot;, int(fit.nobs), int(fit.df_resid))
+    print(&quot;housing coefficients:&quot;)
+    for name, coefficient in fit.params.items():
+        print(name, f&quot;{coefficient:.9f}&quot;)
+    print(&quot;housing R_squared:&quot;, f&quot;{fit.rsquared:.9f}&quot;)
+    print(&quot;housing coefficient_intervals:&quot;)
+    print(np.round(fit.conf_int().to_numpy(), 9))
+    if plots:
+        import matplotlib
+        matplotlib.use(&quot;Agg&quot;)
+        import matplotlib.pyplot as plt
+        target = Path(plots)
+        target.mkdir(parents=True, exist_ok=True)
+        with plt.style.context(&quot;dark_background&quot;):
+            fig, axes = plt.subplots(1, 2, figsize=(10, 4))
+            categories = sorted(data[&quot;Boro&quot;].unique())
+            groups = [data.loc[data.Boro == b, &quot;ValuePerSqFt&quot;]
+                      for b in categories]
+            axes[0].boxplot(groups, tick_labels=categories)
+            axes[0].tick_params(axis=&quot;x&quot;, rotation=45)
+            axes[0].set_ylabel(&quot;Market value per square foot&quot;)
+            axes[1].hist(groups, bins=25, label=categories, histtype=&quot;step&quot;)
+            axes[1].set_xlabel(&quot;Market value per square foot&quot;)
+            axes[1].set_ylabel(&quot;Buildings&quot;)
+            axes[1].legend(fontsize=7)
+            fig.tight_layout()
+            fig.savefig(target / &quot;ch08-housing-distributions.svg&quot;)
+            plt.close(fig)
+            fig, axes = plt.subplots(len(categories), 1, figsize=(7, 9))
+            for axis, category, values in zip(axes, categories, groups):
+                axis.hist(values, bins=25)
+                axis.set_title(category, fontsize=9)
+                axis.set_ylabel(&quot;Buildings&quot;, fontsize=8)
+            axes[-1].set_xlabel(&quot;Market value per square foot&quot;)
+            fig.tight_layout()
+            fig.savefig(target / &quot;ch08-housing-facets.svg&quot;)
+            plt.close(fig)
+            fig, axis = plt.subplots(figsize=(9, 5))
+            coefficients = fit.params.iloc[:-1]
+            intervals = fit.conf_int().iloc[:-1].to_numpy()
+            error = np.vstack([coefficients.to_numpy() - intervals[:, 0],
+                               intervals[:, 1] - coefficients.to_numpy()])
+            axis.errorbar(
+                coefficients.to_numpy(), np.arange(len(coefficients)),
+                xerr=error, fmt=&quot;o&quot;, capsize=3)
+            axis.set_yticks(np.arange(len(coefficients)), coefficients.index)
+            axis.axvline(0, color=&quot;gray&quot;, linewidth=1)
+            axis.set_xlabel(
+                &quot;Coefficient and 95% normal-theory confidence interval&quot;)
+            axis.set_title(&quot;SqFt omitted from this scale; see numeric table&quot;)
+            fig.tight_layout()
+            fig.savefig(target / &quot;ch08-housing-coefficients.svg&quot;)
+            plt.close(fig)
+    if new_path:
+        new = pd.read_csv(new_path)
+        predictions = fit.get_prediction(new).summary_frame(alpha=0.05)
+        assert np.all(predictions.obs_ci_lower &lt; predictions.mean_ci_lower)
+        assert np.all(predictions.obs_ci_upper &gt; predictions.mean_ci_upper)
+        print(&quot;housing new rows:&quot;, len(new))
+        print(&quot;housing first2 predictions: mean mean_se mean_CI obs_CI&quot;)
+        print(np.round(predictions.iloc[:2].to_numpy(), 9))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--housing&quot;)
+    parser.add_argument(&quot;--new&quot;)
+    parser.add_argument(&quot;--toyota&quot;)
+    parser.add_argument(&quot;--training-rows&quot;, nargs=&quot;+&quot;, type=int)
+    parser.add_argument(
+        &quot;--plots&quot;, help=&quot;Folder for converted housing graphics&quot;)
+    args = parser.parse_args()
+    np.set_printoptions(precision=9, suppress=True)
+    construction()
+    if args.housing:
+        housing(args.housing, args.new, args.plots)
+    if args.toyota:
+        toyota(args.toyota, args.training_rows)
+    print(&quot;all executed assertions passed&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>data: original construction, not source Toyota rows
+simple_slope adjusted_slope: [-0.2 -2. ]
+multiple_coefficients: [10. -2.  3.]
+n q residual_df: 8 3 5
+SSE unbiased_variance mle_variance: [8.  1.6 1. ]
+projection_trace residual_projection_trace: [3. 5.]
+partial_F p_value df_difference: [45.           0.001114438  1.         ]
+all executed assertions passed
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-07.html">← Previous chapter</a><a href="chapter-09.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

@@ -1,0 +1,59 @@
+{
+  "chapter": 6,
+  "round": 2,
+  "reviewer": "review_01_06_r2; independent of chapter/helper authorship",
+  "skill": "science-editor",
+  "verdict": "ACCEPT",
+  "body_sha256": "319809c0c238abe601b7dd860d770f0b1004fdabd9e148b76895583f250b882e",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [
+    {
+      "severity": "medium",
+      "location": "chapters/ch06.html:3; section6.3/equation6.3",
+      "quote": "observed feature vectors in R^p; W_k/(np); Y=p/2",
+      "issue": "Unsupervised feature dimension conflicted with the book notation contract, which reserves p for regression slopes.",
+      "replacement": "Use feature dimension d: x_i,mu_j in R^d, d_k=W_k/(nd), Y=d/2; define d locally.",
+      "status": "resolved_verified"
+    },
+    {
+      "severity": "medium",
+      "location": "chapters/ch06.html: section6.7/exercise2 solution",
+      "quote": "Updating the second center ... giving fourteen.",
+      "issue": "The final total also requires moving the first center to the singleton A; updating only the second center leaves total24.",
+      "replacement": "Updating the first center to A makes its contribution zero; updating the second center from (-1,-2) to (-1,-1) yields contributions4,5,5 for B,C,D, giving total fourteen.",
+      "status": "resolved_verified"
+    }
+  ],
+  "checks": [
+    "Read entire repaired fragment and all six worked solutions; independently checked centroid identity, conditional Lloyd descent, finite strict-improvement assumptions, exact size-corrected transfer and all4point partitions.",
+    "Checked optimum WSS monotonicity by feasible splitting, raw elbow versus inverse-power jump, zero-distortion singularity, Hartigan n-k-1/index offset, and ordinary-distance silhouette/singleton convention.",
+    "Verified both round2 repairs in actual current context: feature dimension d in R^d,W/(nd),Y=d/2; exercise2 updates both centers before concluding total14.",
+    "Checked all six solutions numerically/algebraically, including meanSSE53 versus98, descent28->27->14, constructive5group bound, silhouettes79/99, seed-reset contrasts and between fraction0.71222871.",
+    "Read complete mainlab/HW/RNG/NbClust helpers. Independently executed the complete source-data workflow in a fresh Python process with plot/data writes disabled; exact captured stdout matches saved203line output. Acceptance does not rely on theory-only mode.",
+    "Independently inspected kmeans-1347 board frame: both jump powers are negative. Reviewed primary useful Hartigan wrapper, R kmeans/AS136/RNG/sampling source and ten conversion records.",
+    "Added three freshR31x3,k4,nstart3 comparisons: all partitions agree modulo labels and objectives agree at floating precision; seed19 exposes near-tied restart label ordering, now documented in helper API.",
+    "Reviewed saved six-fit/2000uniform/53sample source comparisons and primary-rattle/UCI exact178label/2314feature identity; kept raw versus standardized geometry and unknown source streams separate.",
+    "Read current round1 verdict after its full6runtime and additional freshR curves/partitions; round2 acceptance is bound to the actual unchanged fragment, not merely to round1 status."
+  ],
+  "scope": "Entire current chapter and all six worked solutions, full main laboratory numerical execution/output, conversion records and targeted independent primary-source checks.",
+  "limitations": [
+    "No exhaustive independent audiovisual/editor-line inventory. Targeted captions, selected frames, primary implementation files and authors' full-caption reading records are distinct evidence.",
+    "Finite numerical checks and code/math inspection do not prove arbitrary-input equivalence; unknown historical RNG state and package-version differences remain explicit.",
+    "No proof-assistant verification, human certification or legal licensing opinion.",
+    "Shared reader/browser rendering, source-free export and publication state are outside this fragment verdict."
+  ],
+  "lab_sha256": "ac9c6c6ee0b0194b62b506534a796879d2b13574d65bcb6ef4208aae622c53bb",
+  "stdout_sha256": "8acdf7b35bd447ed2d163e89b1db38fe9c333eefc07b2db8f4954372e3cf1c6d",
+  "round1_current_before_verdict": true,
+  "execution_note": "Numerical calculations executed without plotting/data-file writes to preserve concurrently validated artifacts. Chapters1-5 captured stdout exact; chapter6 separately executed in a fresh process to avoid inherited NumPy print settings and captured stdout exact.",
+  "helper_audit": "reviews/clustering-conversion-audit.md",
+  "supporting_hashes": {
+    "labs/ch05_nbclust.py": "0d1c08ebbbb828a7fac5edfa497b60b48dec1fb4f46e94c6b1670c59d1d41165",
+    "labs/ch05_diana.py": "918706ae2d2d6d65c664cef52b05f79e9eaf9db4e6c0e4de31137cc3de991ba7",
+    "labs/ch05_clusterlearn.py": "4705b0d6bee80ac5b15f4421d55de09e1489a579dd39253498770a3910c44a9e",
+    "labs/ch06_hartigan_wong.py": "09ab1c311d205d211d45d76047b2b4c8a5b024e3a6e754e7af816b2d8792c7c1"
+  },
+  "repair_verification": "Reread both repaired passages and adjacent context; checked current fragment equals the accepted round1 hash and the frozen parent hash."
+}

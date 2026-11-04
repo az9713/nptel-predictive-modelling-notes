@@ -1,0 +1,12 @@
+{
+  "path": "ch06-wine-uci.data",
+  "source_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/wine/wine.data",
+  "shape": [
+    178,
+    14
+  ],
+  "feature_columns": 13,
+  "cultivar_column": 1,
+  "sha256": "6be6b1203f3d51df0b553a70e57b8a723cd405683958204f96d23d7cd6aea659",
+  "verification": "All2314 numeric features and178 cultivar labels match sklearn.datasets.load_wine exactly; raw primary bytes retained; rattle equivalence pending independent reference."
+}

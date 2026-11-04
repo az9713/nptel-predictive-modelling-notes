@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Data, prediction, and correlation — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a aria-current="page" href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Data, prediction, and correlation</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch01-task-heading">1.1 An observation is part of the model</a></li><li><a href="#ch01-learning-heading">1.2 Prediction requires an objective</a></li><li><a href="#ch01-covariance-heading">1.3 Covariance measures paired variation</a></li><li><a href="#ch01-correlation-heading">1.4 Correlation is an angle between centered observations</a></li><li><a href="#ch01-limits-heading">1.5 Zero correlation leaves nonlinear structure untouched</a></li><li><a href="#ch01-exercises-heading">1.6 Exercises with worked solutions</a></li><li><a href="#ch01-lab-note-heading">1.7 Python laboratory and source boundary</a></li></ul></nav><p class="meta">Chapter 1 · <a href="https://www.youtube.com/watch?v=aF8LvZhelzw">Recording 1</a> · <a href="https://www.youtube.com/watch?v=pi-nFW0SOV8">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch01-task">
+<h2 id="ch01-task-heading">1.1 An observation is part of the model</h2>
+<p>A table of customer records can support several different questions. We might predict the next purchase amount, identify groups of similar purchasing profiles, or estimate how a change in an offer affects spending. These tasks can use the same columns while requiring different models and different evidence. Before calculating anything, specify the observational unit, the information available at prediction time, and the quantity the analysis is intended to recover.</p>
+<p>An <dfn>observational unit</dfn> is the entity to which a row refers. A row might represent a customer, a customer-day, or a transaction. Those choices change which rows can reasonably be treated as independent. A <dfn>feature</dfn> is a recorded attribute of that unit. A <dfn>response</dfn>, also called a target, is the attribute a supervised prediction task attempts to predict. A database identifier is useful for joining records, but its numerical representation does not automatically make it a scientifically meaningful predictor.</p>
+<p>The variable taxonomy has two distinct dimensions. A quantitative variable has numerical values for which arithmetic has a subject-specific meaning. A count is quantitative and discrete: the number of transactions takes values in the nonnegative integers. A continuous measurement is modeled on an interval of the real line. That idealization includes irrational real numbers even though a computer stores a finite-precision approximation. A categorical variable records membership, such as store region or product type. Categories can be unordered, or ordered without having meaningful equal numerical spacings.</p>
+<table><thead><tr><th>Variable</th><th>Mathematical object</th><th>Permitted interpretation</th></tr></thead><tbody>
+<tr><td>Number of purchases</td><td>A nonnegative integer</td><td>A difference of one means one additional purchase.</td></tr>
+<tr><td>Purchase amount</td><td>A real-valued measurement in a currency</td><td>Differences and ratios are meaningful under the stated currency convention.</td></tr>
+<tr><td>Store region encoded by an integer</td><td>A label from a finite set</td><td>Equality identifies a region; the distance between integer labels has no intrinsic meaning.</td></tr>
+</tbody></table>
+<p>Recoding three region names from $0,1,2$ to $0,2,1$ preserves the categories but can change their Pearson correlation with spending. The Python laboratory computes both correlations for the same observations. A method that treats the codes as measurements has introduced an ordering assumption. Later, indicator columns will represent categories while making that assumption visible.</p>
+<p>Data structure also matters. <dfn>Cross-sectional data</dfn> compare units at a designated time or sampling occasion. A <dfn>time series</dfn> records a quantity across an ordered sequence of times. <dfn>Panel data</dfn>, or longitudinal data, follow multiple units repeatedly. A child's measurements through time form one series; one year's measurements across children form a cross-section; the complete child-by-time collection forms a panel. A cross-section can still contain dependence between units. The name describes the sampling layout, not a proof of independence.</p>
+<p>A row-level random train/test split can therefore be misleading when the same customer appears repeatedly. A model may recognize a customer from the training rows rather than generalize to a new customer. Conversely, forecasting a future purchase requires respecting which information existed before that purchase. The task determines the appropriate split. This distinction will return when regression assumptions and model evaluation are developed.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=aF8LvZhelzw&amp;t=77">types of variables, 1:17</a> and <a href="https://www.youtube.com/watch?v=aF8LvZhelzw&amp;t=519">cross-sectional and longitudinal data, 8:39</a>. The definitions here distinguish quantitative counts from qualitative categories and distinguish real-valued models from finite-precision storage.</p>
+</section>
+<section id="ch01-learning">
+<h2 id="ch01-learning-heading">1.2 Prediction requires an objective</h2>
+<p>Suppose a feature vector $\mathbf{x}\in\mathbb{R}^d$ is available before a numerical response $y\in\mathbb{R}$ is observed. Here $d$ is the number of numerical feature coordinates after any required encoding. A <dfn>prediction rule</dfn> is a function $f$ that maps the available features to a predicted response $f(\mathbf{x})$. A learning procedure constructs that function from a training sample of paired features and responses.</p>
+<p><dfn>Supervised learning</dfn> uses responses in the training examples to construct or assess a prediction rule. Regression predicts a numerical response; classification predicts a category or its conditional probabilities. These definitions do not require a causal connection. A response need not be a deterministic function of the predictors, and predictors need not be mutually independent. In particular, the traditional expression “independent variable” is not an assertion of probabilistic independence.</p>
+<p>A prediction is evaluated through a <dfn>loss function</dfn>, a numerical penalty for a discrepancy between prediction and observation. Under squared loss, $L(y,a)=(y-a)^2$, where $a$ is a proposed numerical prediction. If $Y$ is a random response with finite second moment and $\mu(\mathbf{x})=\mathbb{E}[Y\mid\mathbf{x}]$ is its conditional mean, then conditioning on the features gives</p>
+<div class="prop"><strong>Proposition 1.1 — the squared-loss target.</strong> For every fixed prediction $a\in\mathbb{R}$, the conditional expected squared loss equals
+$$\mathbb{E}[(Y-a)^2\mid\mathbf{x}]=\operatorname{Var}(Y\mid\mathbf{x})+[\mu(\mathbf{x})-a]^2. \tag{1.1}$$
+It is minimized at $a=\mu(\mathbf{x})$.</div>
+<div class="proof"><p>Write $Y-a=(Y-\mu)+(\mu-a)$, square, and take the conditional expectation. The cross term vanishes because $\mathbb{E}[Y-\mu\mid\mathbf{x}]=0$. The first remaining term is the conditional variance. The second is a nonnegative square whose unique minimum is zero. <span class="qed">∎</span></p></div>
+<p>The first term is uncertainty that no function of these particular features removes under squared loss. The second term measures disagreement with the conditional mean. A finite training procedure does not know that mean: it must estimate a rule from limited observations and assess its behavior on new observations. The training loss is a calculation on data already used to choose the function. It is not automatically an estimate of its future predictive performance.</p>
+<p><dfn>Unsupervised learning</dfn> studies structure without a designated response used as a prediction target. Principal component analysis chooses a low-dimensional representation according to a variance or reconstruction objective. Clustering chooses a partition according to a dissimilarity and a clustering objective. Neither task becomes assumption-free because a target is absent. Scaling, the distance function, the requested number of groups, and the population to which the results are applied remain modeling choices.</p>
+<p>These objectives explain why a single “best model” cannot be selected from a list of methods without stating a purpose. A direction that explains much feature variance need not predict a response. A cluster that has a small within-group distance need not correspond to a scientifically meaningful population. An association that predicts an outcome need not identify what an intervention would change. The course first studies representations and groups, then conditional response models, and finally a setting where causal interpretation needs additional assumptions.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=aF8LvZhelzw&amp;t=1495">targets and supervised learning, 24:55</a>. The conditional-risk derivation is an authored mathematical extension.</p>
+</section>
+<section id="ch01-covariance">
+<h2 id="ch01-covariance-heading">1.3 Covariance measures paired variation</h2>
+<p>A useful first comparison asks whether two numerical measurements move together around their respective means. Let $(x_i,y_i)$, for $i=1,\ldots,n$, be $n$ paired observations with $n\geq2$. The pairing is part of the information: $x_i$ and $y_i$ must describe the same unit or the same designated occasion. Define the means $\bar{x}=n^{-1}\sum_i x_i$ and $\bar{y}=n^{-1}\sum_i y_i$.</p>
+<p>The <dfn>empirical covariance with divisor $n$</dfn> is $c_{xy}=n^{-1}\sum_i(x_i-\bar{x})(y_i-\bar{y})$. Pairs above both means or below both means contribute positive products. Pairs lying on opposite sides contribute negative products. The result combines those contributions; a positive total does not require every pair to follow an increasing pattern. Expanding and using $\sum_i x_i=n\bar{x}$ and $\sum_i y_i=n\bar{y}$ gives</p>
+$$c_{xy}=\frac{1}{n}\sum_i x_i y_i-\bar{x}\bar{y}. \tag{1.2}$$
+<p>This identity is convenient for hand calculations. For floating-point computation, directly centering the observations usually avoids the subtraction of two unnecessarily large quantities when the variation is small relative to the means. With three or more features the same calculation produces a covariance matrix, which will govern principal component analysis.</p>
+<p>The source example uses $\mathbf{x}=(1,3,9,11)$ and $\mathbf{y}=(5,9,21,25)$. The paired product sum is $496$, and the means are $6$ and $15$. Equation (1.2) gives $496/4-6\cdot15=34$. The corresponding empirical variances are $17$ and $68$. These are reproduced in <a href="labs/ch01.py">the executable laboratory</a>. The relation is exactly $y_i=2x_i+3$, so each centered response is twice its corresponding centered predictor. The response standard deviation doubles, and its variance is four times the predictor variance.</p>
+<p>The <dfn>sample covariance</dfn> used by many statistical functions instead divides the centered product sum by $n-1$. Denote it by $s_{xy}$. Then $s_{xy}=n c_{xy}/(n-1)$, which gives $45.333333$ in this example. Under identically distributed independent observations with finite second moments, this correction makes the estimator unbiased for the population covariance. It does not improve every possible estimation criterion, and it does not justify treating dependent rows as independent. A program must choose its convention explicitly before comparing outputs.</p>
+<p>To see the unbiasedness calculation, let the population means be $\mu_x,\mu_y$ and the population covariance be $\sigma_{xy}$. Independence across rows implies $\mathbb{E}[\bar{x}\bar{y}]=\mu_x\mu_y+\sigma_{xy}/n$, while $\mathbb{E}[n^{-1}\sum_i x_i y_i]=\mu_x\mu_y+\sigma_{xy}$. Subtracting gives $\mathbb{E}[c_{xy}]=(n-1)\sigma_{xy}/n$; multiplying by $n/(n-1)$ gives the stated result.</p>
+<p>Covariance has the product of the variables' units. Replacing purchase amounts measured in dollars by amounts measured in cents multiplies their covariance with a fixed second variable by the currency conversion factor. Consequently, its magnitude cannot be interpreted without scale. Dividing by the two standard deviations removes that unit dependence.</p>
+<p class="source-note">Source discussion and exact numerical pairs: <a href="https://www.youtube.com/watch?v=pi-nFW0SOV8&amp;t=448">covariance, 7:28</a> and <a href="https://www.youtube.com/watch?v=pi-nFW0SOV8&amp;t=598">paired products, 9:58</a>. The source uses divisor $n$; Python sample-covariance defaults are not silently substituted.</p>
+</section>
+<section id="ch01-correlation">
+<h2 id="ch01-correlation-heading">1.4 Correlation is an angle between centered observations</h2>
+<p>Assume neither observed variable is constant. Let $\mathbf{x}_c=(x_i-\bar{x})_{i=1}^n$ and $\mathbf{y}_c=(y_i-\bar{y})_{i=1}^n$ be the centered vectors. The <dfn>Pearson sample correlation</dfn> is</p>
+$$r_{xy}=\frac{\mathbf{x}_c^{\mathsf T}\mathbf{y}_c}{\|\mathbf{x}_c\|\,\|\mathbf{y}_c\|}=\frac{s_{xy}}{s_x s_y}. \tag{1.3}$$
+<p>Here $\|\cdot\|$ is the Euclidean norm, and $s_x,s_y$ are the square roots of the sample variances computed with the same divisor as $s_{xy}$. Using divisor $n$ consistently in all three quantities gives exactly the same correlation because the factors cancel. A constant column makes the denominator zero. Its correlation is undefined, rather than a numerical zero.</p>
+<div class="prop"><strong>Proposition 1.2 — range and equality.</strong> For nonconstant real observations, $-1\leq r_{xy}\leq1$. Equality in absolute value holds exactly when there is a nonzero real $a$ such that $\mathbf{y}_c=a\mathbf{x}_c$, equivalently $y_i=a x_i+b$ for every observation and a fixed intercept $b$.</div>
+<div class="proof"><p>Cauchy–Schwarz gives $|\mathbf{x}_c^{\mathsf T}\mathbf{y}_c|\leq\|\mathbf{x}_c\|\|\mathbf{y}_c\|$. Dividing by the positive denominator proves the bound. Equality in Cauchy–Schwarz holds precisely when the nonzero centered vectors are linearly dependent. If $\mathbf{y}_c=a\mathbf{x}_c$, restoring means gives $b=\bar{y}-a\bar{x}$. The sign of the correlation is the sign of $a$. <span class="qed">∎</span></p></div>
+<p>Equation (1.3) is the cosine of the angle between the two centered vectors. Correlation near zero means they are nearly orthogonal in observation space. It does not say that their scatterplot has no structure. The exact source relation $y_i=2x_i+3$ has $r_{xy}=34/\sqrt{17\cdot68}=1$. A negative slope of the same magnitude would give $-1$.</p>
+<p>More generally, for nonzero constants $a$ and $b$, replacing the two measurements by $a x_i+c$ and $b y_i+d$ changes the correlation to $\operatorname{sign}(ab)r_{xy}$. Centering removes $c,d$; the numerator gains $ab$; the norm product gains $|ab|$. Thus changing positive units does not change correlation, but reversing an axis changes its sign. The laboratory checks this identity using the source data.</p>
+<p>The population definition follows the same geometry in a space of random variables. For real random variables $X,Y$ with finite, strictly positive variances, $\rho=\operatorname{Cov}(X,Y)/\sqrt{\operatorname{Var}(X)\operatorname{Var}(Y)}$. Cauchy–Schwarz for expectations gives the same bound. A finite-sample $r$ estimates a property of a sampling distribution only under an explicit model for how the pairs were collected. Computing the number does not establish that model.</p>
+<p>There is no universal threshold separating scientifically weak and strong correlations. Their practical consequences depend on measurement noise, sampling uncertainty, the task, and alternative predictors. A correlation can also be dominated by an influential point. Before fitting a line or interpreting a scalar summary, inspect the paired observations and how they were measured.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=pi-nFW0SOV8&amp;t=868">Pearson correlation, 14:28</a>. The vector proof and affine-transformation result are derived here.</p>
+</section>
+<section id="ch01-limits">
+<h2 id="ch01-limits-heading">1.5 Zero correlation leaves nonlinear structure untouched</h2>
+<p>The second source example has predictor values $-3,-2,-1,1,2,3$ and response $y=x^2$. The predictor mean is zero; the response mean is $28/6$. Each positive contribution $x^3$ to the paired product sum is canceled by the corresponding negative contribution. Hence $\sum_i x_i y_i=0$, the covariance is zero, and the correlation is zero. Nevertheless the response is determined exactly by the predictor. The laboratory verifies zero squared reconstruction error for the quadratic rule and a positive error for a constant rule.</p>
+<p><dfn>Independence</dfn> is the stronger distributional requirement that knowing one variable does not change the distribution of the other. With finite second moments, independence implies zero covariance because $\mathbb{E}[XY]=\mathbb{E}[X]\mathbb{E}[Y]$. The converse fails. For example, let $X$ be uniformly distributed on the six displayed predictor values and let $Y=X^2$. Symmetry gives zero covariance. But $\Pr(Y=9\mid X=3)=1$, whereas $\Pr(Y=9)=1/3$. The conditional and marginal probabilities differ, proving dependence directly.</p>
+<p>A zero Pearson correlation therefore records the absence of a centered linear association as measured by that covariance. It neither excludes useful nonlinear prediction nor proves that the variables are causally unrelated. Even a perfect sample correlation does not establish causation: common causes, selection, and the observational design can generate associations. The regression-discontinuity chapter will identify a specific design and the additional assumptions that make one local causal interpretation possible.</p>
+<p>Correlation also discards information. Different data clouds can have the same means, variances, and correlation. It does not describe tail behavior, the direction of prediction, nonlinear conditional variation, or whether a relationship survives outside the observed range. These limitations motivate explicit response models and diagnostics. They also explain the next step in unsupervised learning: rather than summarize one pair of variables, principal component analysis studies the covariance geometry of all measured features together.</p>
+<p class="source-note">Source counterexample: <a href="https://www.youtube.com/watch?v=pi-nFW0SOV8&amp;t=1124">quadratic dependence with zero correlation, 18:44</a>. All displayed numerical values are reproduced by the laboratory.</p>
+</section>
+<section id="ch01-exercises">
+<h2 id="ch01-exercises-heading">1.6 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Categories and arithmetic.</strong> A region is stored as an integer. Explain why replacing each region label by a different integer preserves its information but can change its correlation with purchase amount. State a representation that does not impose equally spaced region effects.</p>
+<details><summary>Worked solution</summary><p>A one-to-one relabeling preserves which rows belong to the same category. Pearson correlation also uses distances from the numerical mean, which a general relabeling changes. The laboratory's two recodings preserve all group memberships but give correlations $0.979796$ and $0.489898$. An indicator column for each nonreference region represents unrestricted group offsets in a regression with an intercept. It does not require the offsets to follow the arbitrary integer codes.</p></details></li>
+<li><p><strong>A sampling decision.</strong> A table contains monthly measurements for each customer. The deployment target is a previously unseen customer. Explain why a random split of rows can answer a different question, and propose a more relevant split.</p>
+<details><summary>Worked solution</summary><p>Rows from the same customer can appear in both subsets. The fitted procedure then receives indirect information about a test customer's individual characteristics. Holding out complete customers instead estimates generalization to units not represented in training. If deployment concerns a future month for existing customers, a time-respecting split answers that different question. Neither split automatically eliminates dependence or population drift; it must match the specified use.</p></details></li>
+<li><p><strong>Covariance convention.</strong> Recalculate the two covariance conventions for the source pairs $(1,5),(3,9),(9,21),(11,25)$. Explain why Pearson correlation is unchanged if the same convention is used consistently.</p>
+<details><summary>Worked solution</summary><p>The centered product sum is $496-4\cdot6\cdot15=136$. Dividing by $4$ gives $34$; dividing by $3$ gives $136/3$. Changing the divisor multiplies the covariance by $4/3$ and each variance by $4/3$. Their standard-deviation product is therefore also multiplied by $4/3$, so the ratio remains one. Mixing conventions would fail to cancel and can even produce an apparent correlation outside its valid range.</p></details></li>
+<li><p><strong>Affine invariance.</strong> Prove the transformation rule for the correlation between $aX+c$ and $bY+d$, assuming the original variances are finite and positive and $a,b\ne0$. Explain the special case in which a measurement axis is reversed.</p>
+<details><summary>Worked solution</summary><p>Covariance is multiplied by $ab$, while the two standard deviations are multiplied by $|a|$ and $|b|$. The new correlation is $ab/(|a||b|)$ times the original, or $\operatorname{sign}(ab)\rho$. If just one axis is reversed, the sign changes. Offsets cancel under centering. If either multiplier is zero, the transformed variable is constant and the correlation is undefined, so the formula's hypotheses are necessary.</p></details></li>
+<li><p><strong>Nonlinear prediction.</strong> Use the six-point quadratic example to compare a constant predictor with the rule $f(x)=x^2$ under empirical mean squared error. Is the zero correlation evidence that prediction is impossible?</p>
+<details><summary>Worked solution</summary><p>The best constant is the response mean, $14/3$. The empirical second moment of the response is $(1+16+81)/3=98/3$, so its variance is $98/3-(14/3)^2=98/9$, or $10.888889$. The quadratic predictor has zero error on all six points. Zero correlation does not exclude nonlinear prediction. The zero training error alone also does not establish performance on a new population with a different response mechanism.</p></details></li>
+<li><p><strong>An objective determines a prediction.</strong> Given fixed features, show that the conditional mean minimizes expected squared loss. What part of that proof fails if the response has no finite second moment? Explain why a clustering method cannot be judged by this loss until a response prediction rule has been specified.</p>
+<details><summary>Worked solution</summary><p>Expand $Y-a=(Y-\mu)+(\mu-a)$ as in Proposition 1.1. The cross term has zero conditional expectation, leaving the conditional variance plus a nonnegative square. If the second moment is not finite, the expected squared loss may be infinite for every finite $a$, so this decomposition is not a finite optimization argument. A clustering algorithm returns group memberships rather than numerical response predictions. An additional rule, such as a fitted training-group response mean, is needed before squared prediction loss can be evaluated.</p></details></li>
+</ol>
+</section>
+<section id="ch01-lab-note">
+<h2 id="ch01-lab-note-heading">1.7 Python laboratory and source boundary</h2>
+<p>Run <code>python labs/ch01.py</code> from the downloaded course directory. The program reproduces the two source arithmetic examples, checks covariance conventions and correlation transformations, and demonstrates the effect of arbitrary category coding. The category example and risk derivation are original teaching constructions. No R code is demonstrated in the two assigned caption tracks; this statement is confined to those recordings and does not describe the rest of the course.</p>
+<p>The notes use corrected mathematical definitions rather than treating caption wording as an authority on the real-number system. The introductory historical retail anecdotes are not needed for the statistical argument and are omitted. Timestamped captions support the topic coverage and source arithmetic; they do not constitute a comprehensive review of every on-screen object.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch01.py"><code>labs/ch01.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Chapter 1: exact source correlation examples and original checks.&quot;&quot;&quot;
+
+import numpy as np
+
+
+def main():
+    x = np.array([1.0, 3.0, 9.0, 11.0])
+    y = np.array([5.0, 9.0, 21.0, 25.0])
+    centered = np.column_stack((x - x.mean(), y - y.mean()))
+    population = centered.T @ centered / len(x)
+    sample = centered.T @ centered / (len(x) - 1)
+    assert np.allclose(population, [[17, 34], [34, 68]])
+    assert np.allclose(sample, population * 4 / 3)
+    print(&quot;Source linear pairs: x =&quot;, x.astype(int).tolist())
+    print(&quot;Source linear pairs: y =&quot;, y.astype(int).tolist())
+    print(f&quot;Means: x={x.mean():.6f}, y={y.mean():.6f}&quot;)
+    print(f&quot;Covariance, divisor n: {population[0, 1]:.6f}&quot;)
+    print(f&quot;Covariance, divisor n-1: {sample[0, 1]:.6f}&quot;)
+    print(
+        f&quot;Variances, divisor n: {population[0, 0]:.6f}, {population[1, 1]:.6f}&quot;
+    )
+    print(f&quot;Pearson correlation: {np.corrcoef(x, y)[0, 1]:.6f}&quot;)
+    transformed = np.corrcoef(10 + 100 * x, 7 - 2 * y)[0, 1]
+    assert np.isclose(transformed, -1)
+    print(f&quot;Correlation after positive/negative rescaling: {transformed:.6f}&quot;)
+    xq = np.array([-3.0, -2.0, -1.0, 1.0, 2.0, 3.0])
+    yq = xq**2
+    covariance = np.mean((xq - xq.mean()) * (yq - yq.mean()))
+    assert abs(covariance) &lt; 1e-12
+    assert np.allclose(yq, xq**2)
+    print(f&quot;Source quadratic mean response: {yq.mean():.6f}&quot;)
+    print(f&quot;Source quadratic covariance: {covariance:.6f}&quot;)
+    print(f&quot;Source quadratic correlation: {np.corrcoef(xq, yq)[0, 1]:.6f}&quot;)
+    print(f&quot;Quadratic reconstruction error: {np.mean((yq - xq**2) ** 2):.6f}&quot;)
+    print(
+        f&quot;Constant-predictor mean squared error: &quot;
+        f&quot;{np.mean((yq - yq.mean()) ** 2):.6f}&quot;
+    )
+    codes_a = np.array([0.0, 0.0, 1.0, 1.0, 2.0, 2.0])
+    codes_b = np.array([0.0, 0.0, 2.0, 2.0, 1.0, 1.0])
+    response = np.array([0.0, 1.0, 3.0, 4.0, 6.0, 7.0])
+    print(
+        f&quot;Arbitrary category coding correlation A: &quot;
+        f&quot;{np.corrcoef(codes_a, response)[0, 1]:.6f}&quot;
+    )
+    print(
+        f&quot;Arbitrary category coding correlation B: &quot;
+        f&quot;{np.corrcoef(codes_b, response)[0, 1]:.6f}&quot;
+    )
+    print(&quot;Checks passed: source arithmetic, scaling, nonlinear dependence.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Source linear pairs: x = [1, 3, 9, 11]
+Source linear pairs: y = [5, 9, 21, 25]
+Means: x=6.000000, y=15.000000
+Covariance, divisor n: 34.000000
+Covariance, divisor n-1: 45.333333
+Variances, divisor n: 17.000000, 68.000000
+Pearson correlation: 1.000000
+Correlation after positive/negative rescaling: -1.000000
+Source quadratic mean response: 4.666667
+Source quadratic covariance: 0.000000
+Source quadratic correlation: -0.000000
+Quadratic reconstruction error: 0.000000
+Constant-predictor mean squared error: 10.888889
+Arbitrary category coding correlation A: 0.979796
+Arbitrary category coding correlation B: 0.489898
+Checks passed: source arithmetic, scaling, nonlinear dependence.
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="index.html">← Course home</a><a href="chapter-02.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

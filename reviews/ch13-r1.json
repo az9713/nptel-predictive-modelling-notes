@@ -1,0 +1,64 @@
+{
+  "chapter": 13,
+  "round": 1,
+  "verdict": "ACCEPT",
+  "body_sha256": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d",
+  "lab_sha256": "4fa1438aebb7800a05116f0914d3f0d8ae84bc9f9f30bb9df60a63ff2587904e",
+  "stdout_sha256": "d3f932115e2cbdd6f9fd10e4a4281e25796ab6eebebe1e0c86a907c2184ba734",
+  "findings": [],
+  "scope": "Full authored chapter, all six solved exercises, laboratory source and saved output; mathematical derivations assessed independently; fresh Python laboratory execution matched saved stdout; focused source-caption demonstration read and primary package implementation/documentation checked.",
+  "limitations": [
+    "No comprehensive audiovisual review or independent full re-reading of every source recording.",
+    "No claim of formal proof-assistant verification or human expert certification."
+  ],
+  "verified_topics": [
+    "Conditional response versus marginal response normality; projected residual covariance and calibration limits",
+    "Both-sided empirical CDF/KS supremum and fitted-parameter warning",
+    "Shapiro-Wilk contrast normalization, bounds and affine invariance",
+    "R qqnorm/qqline type-7 quartile conventions and car numeric-vector pointwise envelope",
+    "ToothGrowth source output and all printed Python values"
+  ],
+  "primary_sources_checked": [
+    "https://stat.ethz.ch/R-manual/R-devel/library/stats/html/qqnorm.html",
+    "https://raw.githubusercontent.com/cran/car/master/R/qqPlot.R",
+    "https://docs.scipy.org/doc/scipy/reference/generated/scipy.stats.shapiro.html"
+  ],
+  "historical_pilot_record": {
+    "chapter": 13,
+    "round": 1,
+    "reviewer": "author_07_12 independent of chapter 13 authorship",
+    "skill": "science-editor",
+    "body_sha256": "bcef346786da1896293def475bc5d760dc36494e2c9f0effed6e23fb782b8c5d",
+    "verdict": "ACCEPT",
+    "blocking_findings": 0,
+    "major_findings": 0,
+    "minor_findings": 0,
+    "findings": [
+      {
+        "severity": "minor",
+        "location": "validation/chapters/ch13.json:31",
+        "quote": "no fresh R run. Fresh R4.5.1",
+        "issue": "The conversion witness simultaneously denies and affirms a fresh R comparison. The newer run is supported in the accompanying text, but the stale clause should be removed.",
+        "replacement": "Executed Python W=.967428644 p=.109100493 agrees with inspected source frame at1045s (R W=.96743 p=.1091). Frame1004s confirms car::qqPlot(ToothGrowth$len); envelope formula translated from inspected car source. Fresh R4.5.1 W=.9674286439,p=.109100495 agrees within3e-9 on the same ToothGrowth values.",
+        "status": "resolved_verified"
+      }
+    ],
+    "checks": [
+      "Read entire chapter, six worked solutions, Python laboratory and metadata",
+      "Freshly executed Python laboratory; all assertions passed and printed values matched saved stdout",
+      "Verified car numeric-vector envelope and quartile default against primary package R source",
+      "Verified qqline default quartile/type7 convention against primary R documentation",
+      "Verified SciPy Shapiro documented size limitation",
+      "Checked residual covariance, KS two-sided jump formula, Shapiro normalization/bounds and stated limitations"
+    ],
+    "limits": [
+      "No full independent rereading of both lecture transcripts during this review",
+      "Author source-frame claims not independently re-certified",
+      "No formal proof-assistant verification",
+      "Browser layout review belongs to whole-reader validation"
+    ],
+    "repair_verification": "Stale no-fresh-R clause removed; chapter body unchanged from reviewed digest."
+  },
+  "reviewer": "/root/review_13_18_r1",
+  "independence": "Independent reviewer context; not the author of this chapter. No authorship edits were made during this review."
+}

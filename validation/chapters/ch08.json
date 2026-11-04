@@ -1,0 +1,153 @@
+{
+  "number": 8,
+  "title": "Multiple regression and projection geometry",
+  "source_videos": [
+    "BSk7RaB4kbk",
+    "dK7LyVwHlyo",
+    "rLXNVsz9qwo"
+  ],
+  "reading_records": [
+    {
+      "video_id": "BSk7RaB4kbk",
+      "read_full": true,
+      "transcript_sha256": "e811de59d9b35b331820ec506ec77b87b4de182ae433f58de266899fc750d566",
+      "limitations": "English captions read sequentially; no comprehensive video/code transcription."
+    },
+    {
+      "video_id": "dK7LyVwHlyo",
+      "read_full": true,
+      "transcript_sha256": "23744d13eef013c9b25b9859565521089161be073e55641fdd95c13637c22592",
+      "limitations": "English captions read sequentially; no comprehensive video/code transcription."
+    },
+    {
+      "video_id": "rLXNVsz9qwo",
+      "read_full": true,
+      "transcript_sha256": "45c0193487df8e5c8f67f21d1fae525635210fdb47039940ba4ce56de8af5d5d",
+      "limitations": "English captions read sequentially; no comprehensive video/code transcription."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch08-toyota-simple",
+      "video_id": "dK7LyVwHlyo",
+      "start_seconds": 745,
+      "source_method": "lm(Price~KM)",
+      "python_method": "statsmodels formula OLS Price~KM",
+      "data_status": "Source29-row subset and exact20-row random training indices unavailable in captions",
+      "status": "method_converted_exact_source_numbers_not_reproduced",
+      "verification": "Implemented optional --toyota and --training-rows; projection/OLS method independently verified on constructed data.",
+      "limitations": "Not run against unknown source car subset; a shared R/Python seed would not establish matching rows."
+    },
+    {
+      "id": "ch08-toyota-adjusted",
+      "video_id": "dK7LyVwHlyo",
+      "start_seconds": 786,
+      "source_method": "lm(Price~KM+Age)",
+      "python_method": "statsmodels formula OLS Price~KM+Age",
+      "data_status": "Source29-row subset and exact20-row random training indices unavailable in captions",
+      "status": "method_converted_exact_source_numbers_not_reproduced",
+      "verification": "Implemented optional --toyota and --training-rows; projection/OLS method independently verified on constructed data.",
+      "limitations": "Not run against unknown source car subset; a shared R/Python seed would not establish matching rows."
+    },
+    {
+      "id": "ch08-toyota-all",
+      "video_id": "dK7LyVwHlyo",
+      "start_seconds": 893,
+      "source_method": "lm(Price~.)",
+      "python_method": "Explicitly constructed patsy formula over remaining columns",
+      "data_status": "Source29-row subset and exact20-row random training indices unavailable in captions",
+      "status": "method_converted_exact_source_numbers_not_reproduced",
+      "verification": "Implemented optional --toyota and --training-rows; projection/OLS method independently verified on constructed data.",
+      "limitations": "Not run against unknown source car subset; a shared R/Python seed would not establish matching rows."
+    },
+    {
+      "id": "ch08-housing-distributions",
+      "video_id": "dK7LyVwHlyo",
+      "start_seconds": 1034,
+      "source_method": "ggplot distributions and histograms by Boro",
+      "python_method": "Matplotlib boxplot, overlay histograms, and category facets",
+      "data_status": "Canonical Jared Lander housing.csv and housingNew.csv downloaded; source exact URL/version not fully visible in captions",
+      "status": "method_converted_and_executed_on_identified_public_dataset",
+      "verification": "Executed optional housing run, preserved stdout labs/ch08-housing-output.txt and three SVG plots; prediction interval ordering asserted.",
+      "limitations": "Plot semantics implemented and executed on public housing rows; no fresh R graphical rendering comparison. Lecturer exact version not independently certified."
+    },
+    {
+      "id": "ch08-housing-fit",
+      "video_id": "dK7LyVwHlyo",
+      "start_seconds": 1071,
+      "source_method": "lm(ValuePerSqFt~Units+SqFt+Boro)",
+      "python_method": "statsmodels formula OLS with C(Boro)",
+      "data_status": "Canonical Jared Lander housing.csv and housingNew.csv downloaded; source exact URL/version not fully visible in captions",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R and Python coefficients, standard errors, mean and observation intervals matched at absolute tolerance1e-8 on identical public housing rows. Coefficient graphic translated from these verified quantities; no fresh R graphic rendering comparison.",
+      "limitations": "Exact lecturer dataset version not independently certified; fresh R numerical method comparison passed."
+    },
+    {
+      "id": "ch08-coefficient-extraction-plot",
+      "video_id": "rLXNVsz9qwo",
+      "start_seconds": 935,
+      "source_method": "coef, coefficients, coefplot",
+      "python_method": "params, bse, conf_int and Matplotlib interval chart",
+      "data_status": "Canonical Jared Lander housing.csv and housingNew.csv downloaded; source exact URL/version not fully visible in captions",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R and Python coefficients, standard errors, mean and observation intervals matched at absolute tolerance1e-8 on identical public housing rows. Coefficient graphic translated from these verified quantities; no fresh R graphic rendering comparison.",
+      "limitations": "Exact lecturer dataset version not independently certified; fresh R numerical method comparison passed."
+    },
+    {
+      "id": "ch08-housing-prediction",
+      "video_id": "rLXNVsz9qwo",
+      "start_seconds": 1001,
+      "source_method": "predict.lm newdata interval and confidence options",
+      "python_method": "get_prediction(new).summary_frame(alpha=0.05)",
+      "data_status": "Canonical Jared Lander housing.csv and housingNew.csv downloaded; source exact URL/version not fully visible in captions",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh R and Python coefficients, standard errors, mean and observation intervals matched at absolute tolerance1e-8 on identical public housing rows. Coefficient graphic translated from these verified quantities; no fresh R graphic rendering comparison.",
+      "limitations": "Exact lecturer dataset version not independently certified; fresh R numerical method comparison passed."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch08.py",
+    "stdout_path": "labs/ch08-output.txt",
+    "execution": "passed default deterministic assertions in project .venv",
+    "additional_run": {
+      "arguments": [
+        "--housing",
+        "labs/data/ch08-housing.csv",
+        "--new",
+        "labs/data/ch08-housingNew.csv"
+      ],
+      "stdout_path": "labs/ch08-housing-output.txt",
+      "execution": "passed",
+      "data_scope": "Bundled, byte-identical public acquisitions; optional plots were generated in the initial author run."
+    }
+  },
+  "data_records": [
+    {
+      "url": "https://www.jaredlander.com/data/housing.csv",
+      "sha256": "6984574e6e1f13592bd78310d6e706bc07cd0ac705566c8d8b8e49d0da696b75",
+      "private_path": "sources/private/housing.csv",
+      "bundled_path": "labs/data/ch08-housing.csv"
+    },
+    {
+      "url": "https://www.jaredlander.com/data/housingNew.csv",
+      "sha256": "fe9a58520fcf90e958a67907cd7d4f42e410eac3a4eced6f73ba4071d613e40c",
+      "private_path": "sources/private/housingNew.csv",
+      "bundled_path": "labs/data/ch08-housingNew.csv"
+    }
+  ],
+  "word_count": 2321,
+  "source_limitations": [
+    "Source car subset and random split not recovered; functional port supplied with explanation.",
+    "Housing method and public data executed, but exact source version/row match not certified.",
+    "Residual covariance versus scalar squared norm and inferential degrees of freedom are explicitly corrected."
+  ],
+  "body_sha256": "b6e36093340d1eaeeb197bc09f3efc450845ecb3e8b44b4d4227a2f9ce3b8ca5",
+  "fresh_r_comparison": {
+    "record": "validation/chapters/ch07-09-r-comparison.json",
+    "status": "passed",
+    "source_data_limits_preserved": true
+  },
+  "code_validation": "validation/chapters/ch07-12-code-checks.json",
+  "lab_sha256": "9b0b00a4fc800b013ead9df85ba75344b93db37a6c191ce6abe029186230cb67",
+  "stdout_sha256": "ca1d1c9a999977d1f48b487ef23049ad49f37f5271ed8db5028eef4a732ba3a3"
+}

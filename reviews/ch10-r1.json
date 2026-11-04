@@ -1,0 +1,27 @@
+{
+  "chapter": 10,
+  "round": 1,
+  "verdict": "ACCEPT",
+  "body_sha256": "d4f00fc7bbe7964db059e80b9df914ec7a970ead667e377ef187b29f7128de22",
+  "lab_sha256": "dfce72144df3a0f5a919a170a4fe096decba68ad2ad9f573436671a97394f1b9",
+  "stdout_sha256": "09c732dc861721be8d0ef1dd088be77120f0923690774cf2ddf8add11be56cae",
+  "findings": [],
+  "scope": "Independent science-editor FULL scientific/pedagogical round 1: complete current HTML fragment, full Python lab, executed stdout, chapter metadata/conversion ledger, all six solved exercises, mathematical derivations and stated assumptions. Default labs independently rerun in project .venv, exit0, saved stdout reproduced after newline normalization. Shared reader shell, browser rendering and export are handled by root.",
+  "mathematical_and_numerical_checks": [
+    "Derived least-squares group means and their variance under independent equal-variance errors; checked contrast, baseline reversal, \u00b11coding and general invertible-basis fitted-value invariance.",
+    "Verified K-1dummy columns with intercept, rank conditions, unsupported new levels and conditional rather than causal interpretation.",
+    "Default lab reproduces Student means 480.369444/876.825 and difference 396.455556; Gender difference 19.733123; Ethnicity offsets -18.686275 and-12.502513. All six exercise solutions checked."
+  ],
+  "source_evidence": [
+    "vgvKOKD-daM captions131\u2013400s and500\u2013800s confirm Credit, Student/Gender fits and indicator conventions; source10,000 description is explicitly corrected to primary Credit 400 rows.",
+    "Existing ch10-11 R record verifies all 400 rows/all 12 columns against primary ISLR extraction and identical factor reference levels.",
+    "Reviewer independently recomputed Student/Gender/Ethnicity coefficient comparisons against stored fresh-R witnesses: max absolute discrepancies 1.0801e-12,3.9791e-13,7.2121e-13. Primary ISLR manual https://search.r-project.org/CRAN/refmans/ISLR/html/Credit.html repeats the incorrect 10000/4 description; object-level package extraction, not that typo, supports 400 rows/12 columns."
+  ],
+  "limitations": [
+    "No comprehensive every-frame audiovisual or on-screen-code transcription; selected timestamped caption passages independently checked.",
+    "Fresh R witness files/comparison records are existing project evidence; this reviewer did not start a new R runtime. Same-input agreement is distinguished from original source-data reproduction.",
+    "This is an independent scientific editorial review, not formal proof verification or human certification."
+  ],
+  "reviewer": "Independent science-editor; not chapter author",
+  "review_date": "2026-11-04"
+}

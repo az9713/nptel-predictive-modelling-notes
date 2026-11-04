@@ -1,0 +1,8 @@
+NbClust 3.0.1 course workflow: 26 indices, k=2..15
+                     KL       CH  Hartigan      CCC    Scott     Marriot    TrCovW   TraceW  Friedman    Rubin   Cindex       DB  Silhouette    Duda  PseudoT2   Beale  Ratkowsky     Ball  PtBiserial  Frey  McClain     Dunn  Hubert  SDindex  Dindex     SDbw
+Number_clusters  3.0000  15.0000    4.0000  13.0000   9.0000      3.0000    3.0000   5.0000    5.0000  13.0000  10.0000  15.0000     15.0000  2.0000    2.0000  2.0000      5.000   3.0000      4.0000   1.0   2.0000  14.0000     0.0   5.0000     0.0  15.0000
+Value_Index      7.1625  43.7316   21.5587   8.0689  62.4209  14912.6123  359.6716  29.0322  501.0101  -2.6324   0.4126   0.3709      0.6446  0.7197    9.3494  1.1705      0.385  28.9871      0.6921   NaN   0.0449   0.7494     0.0   0.8518     0.0   0.0189
+Votes: {2: 4, 3: 4, 4: 2, 5: 4, 9: 1, 10: 1, 13: 2, 14: 1, 15: 4}
+Tied pluralities: [2, 3, 5, 15]
+Source smallest-tie rule selects: 2
+This is not a unique majority or a calibrated probability.

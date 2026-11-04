@@ -1,0 +1,18 @@
+{
+  "python": "3.13.5 (tags/v3.13.5:6cb20a2, Jun 11 2025, 16:15:46) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "packages": {
+    "numpy": "2.2.6",
+    "scipy": "1.16.0",
+    "pandas": "2.3.3",
+    "matplotlib": "3.9.3",
+    "scikit-learn": "1.7.0",
+    "statsmodels": "0.15.0",
+    "factor-analyzer": "0.5.1",
+    "beautifulsoup4": "4.14.3",
+    "playwright": "1.57.0",
+    "pycodestyle": "2.14.0"
+  },
+  "reference_r": "4.5.1",
+  "reference_r_library": "workspace-private optional verification environment; not required by Python labs"
+}

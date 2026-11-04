@@ -1,0 +1,9 @@
+{
+  "rattle_primary_url": "https://raw.githubusercontent.com/cran/rattle/master/data/wine.RData",
+  "rattle_rdata_sha256": "ac3525d69452b64d6ce8ecc4a9c8d3167c973ce20505ad41b44b2c2acca39d0c",
+  "rows": 178,
+  "columns": 14,
+  "numeric_feature_max_abs_difference_from_original_uci": 0.0,
+  "cultivar_labels_identical": true,
+  "r_export_exit_code": 0
+}

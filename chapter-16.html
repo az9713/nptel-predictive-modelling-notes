@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Model selection, evaluation, and an end-to-end case study — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a aria-current="page" href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Model selection, evaluation, and an end-to-end case study</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch16-1">16.1 The fitted procedure is what must be evaluated</a></li><li><a href="#ch16-2">16.2 AIC, BIC, adjusted fit, and nested comparisons</a></li><li><a href="#ch16-3">16.3 A greedy search and a reproducible source example</a></li><li><a href="#ch16-4">16.4 A case study connects fitting to diagnostics</a></li><li><a href="#ch16-5">16.5 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 16 · <a href="https://www.youtube.com/watch?v=c1MST7rrPIw">Recording 1</a> · <a href="https://www.youtube.com/watch?v=s9U_b3hOs5A">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch16-objective">
+<h2 id="ch16-1">16.1 The fitted procedure is what must be evaluated</h2>
+<p>Adding a predictor cannot increase the minimum training residual sum of squares in a nested least-squares model. That fact alone cannot decide whether the added predictor improves prediction. It describes an optimization on observations already used to fit the model. The object deployed on new data includes the choice of variables, transformations, scaling, component count, and any tuning. An evaluation that treats those choices as fixed after looking at the test responses evaluates a different procedure.</p>
+<p>Let a full-rank fixed design $\mathbf X$ have $n$ rows and $q$ columns. Suppose the conditional mean belongs to its column space and the error covariance is $\sigma^2\mathbf I$. With projection $\mathbf H$ onto that space, the training residual is $(\mathbf I-\mathbf H)\boldsymbol\varepsilon$. The expected training squared-error sum is $\sigma^2\operatorname{tr}(\mathbf I-\mathbf H)=(n-q)\sigma^2$. This follows from $E(\boldsymbol\varepsilon^T\mathbf M\boldsymbol\varepsilon)=\sigma^2\operatorname{tr}\mathbf M$ for a deterministic matrix $\mathbf M$ and zero-mean errors.</p>
+<p>Now obtain independent new responses at the same design points, $\mathbf y_{new}=\mathbf X\boldsymbol\beta+\boldsymbol\varepsilon_{new}$. Their prediction error using the original fitted mean is $\boldsymbol\varepsilon_{new}-\mathbf H\boldsymbol\varepsilon$. Independence gives covariance $\sigma^2(\mathbf I+\mathbf H)$, so its expected squared-error sum is $(n+q)\sigma^2$. The difference is $2q\sigma^2$.</p>
+<p>This is a proved optimism calculation for a fixed, correctly specified, homoscedastic mean model. It is not an exact correction for every variable-selection algorithm or an arbitrary misspecified model. Its mechanism is useful: a fitted model uses random noise in its training data to reduce training loss. The same noise-fitting does not predict a new disturbance.</p>
+<p>A held-out sample can assess a complete fitted procedure. If preprocessing estimates a mean, scale, rotation, or missing-value rule, estimate it on the training subset. If a model is chosen by comparing candidate losses, perform that comparison inside the training portion or an inner validation loop. Preserve an outer test set for the final assessment. Repeatedly choosing methods by their test results makes those results part of selection. A new independent assessment would then be required.</p>
+<p class="source-note">The source introduces information-criterion selection at <a href="https://www.youtube.com/watch?v=c1MST7rrPIw&amp;t=16">Variable Selection and Model Evaluation, 00:16</a>. The fixed-design optimism proof and explicit held-out workflow are authored extensions.</p>
+</section>
+
+<section id="ch16-criteria">
+<h2 id="ch16-2">16.2 AIC, BIC, adjusted fit, and nested comparisons</h2>
+<p>For independent Gaussian errors with unknown variance and a full-rank mean model, write $S$ for the fitted residual sum of squares. Assume $n&gt;q$ and $S&gt;0$, so the fitted variance is positive and the maximized likelihood is finite. The variance maximum-likelihood estimator is $S/n$, while the unbiased residual variance estimator is $S/(n-q)$. Substituting the maximum-likelihood estimator into the Gaussian log likelihood gives</p>
+<p>$$-2\widehat\ell=n\{\log(2\pi)+1+\log(S/n)\}.\tag{16.1}$$</p>
+<p>There are $K=q+1$ freely fitted likelihood parameters if the variance is counted alongside the $q$ regression coefficients. The usual likelihood-based criteria are $\mathrm{AIC}=-2\widehat\ell+2K$ and $\mathrm{BIC}=-2\widehat\ell+K\log n$. Their broader statistical motivations involve assumptions and approximations beyond this substitution; neither formula by itself proves that its selected model is the true model.</p>
+<p>For comparing unweighted Gaussian mean models on the same response rows, R's <code>extractAIC.lm</code> uses $n\log(S/n)+2q$. It omits common likelihood constants and does not count the estimated scale in its degrees-of-freedom term. Consequently, its printed number differs from <code>AIC(lm(...))</code> by a constant common to these candidate models. A Python conversion must match the intended convention before comparing displayed scores. Rankings remain the same when the difference really is constant across candidates.</p>
+<p>The logarithm in $n\log(S/n)$ cannot be replaced by $S/n$ when the variance is unknown. BIC's per-parameter penalty exceeds AIC's when $\log n&gt;2$. This inequality has the opposite direction from saying that the logarithm becomes smaller as the sample grows. A heavier penalty can favor a simpler model, but the selected answer still depends on likelihood changes and the candidate search.</p>
+<p>With an intercept, define $S_{tot}=\sum_i(y_i-\bar y)^2$ and assume $S_{tot}&gt;0$. Then $R^2=1-S/S_{tot}$ and, for $n&gt;q$, adjusted $R^2=1-[S/(n-q)]/[S_{tot}/(n-1)]$. Its degrees-of-freedom correction can decrease when a predictor is added. It remains a statistic computed on fitted data, rather than an untouched estimate of generalization error.</p>
+<p>For prespecified nested Gaussian homoscedastic models with ranks $q_R&lt;q_F&lt;n$ and residual sums $S_R,S_F$, the classical comparison is</p>
+<p>$$F=\frac{(S_R-S_F)/(q_F-q_R)}{S_F/(n-q_F)}.\tag{16.2}$$</p>
+<p>Under the reduced model, the extra fitted component and full residual component are independent orthogonal Gaussian projections. Their scaled squared lengths have chi-square distributions with the numerator and denominator degrees of freedom, yielding an exact $F_{q_F-q_R,n-q_F}$ reference. If the reduced model was chosen by first inspecting these same outcomes, this prespecified-test calibration no longer describes the entire selection procedure. A large p-value does not prove excluded coefficients are zero.</p>
+<p class="source-note">Implementation conventions: <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/extractAIC.html">R extractAIC</a>; <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/step.html">R step</a>. The exact score derivation above corrects caption ambiguities while retaining the source selection problem.</p>
+</section>
+
+<section id="ch16-search">
+<h2 id="ch16-3">16.3 A greedy search and a reproducible source example</h2>
+<p>Backward stepwise selection begins from a specified upper model. At each step it compares deleting one permitted term with retaining the current model, chooses the best score, and stops when no permitted deletion improves that score. Forward selection begins from a lower model, compares allowed additions, and stops by the analogous rule. A search involving interactions must respect the chosen hierarchy of terms. The supplied Python implementation handles the single-column main-effect scope used in the source example.</p>
+<p>This is a greedy local search. It does not generally examine every subset or guarantee the globally smallest score. Forward and backward paths can terminate at different models. All candidate fits must use the same observation rows; otherwise a score change can reflect a changed response sample instead of a changed model. Missing-value filtering therefore precedes the candidate search and uses one documented rule.</p>
+<p>The source's air-pollution table was recovered through the <code>pollution</code> data in <code>SMPracticals</code>. It has 60 metropolitan observations and 15 predictors, with mortality as the response. Matching the source's full-model score and both complete selection paths provides a stronger identification than a similar dataset title. The original field order maps to source labels $X_1,\ldots,X_{15}$ as precipitation, January temperature, July temperature, older-population percentage, household size, education, housing, density, non-white population percentage, white-collar employment, poverty, hydrocarbon pollution, nitric-oxide pollution, sulphur-dioxide pollution, and humidity.</p>
+<p>The executed full-model <code>extractAIC</code> score is $439.787096634$, matching the source's displayed $439.79$. Backward deletion ends with predictors numbered $1,2,3,4,5,6,9,12,13$, score $429.633968121$, and adjusted $R^2=0.713883873$. Forward addition follows $9,6,2,14,1,3,5$, ending with score $428.828918239$ and adjusted $R^2=0.709841820$. A fresh R reference run reproduces the same retained terms and scores. The complete paths are in the <a href="labs/ch16.py">laboratory</a> and its stored output.</p>
+<p>These historical aggregate variables describe associations across metropolitan areas. Stepwise inclusion does not establish individual-level effects or causal impacts of the selected socioeconomic variables. Their coding and historical measurement context remain part of their interpretation. The program's additional held-out example is explicitly an authored evaluation demonstration; it is not a source claim that the historical data establish a useful forecasting system.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=c1MST7rrPIw&amp;t=972">selection demonstration, 16:12</a>. Data description and original study attribution: <a href="https://github.com/cran/SMPracticals/blob/master/man/pollution.Rd">SMPracticals pollution documentation</a>.</p>
+</section>
+
+<section id="ch16-cases">
+<h2 id="ch16-4">16.4 A case study connects fitting to diagnostics</h2>
+<p>The second recording starts with R's <code>women</code> dataset. Its 15 rows contain average weights associated with heights, rather than 15 independently sampled individual patients. The Python conversion fits the same raw linear, quadratic, and cubic powers. Adjusted $R^2$ increases from $0.990318281$ to $0.999385928$ and $0.999722156$. The linear slope is $3.45$; adding a quadratic term changes the linear coefficient to approximately $-7.348319$ because that coefficient now describes the slope contribution at a different algebraic reference. It does not imply that the fitted curve decreases over the observed heights. Its derivative includes the quadratic term.</p>
+<p>The state case uses <code>state.x77</code> with murder rate as response and Population, Income, Illiteracy, and Frost as predictors. The conversion preserves those columns, computes confidence intervals, VIF, leverage, Cook distance, externally studentized residuals, and the diagnostic plots. A reduced model retains Population and Illiteracy. Comparing it with the full model gives $F=0.006108462$ with p-value $0.993910981$. Backward AIC selection also retains that pair. These are the actual reproduced calculations, not proof that omitted variables have no association under every model.</p>
+<figure><img src="labs/ch16-state-diagnostics.svg" alt="Four diagnostics for the state murder-rate regression: residual fit, quantile comparison, scale location and influence"><figcaption>Fig. 16.1. The reproduced state-model diagnostics separate mean pattern, distributional shape, spread and influence. Marker size in the lower-right panel reflects Cook distance.</figcaption></figure>
+<p>Nevada's externally studentized residual is $3.542928636$; a two-sided individual residual test with a Bonferroni adjustment across 50 states gives p-value $0.047544180$. This is an investigative diagnostic, not a reason to remove a valid state automatically. Deletion changes the population represented by the analysis. Examine data quality and scientific model fit before choosing a revised analysis.</p>
+<p>The source also reports a Durbin-Watson procedure. The preserved state ordering gives statistic $2.317691198$. A residual-resampling implementation with an explicit new seed produces a simulated two-sided p-value; it is not expected to match the source's unreported random seed exactly. More fundamentally, alphabetic state order is not a time axis. A serial-correlation interpretation based on that arbitrary order is unsupported. Spatial or regional dependence would need an appropriate structure.</p>
+<p>The laboratory includes component-plus-residual plots, a conditional Box-Cox profile and a small exhaustive subset comparison using Mallows' $C_p$. The Box-Cox family for positive responses is $(y^\lambda-1)/\lambda$, with logarithm as the continuous limit at zero. Profiling its Gaussian regression likelihood requires the transformation Jacobian; fitting transformed responses and comparing only residual sums on incompatible scales omits that term. The fitted conditional profile power is $0.865322$. Such a fitted power and a hypothesis that power one is adequate are different reported quantities.</p>
+<p>For predictor $j$, a component-plus-residual plot places $e_i+\widehat\beta_j x_{ij}$ against $x_{ij}$. Adding back its fitted component lets departures from a straight partial relation appear. For a candidate with $q_C$ coefficients including its intercept, the subset comparison uses $C_p=S_C/s_F^2-n+2q_C$, where $S_C$ is its residual sum of squares and $s_F^2$ is the full model's residual variance estimate. The independent, homoscedastic, correctly specified full mean model makes $s_F^2$ a suitable variance reference. $C_p$ is a selection criterion, not a causal test.</p>
+<p>The graphical counterparts retain the diagnostic quantities. The Q-Q implementation follows the inspected <code>car</code> linear-model method: Student reference quantiles for externally studentized residuals, a robust reference line, Gaussian response simulation with refitting, and pointwise quantiles across simulated ordered residuals. Its explicit new random seed cannot reproduce an unknown source seed point for point. Interactive label placement and exact robust-fitting tolerances are not asserted to be identical. Unreported source settings are not silently represented as exact output agreement.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=s9U_b3hOs5A&amp;t=44">women example, 00:44</a> and <a href="https://www.youtube.com/watch?v=s9U_b3hOs5A&amp;t=320">state case, 05:20</a>. The <a href="https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/women.html">R dataset documentation</a> clarifies the aggregated women measurements.</p>
+</section>
+
+<section id="ch16-exercises">
+<h2 id="ch16-5">16.5 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Conceptual: a global optimum.</strong> Forward and backward AIC selection return different subsets. Must one implementation be wrong?</p><details><summary>Solution</summary><p>No. They search different neighboring models from different starting points. Each may stop at a local optimum under its allowed moves. The recovered pollution example reproduces two distinct source paths and final subsets. An exhaustive search over the same candidate scope is a different algorithm.</p></details></li>
+<li><p><strong>Conceptual: after selection.</strong> Why do ordinary coefficient p-values from the selected model not automatically have their prespecified-model interpretation?</p><details><summary>Solution</summary><p>The responses helped select the model whose coefficients are then tested. The sampling distribution of the complete procedure includes that search, while the conventional table conditions on a fixed specification. Use an inferential method designed for selection, an independent confirmation sample, or report the table as descriptive rather than treating it as untouched confirmatory evidence.</p></details></li>
+<li><p><strong>Derivation: optimism.</strong> Derive the expected difference between new-response and training squared-error sums in the fixed-design setting of <a href="#ch16-1">§16.1</a>.</p><details><summary>Solution</summary><p>The residual projection has rank $n-q$, giving expected training error $(n-q)\sigma^2$. The new response error combines independent new noise and projected training noise, with covariance $\sigma^2(\mathbf I+\mathbf H)$ and expected squared norm $(n+q)\sigma^2$. Subtraction gives $2q\sigma^2$. A data-dependent selected projection is not the same fixed matrix, so that proof cannot be transferred unchanged.</p></details></li>
+<li><p><strong>Derivation: a score constant.</strong> Why can R's <code>extractAIC.lm</code> and a likelihood-based Gaussian AIC print different values but rank the same fixed-row models?</p><details><summary>Solution</summary><p>The maximized negative twice log likelihood is $n\log(S/n)+n\{1+\log(2\pi)\}$. Counting the fitted variance adds another constant penalty across these models. If all models use the same unweighted responses and sample size, those omitted terms are common. Subtraction preserves score differences. Changing rows, likelihood families, or weights can invalidate the common-constant argument.</p></details></li>
+<li><p><strong>Computational: source reproduction.</strong> Recover the first backward deletion and explain why the displayed two-decimal tie is insufficient to choose among later candidates.</p><details><summary>Solution</summary><p>The complete Python path first removes predictor 11, matching the source. Compare full-precision scores for every candidate deletion; the rounded printed values can conceal a strict difference. Preserve the documented candidate order for genuine ties. The code verifies both final source subsets, and a fresh R run agrees with their scores.</p></details></li>
+<li><p><strong>Computational design: a valid comparison.</strong> Specify a held-out assessment of a pipeline that includes variable selection and PCA. Where should each fitted operation occur?</p><details><summary>Solution</summary><p>Reserve an outer test set before comparing choices. In the training set, fit any imputation, centering, scaling and PCA within each inner training split, choose the component count and variables using inner validation, then refit the chosen complete pipeline on the outer training data. Apply that fitted pipeline once to the outer test features. Evaluate the specified response loss without selecting another pipeline from that test result. Match the split to grouping or time structure when applicable.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch16.py"><code>labs/ch16.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Source-data stepwise selection and regression case studies in Python.&quot;&quot;&quot;
+from pathlib import Path
+from itertools import combinations
+
+import matplotlib
+import numpy as np
+import pandas as pd
+import statsmodels.api as sm
+from scipy import optimize, stats
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from statsmodels.stats.stattools import durbin_watson
+
+import matplotlib.pyplot as plt
+
+matplotlib.use(&quot;Agg&quot;)
+
+
+def fit_columns(features, target, columns):
+    design_columns = [np.ones(len(target))]
+    design_columns.extend(features[:, j] for j in columns)
+    design = np.column_stack(design_columns)
+    return sm.OLS(target, design).fit()
+
+
+def extract_aic(fit, penalty=2):
+    &quot;&quot;&quot;R extractAIC.lm, unknown scale, full-rank fixed-row comparison.&quot;&quot;&quot;
+    return fit.nobs*np.log(fit.ssr / fit.nobs) + penalty*fit.df_model + penalty
+
+
+def stepwise(features, target, direction, penalty=2):
+    &quot;&quot;&quot;Single-column terms, fixed rows, no interactions or rank defects.&quot;&quot;&quot;
+    available = list(range(features.shape[1]))
+    current = available.copy() if direction == &quot;backward&quot; else []
+    fit = fit_columns(features, target, current)
+    path = [(current.copy(), extract_aic(fit, penalty))]
+    while True:
+        options = []
+        for column in (current if direction == &quot;backward&quot; else available):
+            if direction == &quot;forward&quot; and column in current:
+                continue
+            proposed = ([j for j in current if j != column]
+                        if direction == &quot;backward&quot; else current + [column])
+            candidate = fit_columns(features, target, proposed)
+            options.append((extract_aic(candidate, penalty),
+                            proposed, candidate))
+        if not options:
+            break
+        value, proposed, candidate = min(options, key=lambda item: item[0])
+        if value &gt;= path[-1][1] - 1e-10:
+            break
+        current, fit = proposed, candidate
+        path.append((current.copy(), value))
+    return fit, current, path
+
+
+def case_study(here):
+    women = pd.read_csv(here / &quot;data/ch16-women.csv&quot;)
+    print(&quot;women polynomial fits; rows:&quot;, len(women))
+    for degree in [1, 2, 3]:
+        design = np.vander(
+            women[&quot;height&quot;].to_numpy(),
+            degree + 1,
+            increasing=True)
+        fitted = sm.OLS(women[&quot;weight&quot;], design).fit()
+        coefficients = np.array2string(np.asarray(fitted.params), precision=6)
+        print(f&quot;Degree {degree}: adjusted R2={fitted.rsquared_adj:.9f}, &quot;
+              f&quot;coefficients={coefficients}&quot;)
+    states = pd.read_csv(here / &quot;data/ch16-state.x77.csv&quot;)
+    names = [&quot;Population&quot;, &quot;Income&quot;, &quot;Illiteracy&quot;, &quot;Frost&quot;]
+    design = sm.add_constant(states[names])
+    fit = sm.OLS(states[&quot;Murder&quot;], design).fit()
+    reduced = sm.OLS(states[&quot;Murder&quot;], sm.add_constant(
+        states[[&quot;Population&quot;, &quot;Illiteracy&quot;]])).fit()
+    print(&quot;state.x77 full coefficients:&quot;,
+          np.array2string(fit.params.to_numpy(), precision=9))
+    print(&quot;State full 95% intervals:\n&quot;, fit.conf_int().round(6).to_string())
+    print(
+        &quot;State VIF:&quot;, [
+            round(
+                variance_inflation_factor(
+                    design.to_numpy(), j), 6) for j in range(
+                1, len(names) + 1)])
+    influence = fit.get_influence()
+    student = influence.resid_studentized_external
+    tail_probability = stats.t.sf(abs(student), fit.df_resid - 1)
+    pvalues = np.minimum(1., 2*tail_probability*len(states))
+    nevada = int(np.flatnonzero(states[&quot;rownames&quot;] == &quot;Nevada&quot;)[0])
+    print(f&quot;Nevada external studentized residual={student[nevada]:.9f}, &quot;
+          f&quot;Bonferroni p={pvalues[nevada]:.9f}&quot;)
+    print(f&quot;State alphabetical-order DW={durbin_watson(fit.resid):.9f}&quot;)
+    print(&quot;State ordering is not a time index; &quot;
+          &quot;serial interpretation is unsupported.&quot;)
+    rng = np.random.default_rng(1602)
+    simulated_y = np.asarray(fit.fittedvalues)[:, None]
+    simulated_y = simulated_y + rng.choice(np.asarray(fit.resid),
+                                           size=(len(states), 1000))
+    fitted_all = design.to_numpy() @ np.linalg.lstsq(
+        design.to_numpy(), simulated_y, rcond=None)[0]
+    simulated_residual = simulated_y - fitted_all
+    simulated_dw = np.sum(np.diff(simulated_residual, axis=0)**2, axis=0)
+    simulated_dw /= np.sum(simulated_residual**2, axis=0)
+    tail = np.mean(simulated_dw &lt;= durbin_watson(fit.resid))
+    simulated_p = min(1., 2*min(tail, 1-tail))
+    print(&quot;Residual-resampling two-sided DW p (1000 draws)=&quot;
+          f&quot;{simulated_p:.6f}&quot;)
+    ftest, pvalue, difference = fit.compare_f_test(reduced)
+    print(f&quot;Full versus reduced F={ftest:.9f}, p={pvalue:.9f}, &quot;
+          f&quot;df difference={difference:.0f}&quot;)
+    _, selected, _ = stepwise(
+        states[names].to_numpy(), states[&quot;Murder&quot;].to_numpy(), &quot;backward&quot;)
+    print(&quot;State backward retained:&quot;, [names[j] for j in selected])
+    target = states[&quot;Murder&quot;].to_numpy()
+
+    def neg_profile(power):
+        transformed = (np.log(target) if abs(power) &lt; 1e-8
+                       else np.expm1(power*np.log(target)) / power)
+        rss = sm.OLS(transformed, design).fit().ssr
+        return len(target)*np.log(rss / len(target)) / \
+            2 - (power - 1)*np.log(target).sum()
+
+    power = optimize.minimize_scalar(neg_profile, bounds=(-2, 2),
+                                     method=&quot;bounded&quot;).x
+    print(f&quot;Conditional Gaussian-regression Box-Cox profile power={power:.6f}&quot;)
+    marginal_power = stats.boxcox_normmax(target, method=&quot;mle&quot;)
+    print(f&quot;Marginal normal-family Box-Cox power={marginal_power:.6f}&quot;)
+    spread_model = sm.RLM(
+        np.log(np.abs(influence.resid_studentized_internal)),
+        sm.add_constant(np.log(np.asarray(fit.fittedvalues)))).fit()
+    suggested_power = 1 - spread_model.params[1]
+    print(&quot;Robust spread-level suggested response &quot;
+          f&quot;power={suggested_power:.6f}&quot;)
+    best_subsets = []
+    for count in range(1, len(names) + 1):
+        alternatives = []
+        for subset in combinations(range(len(names)), count):
+            candidate = fit_columns(states[names].to_numpy(), target, subset)
+            cp = candidate.ssr / fit.mse_resid - len(states) + 2*(count + 1)
+            alternatives.append((cp, subset, candidate.rsquared_adj))
+        best = min(alternatives, key=lambda item: item[0])
+        best_subsets.append(best)
+        print(&quot;Best size&quot;, count, &quot;Cp:&quot;, round(best[0], 6),
+              &quot;terms:&quot;, [names[j] for j in best[1]])
+    partial_figure, partial_axes = plt.subplots(2, 2, figsize=(10, 7))
+    for column, ax in zip(names, partial_axes.flat):
+        x_values = states[column].to_numpy()
+        component = fit.resid + fit.params[column]*x_values
+        ax.scatter(x_values, component)
+        ax.plot(x_values[np.argsort(x_values)],
+                fit.params[column]*np.sort(x_values), color=&quot;firebrick&quot;)
+        smooth = sm.nonparametric.lowess(component, x_values, frac=2/3)
+        ax.plot(smooth[:, 0], smooth[:, 1], color=&quot;black&quot;)
+        ax.set(xlabel=column, ylabel=&quot;Component plus residual&quot;)
+    partial_figure.tight_layout()
+    partial_figure.savefig(here / &quot;ch16-component-plots.svg&quot;)
+    plt.close(partial_figure)
+    figure, axes = plt.subplots(2, 2, figsize=(10, 7))
+    axes[0, 0].scatter(fit.fittedvalues, fit.resid)
+    axes[0, 0].set(xlabel=&quot;Fitted murder rate&quot;, ylabel=&quot;Residual&quot;)
+    probabilities = (np.arange(1, len(states) + 1) - 0.5) / len(states)
+    theoretical = stats.t.ppf(probabilities, fit.df_resid - 1)
+    ordered = np.sort(student)
+    robust = sm.RLM(ordered, sm.add_constant(theoretical)).fit()
+    simulated_y = np.asarray(fit.fittedvalues)[:, None]
+    simulated_y = simulated_y + np.sqrt(fit.mse_resid)*rng.normal(
+        size=(len(states), 100))
+    residual_sim = simulated_y - design.to_numpy() @ np.linalg.lstsq(
+        design.to_numpy(), simulated_y, rcond=None)[0]
+    leverage = influence.hat_matrix_diag[:, None]
+    residual_sse = np.sum(residual_sim**2, axis=0)
+    adjustment = residual_sim**2 / (1 - leverage)
+    deleted_scale = (residual_sse - adjustment) / (fit.df_resid - 1)
+    simulated_t = residual_sim / np.sqrt(deleted_scale*(1 - leverage))
+    envelope = np.quantile(np.sort(simulated_t, axis=0), [0.025, 0.975],
+                           axis=1, method=&quot;linear&quot;)
+    axes[0, 1].fill_between(theoretical, envelope[0], envelope[1], alpha=0.2)
+    axes[0, 1].scatter(theoretical, ordered, s=14)
+    axes[0, 1].plot(theoretical, robust.predict(sm.add_constant(theoretical)),
+                    color=&quot;firebrick&quot;)
+    axes[0, 1].set_title(&quot;Studentized residuals; simulated pointwise envelope&quot;)
+    axes[1, 0].scatter(fit.fittedvalues,
+                       np.sqrt(abs(influence.resid_studentized_internal)))
+    axes[1, 0].set(xlabel=&quot;Fitted murder rate&quot;,
+                   ylabel=&quot;sqrt(abs standardized residual)&quot;)
+    axes[1, 1].scatter(influence.hat_matrix_diag, student,
+                       s=20 + 300*influence.cooks_distance[0])
+    axes[1, 1].set(xlabel=&quot;Leverage&quot;, ylabel=&quot;Externally studentized residual&quot;)
+    for state in [&quot;Alaska&quot;, &quot;Hawaii&quot;, &quot;Nevada&quot;]:
+        index = int(np.flatnonzero(states[&quot;rownames&quot;] == state)[0])
+        axes[1, 1].annotate(
+            state, (influence.hat_matrix_diag[index], student[index]))
+    figure.tight_layout()
+    figure.savefig(here / &quot;ch16-state-diagnostics.svg&quot;)
+    plt.close(figure)
+
+
+def main():
+    here = Path(__file__).resolve().parent
+    pollution = pd.read_csv(here / &quot;data/ch16-pollution.csv&quot;)
+    features = pollution.iloc[:, :15].to_numpy()
+    target = pollution[&quot;mort&quot;].to_numpy()
+    full_fit = fit_columns(features, target, list(range(15)))
+    print(&quot;pollution full extractAIC:&quot;, f&quot;{extract_aic(full_fit):.9f}&quot;)
+    for direction in [&quot;backward&quot;, &quot;forward&quot;]:
+        fit, selected, path = stepwise(features, target, direction)
+        print(direction, &quot;step path:&quot;)
+        for columns, value in path:
+            print(&quot; &quot;, [j + 1 for j in columns], f&quot;{value:.9f}&quot;)
+        print(f&quot;Final adjusted R2={fit.rsquared_adj:.9f}&quot;)
+        expected = ([1, 2, 3, 4, 5, 6, 9, 12, 13] if direction == &quot;backward&quot;
+                    else [9, 6, 2, 14, 1, 3, 5])
+        assert [j + 1 for j in selected] == expected
+    train, test = train_test_split(np.arange(len(target)), test_size=0.25,
+                                   random_state=1601)
+    train_fit, selected, _ = stepwise(
+        features[train], target[train], &quot;backward&quot;)
+    test_columns = [np.ones(len(test))]
+    test_columns.extend(features[test, j] for j in selected)
+    test_design = np.column_stack(test_columns)
+    error = mean_squared_error(target[test], train_fit.predict(test_design))
+    print(f&quot;Authored held-out example MSE={error:.6f}&quot;)
+    case_study(here)
+    print(&quot;Source-step-path assertions and diagnostics: passed&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>pollution full extractAIC: 439.787096634
+backward step path:
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15] 439.787096634
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14, 15] 437.790776077
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 13, 14] 435.804959057
+  [1, 2, 3, 4, 5, 6, 7, 8, 9, 12, 13, 14] 433.823571622
+  [1, 2, 3, 4, 5, 6, 8, 9, 12, 13, 14] 432.056754904
+  [1, 2, 3, 4, 5, 6, 8, 9, 12, 13] 430.389380619
+  [1, 2, 3, 4, 5, 6, 9, 12, 13] 429.633968121
+Final adjusted R2=0.713883873
+forward step path:
+  [] 496.646285110
+  [9] 466.538100596
+  [9, 6] 451.019420723
+  [9, 6, 2] 441.491415908
+  [9, 6, 2, 14] 435.612858683
+  [9, 6, 2, 14, 1] 430.928880668
+  [9, 6, 2, 14, 1, 3] 429.001668811
+  [9, 6, 2, 14, 1, 3, 5] 428.828918239
+Final adjusted R2=0.709841820
+Authored held-out example MSE=1676.693423
+women polynomial fits; rows: 15
+Degree 1: adjusted R2=0.990318281, coefficients=[-87.516667   3.45    ]
+Degree 2: adjusted R2=0.999385928, coefficients=[ 2.618782e+02 -7.348319e+00  8.306399e-02]
+Degree 3: adjusted R2=0.999722156, coefficients=[-8.967476e+02  4.641079e+01 -7.461844e-01  4.252556e-03]
+state.x77 full coefficients: [1.234563411e+00 2.236753573e-04 6.442470152e-05 4.142836590e+00
+ 5.813055377e-04]
+State full 95% intervals:
+                    0         1
+const      -6.552191  9.021318
+Population  0.000041  0.000406
+Income     -0.001313  0.001441
+Illiteracy  2.381799  5.903874
+Frost      -0.019668  0.020830
+State VIF: [np.float64(1.245282), np.float64(1.345822), np.float64(2.165848), np.float64(2.082547)]
+Nevada external studentized residual=3.542928636, Bonferroni p=0.047544180
+State alphabetical-order DW=2.317691198
+State ordering is not a time index; serial interpretation is unsupported.
+Residual-resampling two-sided DW p (1000 draws)=0.252000
+Full versus reduced F=0.006108462, p=0.993910981, df difference=2
+State backward retained: [&#x27;Population&#x27;, &#x27;Illiteracy&#x27;]
+Conditional Gaussian-regression Box-Cox profile power=0.865322
+Marginal normal-family Box-Cox power=0.605542
+Robust spread-level suggested response power=1.209266
+Best size 1 Cp: 6.562469 terms: [&#x27;Illiteracy&#x27;]
+Best size 2 Cp: 1.012217 terms: [&#x27;Population&#x27;, &#x27;Illiteracy&#x27;]
+Best size 3 Cp: 3.003343 terms: [&#x27;Population&#x27;, &#x27;Income&#x27;, &#x27;Illiteracy&#x27;]
+Best size 4 Cp: 5.0 terms: [&#x27;Population&#x27;, &#x27;Income&#x27;, &#x27;Illiteracy&#x27;, &#x27;Frost&#x27;]
+Source-step-path assertions and diagnostics: passed
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-15.html">← Previous chapter</a><a href="chapter-17.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

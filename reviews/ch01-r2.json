@@ -1,0 +1,50 @@
+{
+  "chapter": 1,
+  "round": 2,
+  "reviewer": "review_01_06_r2; independent of chapter/helper authorship",
+  "skill": "science-editor",
+  "verdict": "ACCEPT",
+  "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533",
+  "blocking_findings": 0,
+  "major_findings": 0,
+  "minor_findings": 0,
+  "findings": [],
+  "checks": [
+    "Read the entire fragment and all six worked solutions; independently checked conditional squared-loss completion, sample-covariance unbiasedness, correlation range/equality and affine transformation laws.",
+    "Checked the source pairs, divisor n versus n-1, quadratic dependence counterexample, category recoding and all exercise arithmetic, including 136/3, 98/9 and the conditional versus marginal dependence test.",
+    "Read complete main laboratory and independently executed all calculations in the project environment; captured stdout exactly matches labs/ch01-output.txt.",
+    "Reviewed conversion metadata: no R examples identified in the two assigned caption tracks; this is a caption-bounded inventory, not a claim of complete screen inspection.",
+    "Preserved the prior independent pilot-round2 report below; current full-edition review reassesses the same fragment without treating its earlier acceptance as proof."
+  ],
+  "scope": "Entire current chapter and all six worked solutions, full main laboratory numerical execution/output, conversion records and targeted independent primary-source checks.",
+  "limitations": [
+    "No exhaustive independent audiovisual/editor-line inventory. Targeted captions, selected frames, primary implementation files and authors' full-caption reading records are distinct evidence.",
+    "Finite numerical checks and code/math inspection do not prove arbitrary-input equivalence; unknown historical RNG state and package-version differences remain explicit.",
+    "No proof-assistant verification, human certification or legal licensing opinion.",
+    "Shared reader/browser rendering, source-free export and publication state are outside this fragment verdict."
+  ],
+  "lab_sha256": "6eb35d9e4a49639459b203e42f13f7917cd634866bebd194579e4f9f8bbdba16",
+  "stdout_sha256": "8af70d20f6e12bf9b3932d1c2035055407956b6bd0f4c997a93e90a361bd67b4",
+  "round1_current_before_verdict": true,
+  "execution_note": "Numerical calculations executed without plotting/data-file writes to preserve concurrently validated artifacts. Chapters1-5 captured stdout exact; chapter6 separately executed in a fresh process to avoid inherited NumPy print settings and captured stdout exact.",
+  "prior_pilot_review": {
+    "chapter": 1,
+    "round": 2,
+    "reviewer": "author_13_18; independent of chapter1 authorship",
+    "verdict": "ACCEPT",
+    "body_sha256": "cdf8f0b1f48ee8b183685008bc57e06bf839d21d975a50de263762c8cdb16533",
+    "findings": [],
+    "checks": [
+      "Full chapter and six worked solutions read",
+      "Core mathematical derivations checked independently",
+      "lab executed with project Python; output matches",
+      "Complete correlation captions read; numerical pairs and arithmetic source-checked",
+      "Introductory distinctions checked against available source context"
+    ],
+    "limitations": [
+      "No complete audiovisual audit",
+      "No-R source inventory confined to available caption tracks",
+      "Not human certification or formal verification"
+    ]
+  }
+}

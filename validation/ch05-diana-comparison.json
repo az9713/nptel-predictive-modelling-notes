@@ -1,0 +1,30 @@
+{
+  "arrests": {
+    "distance_max_error": 5.329070518200751e-15,
+    "cophenetic_max_error": 4.884981308350689e-15,
+    "cut2_same_partition": true,
+    "divisive_coefficient": 0.8530481146136829,
+    "r_dc": 0.853048114613683
+  },
+  "votes": {
+    "distance_max_error": 5.115907697472721e-13,
+    "cophenetic_max_error": 5.3290705182007514e-14,
+    "cut2_same_partition": true,
+    "divisive_coefficient": 0.8869181668152879,
+    "r_dc": 0.886918166815288
+  },
+  "votes-euclidean": {
+    "distance_max_error": 5.3290705182007514e-14,
+    "cophenetic_max_error": 4.618527782440651e-14,
+    "cut2_same_partition": true,
+    "divisive_coefficient": 0.8616300379431518,
+    "r_dc": 0.861630037943152
+  },
+  "agriculture": {
+    "distance_max_error": 4.796163466380676e-14,
+    "cophenetic_max_error": 3.907985046680551e-14,
+    "cut2_same_partition": true,
+    "divisive_coefficient": 0.8711061710146346,
+    "r_dc": 0.871106171014635
+  }
+}

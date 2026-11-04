@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Regression discontinuity and local causal identification — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a aria-current="page" href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Regression discontinuity and local causal identification</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch18-1">18.1 A threshold is a design feature, not a causal conclusion</a></li><li><a href="#ch18-2">18.2 The local effect identified by continuity</a></li><li><a href="#ch18-3">18.3 Estimating the boundary with separate slopes</a></li><li><a href="#ch18-4">18.4 An executable design and a deliberate identification failure</a></li><li><a href="#ch18-5">18.5 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 18 · <a href="https://www.youtube.com/watch?v=9qR4g3nkpis">Recording 1</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch18-design">
+<h2 id="ch18-1">18.1 A threshold is a design feature, not a causal conclusion</h2>
+<p>A scholarship may become available at a score cutoff, an eligibility rule may begin at a specified age, or a pricing algorithm may change its action when a continuous index crosses a boundary. These settings create an opportunity to compare observations close to the threshold. A visible break in a fitted curve is not enough to establish what caused that break.</p>
+<p>A <dfn>running variable</dfn> is the score or measurement that determines assignment. Denote it by $r\in\mathbb R$, and let $c$ be a known cutoff. In a sharp regression-discontinuity design, the treatment indicator is $D=\mathbf1\{r\ge c\}$. The treatment is the intervention that changes at the boundary; it is not the running variable itself. A causal question must identify the treatment, the outcome, and the population near the boundary.</p>
+<p>A segmented regression can describe different mean curves on two sides of any chosen point. Regression discontinuity as a causal design additionally requires that the assignment rule and counterfactual comparison be credible. A data analyst cannot create this design merely by searching for the cutoff with the largest fitted jump. The treatment rule must exist, and other determinants of the outcome must satisfy the identifying conditions.</p>
+<p>The source discusses a minimum-age alcohol-access example and historical ride-pricing thresholds. A primary published study by Carpenter and Dobkin analyzes the age threshold in a specific historical population. Its empirical result is not a claim that every single-day birthday spike measures the same permanent treatment effect. The notes do not infer current driving-license rules or present a historical pricing multiplier as a current platform policy.</p>
+<p class="source-note">Source: <a href="https://www.youtube.com/watch?v=9qR4g3nkpis&amp;t=181">Regression Discontinuity Design, 03:01</a>. Historical study: <a href="https://www.aeaweb.org/articles?id=10.1257/app.1.1.164">Carpenter and Dobkin, The Effect of Alcohol Consumption on Mortality (2009)</a>.</p>
+</section>
+
+<section id="ch18-identification">
+<h2 id="ch18-2">18.2 The local effect identified by continuity</h2>
+<p>Let $Y(0)$ and $Y(1)$ be a unit's potential outcomes without and with treatment. Consistency means that the observed outcome is $Y=(1-D)Y(0)+DY(1)$. Assume that treatment status follows the sharp cutoff rule and that there are observations arbitrarily close to $c$ on both sides. Define $m_d(r)=E[Y(d)\mid r]$ for $d=0,1$.</p>
+<div class="prop"><p><strong>Proposition 18.1 (proved here).</strong> If both conditional potential-outcome means have continuous limits at $c$, then the right-minus-left limit of the observed conditional mean equals the local treatment effect $\tau(c)=m_1(c)-m_0(c)$.</p></div>
+<div class="proof"><p>For $r&lt;c$, sharp assignment gives $D=0$, so $E(Y\mid r)=m_0(r)$. For $r\ge c$, it gives $D=1$, so $E(Y\mid r)=m_1(r)$. Continuity extends the untreated mean from the left to $m_0(c)$ and the treated mean from the right to $m_1(c)$. Subtracting these limits gives</p>
+<p>$$\lim_{r\downarrow c}E(Y\mid r)-\lim_{r\uparrow c}E(Y\mid r)=m_1(c)-m_0(c)=\tau(c).\tag{18.1}$$</p>
+<p>Support on both sides makes the observed limits meaningful. Consistency connects observed outcomes with their potential-outcome means. Neither step requires a globally linear response curve. <span class="qed">∎</span></p></div>
+<p>The effect is local to the cutoff. Extending it to people far from that boundary requires additional assumptions or evidence. The proof also shows its failure mode. If the untreated potential-outcome mean itself jumps at the same cutoff, the observed discontinuity contains that jump as well as the treatment effect. A simultaneous policy change or systematic sorting of different units can therefore invalidate the intended causal interpretation.</p>
+<p>Whether potential-outcome means would be smooth at the cutoff is not directly testable from the observed outcomes: each side reveals only one treatment state. Substantive knowledge of assignment and measurement is indispensable. Examining score density, predetermined covariate balance, placebo cutoffs and alternative specifications can detect problems, but passing these checks does not prove the unobserved counterfactual condition. Some scores are discrete or heavily rounded, limiting how closely observations approach the boundary and changing the appropriate interpretation of continuity-based approximations.</p>
+<p>If crossing the cutoff changes treatment probability rather than treatment status deterministically, the sharp proof no longer applies. A treatment-probability discontinuity can support another design under additional assumptions, but one should not interpret the observed outcome jump as the sharp treatment effect automatically. The distinction is part of identifying the intervention before choosing a regression formula.</p>
+<p class="source-note">The lecture introduces the cutoff jump at <a href="https://www.youtube.com/watch?v=9qR4g3nkpis&amp;t=431">07:11</a>. A detailed primary methodological treatment is <a href="https://rdpackages.github.io/references/Cattaneo-Idrobo-Titiunik_2020_CUP.pdf">Cattaneo, Idrobo and Titiunik, A Practical Introduction to Regression Discontinuity Designs: Foundations</a>, sections 2 and 4.</p>
+</section>
+
+<section id="ch18-estimation">
+<h2 id="ch18-3">18.3 Estimating the boundary with separate slopes</h2>
+<p>Center the score at the cutoff by writing $x_i=r_i-c$. A piecewise-linear mean specification is</p>
+<p>$$E(Y_i\mid r_i)\approx\alpha+\tau D_i+\gamma x_i+\delta D_i x_i.\tag{18.2}$$</p>
+<p>On the left, the fitted intercept at the boundary is $\alpha$ and slope is $\gamma$. On the right, they are $\alpha+\tau$ and $\gamma+\delta$. Thus $\tau$ is the fitted intercept difference at the cutoff. The interaction permits different slopes. Omitting it imposes a common-slope restriction; that is a modeling assumption rather than a consequence of the design.</p>
+<p>Centering is essential for interpreting the treatment coefficient. If an uncentered score is used with a treatment-score interaction, the coefficient of $D$ is the difference at score zero, which may lie far from the cutoff. At the actual cutoff the fitted difference combines that coefficient with the interaction. A correct transformation of the design leaves the fitted curves unchanged but changes which coefficient directly reports the desired boundary contrast.</p>
+<p>A local fit uses observations within a bandwidth $h&gt;0$ of the cutoff. A triangular kernel assigns weight $w_i=1-|x_i|/h$ for $|x_i|&lt;h$ and zero otherwise. Weighted least squares on the design columns $(1,D_i,x_i,D_i x_i)$ estimates both boundary intercepts. The kernel weights describe locality; they are not a claim that the observation error variance is the reciprocal of that kernel. A covariance calculation must respect the estimator's actual purpose.</p>
+<p>The bandwidth trades approximation error against sampling uncertainty. Under smooth conditional means, a Taylor expansion near the boundary contains a constant, a linear term and a remainder of order $x^2$. Local-linear weights reproduce constants and linear terms, leaving a leading bias of order $h^2$ under appropriate nondegenerate design conditions. With score density positive near the cutoff, there are order $nh$ local observations; weights of order $1/(nh)$ give a variance of order $1/(nh)$ under bounded independent error variances.</p>
+<p>This rate argument suggests an approximate mean squared error $C_bh^4+C_v/(nh)$ with positive constants $C_b,C_v$. Differentiating gives $h^5=C_v/(4C_bn)$, the familiar $n^{-1/5}$ rate. The argument identifies the mechanism; it does not supply a practical optimal bandwidth or a complete asymptotic theorem for arbitrary designs. Vanishing curvature, discrete scores, dependence and other boundary conditions can change the details.</p>
+<p>A conventional heteroscedasticity-consistent standard error addresses sampling variability of the fitted local regression. It does not by itself correct the local-polynomial bias. At bandwidths chosen for point-estimation accuracy, that bias can be material for confidence intervals. Specialized bias-corrected methods also account for uncertainty introduced by estimating the bias. The laboratory reports conventional HC3 standard errors only as an implementation demonstration, without claiming formal robust bias-corrected regression-discontinuity inference.</p>
+<p class="source-note">Source model and different curve shapes: <a href="https://www.youtube.com/watch?v=9qR4g3nkpis&amp;t=553">09:13</a> and <a href="https://www.youtube.com/watch?v=9qR4g3nkpis&amp;t=672">11:12</a>. Local-polynomial inference distinctions: the methodological reference above, section 4.3.</p>
+</section>
+
+<section id="ch18-lab">
+<h2 id="ch18-4">18.4 An executable design and a deliberate identification failure</h2>
+<p>The <a href="labs/ch18.py">Python laboratory</a> generates 1,200 independent synthetic observations with a known sharp assignment rule at zero. The untreated conditional mean is $1+0.6r+0.4r^2$, the treatment effect is $2+0.3r$, and the disturbance has independent Gaussian standard deviation $0.35$. Both potential-outcome means are continuous, and the true effect at the cutoff is two outcome units. These data are an original teaching construction, not a reconstruction of the source's mortality or pricing records.</p>
+<p>The triangular local-linear fit with bandwidth $0.5$ uses 279 observations on the left and 305 on the right. It estimates a jump of $1.998572802$, with conventional HC3 standard error $0.067265349$. Bandwidths $0.25$, $0.75$ and $1$ give estimates $2.022091069$, $2.014904482$ and $2.019623690$. Agreement with the known target in this run verifies the computational example; it is not a universal coverage result. Each fit is independently checked against explicit square-root-weighted least squares.</p>
+<figure><img src="labs/ch18-cutoff.svg" alt="Binned synthetic observations near a real treatment jump and near a continuous nonlinear mean"><figcaption>Fig. 18.1. Left: a constructed sharp design with effect two at zero. Right: a continuous nonlinear mean. Separate lines fit over an overly broad range can manufacture an apparent boundary difference from curvature.</figcaption></figure>
+<p>The second construction has conditional mean $1+\tanh(4r)$, which is continuous at zero. A full-range segmented linear approximation nevertheless reports a jump of $0.714900377$ in this sample; narrowing the bandwidth to $0.25$ gives $0.084937885$. The difference arises from approximation and noise, not a genuine discontinuity in that data-generating mean. This implements the source's warning that curved patterns can be mistaken for a jump.</p>
+<p>The third construction adds a separate $0.8$ discontinuity to the untreated conditional mean at the same boundary while keeping the treatment effect function unchanged. The fitted jump increases by exactly $0.8$, as asserted by the program. A researcher seeing only observed outcomes could wrongly assign the additional change to treatment. The failure is in identification; choosing a more powerful optimizer cannot repair it.</p>
+<p>No R code is demonstrated in the complete caption track assigned to this final lecture. Its graphs and empirical stories are used to motivate the design, while the laboratory supplies transparent synthetic inputs. Full source microdata and an independent numerical reproduction of the historical empirical studies are not claimed. Reproducing a graph's appearance would not substitute for recovering its data, assignment rule and uncertainty calculation.</p>
+</section>
+
+<section id="ch18-exercises">
+<h2 id="ch18-5">18.5 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Conceptual: a piecewise fit.</strong> A researcher searches many cutoffs and finds one with a large fitted response jump. What is still missing for a causal regression-discontinuity interpretation?</p><details><summary>Solution</summary><p>There must be an actual treatment assignment rule at a known cutoff, a defined intervention, consistency, adequate score support, and credible continuity of the counterfactual outcome means. Searching on the outcome does not create these conditions. The search also changes the statistical inference problem. A fitted discontinuity can describe the sample without identifying a treatment effect.</p></details></li>
+<li><p><strong>Conceptual: the target population.</strong> Does the effect in eq. (18.1) describe everyone who receives treatment?</p><details><summary>Solution</summary><p>No. It is the effect at the cutoff, defined through conditional potential-outcome means there. People far above the cutoff can have different treatment effects. Extrapolation needs additional structure or evidence. This local estimand can still be relevant for a policy that changes eligibility near the existing boundary.</p></details></li>
+<li><p><strong>Derivation: centering and the jump.</strong> An uncentered model is $a+bD+gr+uDr$. Express the boundary jump at $r=c$ and the equivalent centered parameterization.</p><details><summary>Solution</summary><p>The right-minus-left fitted difference at $c$ is $b+uc$. Substitute $r=x+c$ to obtain $(a+gc)+(b+uc)D+gx+uDx$. Thus the centered intercept is $a+gc$, the centered treatment coefficient is $b+uc$, and the two slope terms retain $g,u$. Fitted values are unchanged, while the centered treatment coefficient now directly reports the boundary contrast.</p></details></li>
+<li><p><strong>Derivation: a violated continuity condition.</strong> Suppose the untreated mean has a boundary jump $\zeta$, while the treatment effect is continuous with value $\tau(c)$. What does the observed jump identify?</p><details><summary>Solution</summary><p>On the right, the observed mean is the right-limit untreated mean plus $\tau(c)$. On the left it is the left-limit untreated mean. Subtraction gives $\zeta+\tau(c)$. Without information separating the two terms, the observed jump does not identify the treatment effect alone. The laboratory sets $\zeta=0.8$ and verifies the induced estimator difference.</p></details></li>
+<li><p><strong>Computational: two representations of a local fit.</strong> Verify that the triangular weighted fit agrees with an ordinary least-squares fit to transformed observations.</p><details><summary>Solution</summary><p>For every retained row, multiply its outcome and all four design entries by $\sqrt{w_i}$. Ordinary least squares then minimizes the same sum $\sum_iw_i(y_i-\mathbf x_i^T\boldsymbol\theta)^2$. The laboratory compares both coefficient vectors at every bandwidth and asserts agreement to floating-point tolerance. This checks the computation, not the causal assumptions.</p></details></li>
+<li><p><strong>Computational design: a bandwidth audit.</strong> Explain what to report when estimates change substantially across plausible local bandwidths, and why conventional robust standard errors are not a complete solution.</p><details><summary>Solution</summary><p>Report bandwidths, retained sample sizes on both sides, polynomial order, kernel, estimates, uncertainty method and relevant diagnostics. Investigate curvature, sparse support, sorting and covariate discontinuities rather than selecting the most favorable result. Conventional heteroscedasticity-robust standard errors address sampling variation around the local approximation; they do not remove approximation bias or establish counterfactual continuity. Use an inference method designed for the RD estimator when making a formal causal claim.</p></details></li>
+</ol>
+<p>The course's methods now serve distinct purposes. Covariance and latent representations describe variation; clusters summarize similarity; regression specifies conditional means; diagnostics examine failure modes; validation evaluates a fitted prediction procedure. A causal design adds assumptions that identify what an intervention changes. The same software output cannot answer all of these questions without those distinctions.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch18.py"><code>labs/ch18.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Synthetic sharp regression-discontinuity mechanisms and assumptions.&quot;&quot;&quot;
+from pathlib import Path
+
+import matplotlib
+import numpy as np
+import statsmodels.api as sm
+from scipy.stats import binned_statistic
+
+import matplotlib.pyplot as plt
+
+matplotlib.use(&quot;Agg&quot;)
+
+
+def local_linear(running, outcome, cutoff=0., bandwidth=0.5):
+    if bandwidth &lt;= 0:
+        raise ValueError(&quot;Bandwidth must be positive&quot;)
+    centered = np.asarray(running) - cutoff
+    keep = abs(centered) &lt; bandwidth
+    x = centered[keep]
+    treatment = (x &gt;= 0).astype(float)
+    design = np.column_stack([np.ones(len(x)), treatment, x, treatment*x])
+    weights = 1 - abs(x) / bandwidth
+    if np.linalg.matrix_rank(design) &lt; 4:
+        raise ValueError(&quot;Both cutoff sides need enough distinct observations&quot;)
+    fit = sm.WLS(np.asarray(outcome)[keep], design, weights=weights).fit()
+    direct = np.linalg.lstsq(np.sqrt(weights)[:, None]*design,
+                             np.sqrt(weights)*np.asarray(outcome)[keep],
+                             rcond=None)[0]
+    assert np.allclose(fit.params, direct, atol=1e-10)
+    robust = fit.get_robustcov_results(cov_type=&quot;HC3&quot;)
+    return fit, robust.bse[1], int((x &lt; 0).sum()), int((x &gt;= 0).sum())
+
+
+def main():
+    rng = np.random.default_rng(1801)
+    running = rng.uniform(-1, 1, 1200)
+    treatment = (running &gt;= 0).astype(float)
+    untreated = 1 + 0.6*running + 0.4*running**2
+    effect = 2 + 0.3*running
+    disturbance = rng.normal(scale=0.35, size=len(running))
+    outcome = untreated + treatment*effect + disturbance
+    print(&quot;Original synthetic sharp design; seed=1801, n=1200&quot;)
+    print(&quot;True treatment effect at cutoff=2.000000&quot;)
+    fits = []
+    for bandwidth in [0.25, 0.5, 0.75, 1.0]:
+        fit, standard_error, left, right = local_linear(
+            running, outcome, bandwidth=bandwidth)
+        fits.append((bandwidth, fit))
+        print(f&quot;h={bandwidth:.2f}, nLeft={left}, nRight={right}, &quot;
+              f&quot;jump={fit.params[1]:.9f}, &quot;
+              f&quot;conventional HC3SE={standard_error:.9f}&quot;)
+    print(&quot;HC3 values are conventional demo standard errors, &quot;
+          &quot;not RD bias-corrected inference.&quot;)
+    nuisance_jump = 0.8
+    invalid = outcome + nuisance_jump*treatment
+    valid_fit = local_linear(running, outcome, bandwidth=0.5)[0]
+    invalid_fit = local_linear(running, invalid, bandwidth=0.5)[0]
+    jump_change = invalid_fit.params[1] - valid_fit.params[1]
+    assert np.isclose(jump_change, nuisance_jump)
+    print(f&quot;Untreated-mean violation adds={nuisance_jump:.6f} &quot;
+          &quot;to observed jump, &quot;
+          &quot;without changing treatment effect.&quot;)
+    smooth = 1 + np.tanh(4*running) + disturbance
+    smooth_fit = local_linear(running, smooth, bandwidth=1.)[0]
+    narrow = local_linear(running, smooth, bandwidth=0.25)[0]
+    print(&quot;Continuous nonlinear mean, true jump=0: &quot;
+          f&quot;h1fit={smooth_fit.params[1]:.9f}, &quot;
+          f&quot;h0.25fit={narrow.params[1]:.9f}&quot;)
+    figure, axes = plt.subplots(1, 2, figsize=(10, 4))
+    for axis, response, title in [
+        (axes[0],
+         outcome, &quot;Sharp design; true jump2&quot;),
+        (axes[1],
+         smooth, &quot;Continuous nonlinear mean&quot;)]:
+        means, edges, _ = binned_statistic(running, response, bins=30)
+        midpoint = (edges[:-1] + edges[1:]) / 2
+        axis.scatter(midpoint, means, s=18, label=&quot;Binned observations&quot;)
+        fitted = local_linear(running, response, bandwidth=0.5)[0]
+        for left, right in [(-0.5, 0), (0, 0.5)]:
+            grid = np.linspace(left, right, 100)
+            indicator = np.full(len(grid), float(left &gt;= 0))
+            design = np.column_stack([np.ones(len(grid)), indicator,
+                                      grid, indicator*grid])
+            axis.plot(grid, fitted.predict(design), color=&quot;firebrick&quot;)
+        axis.axvline(0, color=&quot;gray&quot;, linestyle=&quot;--&quot;)
+        axis.set(
+            xlabel=&quot;Running variable relative to cutoff&quot;,
+            ylabel=&quot;Outcome&quot;)
+        axis.set_title(title)
+    figure.tight_layout()
+    figure.savefig(Path(__file__).with_name(&quot;ch18-cutoff.svg&quot;))
+    plt.close(figure)
+    print(&quot;Local WLS/direct-whitening and nuisance-jump assertions: passed&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Original synthetic sharp design; seed=1801, n=1200
+True treatment effect at cutoff=2.000000
+h=0.25, nLeft=144, nRight=165, jump=2.022091069, conventional HC3SE=0.092379442
+h=0.50, nLeft=279, nRight=305, jump=1.998572802, conventional HC3SE=0.067265349
+h=0.75, nLeft=452, nRight=437, jump=2.014904482, conventional HC3SE=0.054722497
+h=1.00, nLeft=612, nRight=588, jump=2.019623690, conventional HC3SE=0.047499259
+HC3 values are conventional demo standard errors, not RD bias-corrected inference.
+Untreated-mean violation adds=0.800000 to observed jump, without changing treatment effect.
+Continuous nonlinear mean, true jump=0: h1fit=0.714900377, h0.25fit=0.084937885
+Local WLS/direct-whitening and nuisance-jump assertions: passed
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-17.html">← Previous chapter</a><a href="index.html">Course home →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

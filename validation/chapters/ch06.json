@@ -1,0 +1,154 @@
+{
+  "number": 6,
+  "title": "K-means, objective descent, and choosing a partition",
+  "source_videos": [
+    "6qNLWCODvz0"
+  ],
+  "reading_records": [
+    {
+      "video_id": "6qNLWCODvz0",
+      "read_full": true,
+      "transcript_sha256": "b787a55f69e139c37076d3f5675ecfda05b3005eb0c8951c1f3510e25b83e56b",
+      "limitations": "Full English automatic captions read; selected720p code/math frames inspected at1347,1400,1460,1490,1505,1520,1600,1710,1770,1830,1950,2070,2165. No exhaustive editor-line recovery claim."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "utilities-kmeans-all8",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1460,
+      "source_method": "kmeans(utilities.df.norm,6); cluster/centers/withinss/size; line center profiles; dist(centers)",
+      "python_method": "kmeans_r; sample-SD scale; pandas output; matplotlib profiles; scipy.cdist",
+      "data_status": "Same canonical publisher Utilities22x8 as chapter5.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json.",
+      "limitations": "Source specifies no visible seed or nstart; literal defaults HW,nstart1 retained; authored seed2026 makes new execution reproducible, cannot recover unseen historical state."
+    },
+    {
+      "id": "wine-raw-single",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1505,
+      "source_method": "read.table UCI wine.data; exclude Cultivar; set.seed278613;kmeans(wineTrain,centers3); useful plot",
+      "python_method": "kmeans_r with RRandom compatibility; NumPy raw PCA; cluster/cultivar displays",
+      "data_status": "Primary UCI178x14 retrieved; all2314 features and178 cultivar labels equal canonical sklearn copy.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json. R target WSS2629315.1940181.",
+      "limitations": "Raw13-feature units retained. Source labels are evaluation metadata, never fit inputs."
+    },
+    {
+      "id": "wine-raw-multiple",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1600,
+      "source_method": "set.seed278613;kmeans(wineTrain,centers3,nstart25); table(Cultivar,cluster)",
+      "python_method": "kmeans_r nstart25; pandas.crosstab; raw PCA color/shape display",
+      "data_status": "Same exact raw UCI observations.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json. R target WSS2370689.68678297.",
+      "limitations": "Comparing group numbers directly is not label-invariant classification accuracy."
+    },
+    {
+      "id": "wine-fitkmeans-hartigan",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1600,
+      "source_method": "useful::FitKMeans(wineTrain,max.clusters20,nstart25,seed278613); PlotHartigan",
+      "python_method": "kmeans_r repeated fits with per-k seed reset; literal Hartigan statistic and next-cluster row labels",
+      "data_status": "Same raw13-feature wine matrix.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json. Exact fresh R19-row reference saved wine-hartigan.csv.",
+      "limitations": "First threshold<=10 occursH16=1.9870054,rowClusters17; does not select3. Current package/version can differ from lecture package."
+    },
+    {
+      "id": "wine-standardized-wss",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1640,
+      "source_method": "data(wine,package=rattle);df<-scale(wine[-1]); custom wssplot nc15,seed1234",
+      "python_method": "NumPy sample-SD scale; HW one-start k2..15 resetseed1234; exact one-groupSSE",
+      "data_status": "Primary cran/rattle wine.RData compared with original UCI table: all2314 features and178 cultivar labels identical; see validation/ch06-wine-identity.json.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json.",
+      "limitations": "This is separate geometry from rawwine; source WSS function resets each k, not one continued stream."
+    },
+    {
+      "id": "wine-nbclust-all26",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1710,
+      "source_method": "set.seed1234;NbClust(df,min.nc2,max.nc15,method=kmeans),defaultsEuclidean/indexall;Best.nc vote/Dindex plots",
+      "python_method": "ch05_nbclust.nbclust_average(method=kmeans,seed1234); literal26-index engine and HW backend",
+      "data_status": "Same standardized canonical wine table.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json.",
+      "limitations": "Audited NbClust3.0.1 internally resets seed1 before each partition; outer1234 overwritten. Literal26-index engine and HW backend independently compared with fresh R; Marriot at magnitude1e25 differs only at about1e-14 relative floating arithmetic. Not replaceable by elbow/silhouette alone."
+    },
+    {
+      "id": "arrests-preprocess-candidates",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 1770,
+      "source_method": "USArrests;na.omit;scale;get_dist;fviz_dist;kmeans centers2/3/4/5,nstart25;fviz_cluster;UrbanPop/Murder state-label scatter;grid.arrange",
+      "python_method": "Canonical data; sample-SD scale; scipy.pdist; kmeans_r; NumPy PCA; convex-hull and labelled feature-coordinate displays",
+      "data_status": "Canonical R datasets::USArrests50x4 from chapter5, no missing observations.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json.",
+      "limitations": "Initial source seed not shown; authored sequentialRRandom123 recorded. PCA loses13.3percent variance; projected overlap not full-space failure."
+    },
+    {
+      "id": "arrests-custom-wss-silhouette",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 2045,
+      "source_method": "set.seed123;wss function kmeans(df,k,nstart10),k1..15;avg_sil kmeans centersk,nstart25 and cluster::silhouette Euclidean,k2..15",
+      "python_method": "kmeans_r with preservedRRandom streams; sklearn.silhouette_score Euclidean",
+      "data_status": "Same50x4 sample-SD standardized table.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json. Fresh R WSS/silhouette CSVs saved.",
+      "limitations": "Separate seed123 curve runs explicitly recorded; max silhouette2=.408489 versusk4=.339689; source verbal unanimity claim corrected."
+    },
+    {
+      "id": "arrests-fviz-nbclust-wrappers",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 2070,
+      "source_method": "fviz_nbclust(df,kmeans,method=wss) and method=silhouette",
+      "python_method": "Equivalent one-start HW loops with k.max10 and appropriate Euclidean objective/width; plotting",
+      "data_status": "Same standardized observations.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json.",
+      "limitations": "No nstart forwarded, so source default1 differs custom10/25-start loops. Wrapper stream timing not fully recoverable; controlled seed123 separately recorded. No new current-wrapper elbow marker is imposed."
+    },
+    {
+      "id": "arrests-final-k4",
+      "video_id": "6qNLWCODvz0",
+      "start_seconds": 2165,
+      "source_method": "set.seed123;final<-kmeans(df,4,nstart25);print;fviz_cluster;group_by(cluster);summarise_all(mean)",
+      "python_method": "kmeans_r seed123,nstart25; pandas rawmeans/membership; full labelled PCA",
+      "data_status": "Same canonical50x4 observations.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Full Python source workflow in labs/ch06.py; fresh R4.5.1 reference saved under sources/private/ch06-reference; HW/R RNG fit labels, sizes, centers and withinss independently validated against fresh R4.5.1; full lab executed successfully. See validation/ch06-hartigan-wong-comparison.json. Exact R WSS56.4031734582928;sizes8,13,16,13; withinss8.3160608164871,11.9524628551417,16.2122132648031,19.9224365218609.",
+      "limitations": "Four-group descriptive resolution differs silhouette-preferred2; variance decomposition not prediction accuracy."
+    }
+  ],
+  "r_inventory_scope": "All identified displayed methods/data/preprocessing/selection wrappers grouped into ten explicit conversions; original random state not claimed when absent from source.",
+  "lab": {
+    "path": "labs/ch06.py",
+    "stdout_path": "labs/ch06-output.txt",
+    "execution": "Full source workflow passed exit0 with all assertions; exact saved stdout reproduced. Pure-Python Hartigan-Wong/R RNG independently compared with fresh R4.5.1 references.",
+    "sha256": "ac9c6c6ee0b0194b62b506534a796879d2b13574d65bcb6ef4208aae622c53bb",
+    "stdout_sha256": "8acdf7b35bd447ed2d163e89b1db38fe9c333eefc07b2db8f4954372e3cf1c6d"
+  },
+  "word_count": 3888,
+  "source_limitations": [
+    "Source captions omit negative power of jump formula; inspected board establishes d_k^(-Y)-d_(k-1)^(-Y).",
+    "Source rawwine Hartigan threshold and USArrests silhouette unanimity claims do not follow from executed references; corrected explicitly.",
+    "Raw source R session state unavailable for some unseeded demos; controlled choices recorded rather than inferred."
+  ],
+  "body_sha256": "319809c0c238abe601b7dd860d770f0b1004fdabd9e148b76895583f250b882e",
+  "verification_evidence": [
+    "validation/ch06-hartigan-wong-comparison.json",
+    "validation/ch06-wine-identity.json"
+  ],
+  "figures": [
+    "assets/ch06-arrests-diagnostics.svg",
+    "assets/ch06-arrests-partitions.svg",
+    "assets/ch06-arrests-state-labels.svg",
+    "assets/ch06-utilities.svg",
+    "assets/ch06-wine-raw.svg",
+    "assets/ch06-wine-selection.svg"
+  ]
+}

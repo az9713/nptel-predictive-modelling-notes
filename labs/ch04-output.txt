@@ -1,0 +1,17 @@
+Difference(3,4): L1= 7.0 L2= 5.0
+Cross-cluster Euclidean distances:
+[[3.       3.605551]
+ [3.605551 3.      ]]
+Single linkage: 3.000000
+Complete linkage: 3.605551
+Average linkage: 3.302776
+Centroid distance: 3.0
+single merge heights: [1. 2. 4.]
+complete merge heights: [1.       2.       4.472136]
+average merge heights: [1.       2.       4.179587]
+Mahalanobis versus whitened Euclidean: 2.563480
+1-correlation triangle: direct=1.000000, via third=0.585786 (fails)
+Jaccard presence distance: 0.666667
+Mixed numeric/nominal Gower pair: 0.750000
+Minkowski exponent0.5: direct=4.000000, axis route=2.000000 (fails triangle)
+Checks passed: distances, linkage, whitening, counterexamples.

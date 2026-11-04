@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>K-means as alternating optimization — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a aria-current="page" href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>K-means as alternating optimization</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch06-objective-heading">6.1 A partition defined by squared error</a></li><li><a href="#ch06-algorithm-heading">6.2 Descent, a hand calculation, and optimizer conventions</a></li><li><a href="#ch06-selection-heading">6.3 Choosing the number of groups</a></li><li><a href="#ch06-utilities-heading">6.4 Utilities: the feature set changes the problem</a></li><li><a href="#ch06-wine-heading">6.5 Wine: distinguish raw and standardized analyses</a></li><li><a href="#ch06-arrests-heading">6.6 USArrests: inspect the partition and the diagnostics separately</a></li><li><a href="#ch06-exercises-heading">6.7 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 6 · <a href="https://www.youtube.com/watch?v=6qNLWCODvz0">Recording 1</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch06-objective">
+<h2 id="ch06-objective-heading">6.1 A partition defined by squared error</h2>
+<p>A hierarchy answers a nested sequence of grouping questions. K-means instead asks for one partition into a specified number of groups. Its computational appeal comes from replacing repeated comparisons between whole clusters by comparisons with representative centers. That convenience has a precise geometric cost: arithmetic means and squared Euclidean distances define the problem. Changing feature units can change the answer, and replacing a distance formula does not automatically produce a valid version of the same algorithm. The lecture introduces this distinction before its numerical example. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=35">Source: partitioning versus hierarchical clustering</a>.</p>
+<p>Let $x_1,\ldots,x_n\in\mathbb R^d$ be the observed feature vectors, where $d$ is the number of features. A partition $C_1,\ldots,C_k$ consists of nonempty, disjoint index sets whose union is $\{1,\ldots,n\}$. With representative $\mu_j\in\mathbb R^d$ for group $j$, the objective is</p>
+<div class="equation">$$W(C,\mu)=\sum_{j=1}^k\sum_{i\in C_j}\|x_i-\mu_j\|_2^2.\tag{6.1}$$</div>
+<p>The integer $k$ is an input, not an estimate supplied by this objective alone. In particular, allowing one group per observation gives zero error. A useful grouping therefore balances compression, separation, stability, interpretability, and the intended decision. None of those additional purposes is captured merely by minimizing (6.1) over every possible $k$.</p>
+<p>The representative minimizing a fixed group's error is its arithmetic mean $\bar x_C=|C|^{-1}\sum_{i\in C}x_i$. To see this without differentiability assumptions, write $x_i-a=(x_i-\bar x_C)+(\bar x_C-a)$, expand the squared norm, and use $\sum_{i\in C}(x_i-\bar x_C)=0$. The cross terms disappear, leaving</p>
+<div class="equation">$$\sum_{i\in C}\|x_i-a\|^2=\sum_{i\in C}\|x_i-\bar x_C\|^2+|C|\|a-\bar x_C\|^2.\tag{6.2}$$</div>
+<p>The second term is nonnegative and vanishes exactly at the mean. This identity also explains why an outlying observation can move a center strongly: its contribution grows quadratically with distance. A medoid, a coordinatewise median, and a trimmed mean solve different representative problems and should be named separately.</p>
+<p>If each feature is standardized as $z_{i\ell}=(x_{i\ell}-\bar x_\ell)/s_\ell$, Euclidean k-means on $z$ minimizes a weighted error on the original coordinates, with weight $s_\ell^{-2}$ on feature $\ell$. Standardization is thus part of the model. It does not merely make the computer numerically comfortable. The course uses sample standard deviations in its <code>scale</code> examples; the lab makes that divisor explicit. This differs from the mean absolute deviation used by the preceding chapter's DIANA standardization.</p>
+</section>
+<section id="ch06-algorithm">
+<h2 id="ch06-algorithm-heading">6.2 Descent, a hand calculation, and optimizer conventions</h2>
+<p>The familiar Lloyd iteration alternates two operations. Holding the centers fixed, assign every observation to a nearest center. Holding the resulting assignments fixed, replace each center by its group mean. The first operation minimizes each observation's contribution independently. Equation (6.2) proves that the second operation minimizes each group's contribution. Consequently neither operation increases (6.1). These are conditional minimizations; their composition need not find the best partition among all possible assignments.</p>
+<p>For a finite dataset there are finitely many assignments. With a deterministic treatment of ties, nonempty groups, and strict improvement whenever the assignment changes, descent must reach a stable assignment after finitely many changes. Practical software adds iteration limits, numerical tolerances, and rules for empty groups. Without specifying these conventions, a claim that “k-means converged” is incomplete. A stable solution is a local solution under the algorithm's moves; it is not a certificate of a global minimum.</p>
+<p>The source example uses four observations $A=(5,3)$, $B=(-1,1)$, $C=(1,-2)$, and $D=(-3,-2)$. Start from groups $\{A,B\}$ and $\{C,D\}$, whose means are $(2,2)$ and $(-1,-2)$. The squared distances to these two centers are respectively $(10,61)$ for $A$, $(10,9)$ for $B$, $(17,4)$ for $C$, and $(41,4)$ for $D$. Thus only $B$ changes group. The old assigned error is $10+10+4+4=28$; reassignment with the old centers reduces it to $27$. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=585">Source: four-observation calculation</a>.</p>
+<p>The updated centers are now $A$ itself, $(5,3)$, and the mean of $B,C,D$, namely $(-1,-1)$. The first group contributes zero. The remaining squared distances to their own center are $4,5,5$, so the updated error is $14$. Rechecking the assignments leaves all four observations in these groups. The lab executes both conditional steps and verifies the full sequence $28\to27\to14$. Separating the assignment error from the updated-center error makes the descent argument visible instead of hiding it inside one library call.</p>
+<p>Initialization matters because different basins can lead to different stable partitions. Multiple starts repeat an optimizer from several initial center sets and retain the result with the smallest observed error. Increasing the number of starts improves the search opportunity; it gives no general proof that the global optimum has been found. A seed fixes a particular generator's state. The same integer seed in two programming languages generally does not select the same rows or imply identical fitted groups.</p>
+<p>A useful extension explains why a transfer optimizer can differ from nearest-center reassignment. Moving $x_i$ from group $A$ of size $a&gt;1$ to group $B$ of size $b$, while refitting both means, changes the error by</p>
+<div class="equation">$$\Delta W=\frac{b}{b+1}\|x_i-\mu_B\|^2-\frac{a}{a-1}\|x_i-\mu_A\|^2.\tag{6.6}$$</div>
+<p>Apply (6.2) to the enlarged group and to the group with the point removed: addition costs the first term, while removal saves the second. Thus the exact gain includes group-size factors, whereas Lloyd's fixed-center assignment compares only distances. In the source initialization, transferring $B$ and refitting saves $2(10)-(2/3)(9)=14$, agreeing with the executed change from error 28 to 14. This transfer identity describes a move, not the complete scheduling and acceleration rules of a software optimizer.</p>
+<p>The R calls in this lecture use the default Hartigan–Wong optimizer. Its transfer operations differ from the batch reassignment just used to prove Lloyd descent. Scikit-learn's explicitly selected Lloyd implementation is therefore an instructive alternative, but is not by itself a literal translation of those default R calls. Our conversion records distinguish the objective, the optimizer, the initial centers, and the final partition. Agreement of the last item does not establish agreement of every intermediate update. The primary <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/kmeans.html">R kmeans documentation</a> states the optimizer and default random-row initialization; the <a href="https://scikit-learn.org/stable/modules/generated/sklearn.cluster.KMeans.html">scikit-learn documentation</a> describes its separate initialization and algorithm controls.</p>
+</section>
+<section id="ch06-selection">
+<h2 id="ch06-selection-heading">6.3 Choosing the number of groups</h2>
+<p>Let $W_k^*$ denote the smallest attainable value of (6.1) among partitions into exactly $k$ nonempty groups. For $1\le k&lt;n$, a group containing at least two observations can be split. Using its original center for both children preserves the old error, and subsequently fitting the two means can only reduce it. Therefore $W_{k+1}^*\le W_k^*$. This argument is about optimal objective values. A collection of finite, randomly initialized fits need not satisfy the same ordering.</p>
+<p>The source's USArrests error plot rises between two neighboring values of $k$. That rise signals an inferior local fit, a change of computational settings, or a plotting/data error; it is not a property of the optimal k-means objective. Nor does such an increase prove that the extra group is intrinsically unnecessary. The lab reports both independently fitted errors and their running minimum so this distinction can be checked. The running minimum is a diagnostic display, not a new claim that all fits have become globally optimal. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=2045">Source: error-curve interpretation requiring this qualification</a>.</p>
+<p>An elbow seeks a value beyond which further groups make comparatively small error reductions. It is a heuristic and may have no visually unique answer. A more formal source construction transforms a distortion $d_k$, proportional to mean squared error per feature, before differencing:</p>
+<div class="equation">$$d_k=\frac{W_k}{nd},\qquad J_k=d_k^{-Y}-d_{k-1}^{-Y},\qquad Y=d/2.\tag{6.3}$$</div>
+<p>The minus sign in the power is essential. The source board shows it, although the automatic captions describe only an unspecified power. For the initial comparison one may set the transformed zero-group distortion to zero, corresponding to infinite distortion. Exact zero distortion makes the negative power singular; this method is not defined by simply raising zero to a negative exponent. A largest transformed jump is a selection rule whose meaning depends on feature dimension, scaling, and how distortions were estimated. It is different from a raw decrease $W_{k-1}-W_k$. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=1347">Source: inverse-power jump formula</a>.</p>
+<p>The source also describes the Hartigan statistic</p>
+<div class="equation">$$H(k)=(n-k-1)\left(\frac{W_k}{W_{k+1}}-1\right),\tag{6.4}$$</div>
+<p>and the heuristic of choosing the smallest $k$ for which $H(k)\le10$. This compares the reduction from adding a group with the remaining error. The threshold is a convention, not a universal guarantee of the true number of populations. Hartigan's selection statistic is also a different object from the Hartigan–Wong optimization algorithm. Sharing an author's name does not make their roles interchangeable.</p>
+<p>Silhouette width evaluates a fitted partition in pairwise-distance geometry. For observation $i$, let $a_i$ be the average distance to the other members of its own group. For each other group compute its average distance from $i$, and let $b_i$ be the smallest such average. For a nonsingleton group and a positive denominator,</p>
+<div class="equation">$$s_i=\frac{b_i-a_i}{\max(a_i,b_i)}\in[-1,1].\tag{6.5}$$</div>
+<p>Positive values indicate that the observation is closer on average to its own group than to its nearest competing group. Negative values flag the opposite. The R convention assigns width zero to a singleton. The mean width compares candidate partitions for $2\le k\le n-1$; it is not the same objective as squared-error minimization. The lab uses Euclidean distances for this evaluation, matching the source's <code>silhouette(...,dist(df))</code>. Squared distances would define a different evaluation. See the primary <a href="https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/silhouette.html">silhouette documentation</a> for these conventions.</p>
+<p>Finally, a multi-index vote such as NbClust combines many criteria, each with its own response to dispersion, separation, and dimensionality. Replacing its full call by one silhouette or elbow calculation would omit most of the requested computation. The converted workflow retains the actual index tables and recommendations, rather than treating a visually similar plot as equivalent evidence.</p>
+</section>
+<section id="ch06-utilities">
+<h2 id="ch06-utilities-heading">6.4 Utilities: the feature set changes the problem</h2>
+<p>The first R application reads the same 22-company Utilities table used in the hierarchical lecture. It removes the company-name column, standardizes the eight numeric features, and calls <code>kmeans(utilities.df.norm,6)</code>. This time all eight features define the fit. The earlier hierarchy used only standardized Sales and Fuel Cost. A difference in the resulting groups can therefore arise from a changed feature space even before considering the changed optimization criterion. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=1460">Source: six-group Utilities fit and center profiles</a>.</p>
+<p>The lab retains the recovered book-author table and translates every displayed output: group memberships, the six center vectors, the within-group errors, the group sizes, the line profiles of the centers, and the Euclidean distance matrix between centers. The source call supplies neither <code>nstart</code> nor a visible seed, so the relevant R defaults are one random start and Hartigan–Wong optimization. Our runnable version supplies the explicitly recorded seed 2026 to make a new execution reproducible. That choice does not reconstruct an unseen historical random-generator state.</p>
+<p>A profile coordinate is a mean in standardized units. A center with Fuel Cost coordinate one is approximately one sample standard deviation above the overall Fuel Cost mean. A negative coordinate is not a negative physical fuel price. Comparing entire profiles is more informative than calling the group number a ranking: cluster labels are arbitrary identifiers, and their numerical order has no ordinal meaning. The center-distance display summarizes separation among representative means; it omits each group's dispersion and is not a silhouette analysis.</p>
+<figure><img src="assets/ch06-utilities.svg" alt="Eight-feature standardized Utilities center profiles and distances between their six centers."><figcaption>Figure 6.1. The source's all-feature k-means calculation, with a recorded execution seed. Center profiles and center-to-center distances answer different descriptive questions.</figcaption></figure>
+</section>
+<section id="ch06-wine">
+<h2 id="ch06-wine-heading">6.5 Wine: distinguish raw and standardized analyses</h2>
+<p>The lecture next downloads the original UCI wine table. There are 178 observations, a cultivar label, and 13 chemical measurements. The lab retrieves that primary table and checks all 2,314 feature values against the canonical scikit-learn copy. Cultivar is retained only for evaluation and display; it is excluded from the fitted feature matrix. Including a known class label among the clustering inputs would change the question and contaminate the proposed unsupervised comparison. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=1505">Source: UCI input and explicit cultivar exclusion</a>.</p>
+<p>The first wine analysis uses raw measurement units, seed 278613, three groups, and the default single start. It then repeats the three-group analysis with 25 starts. Fresh R references give errors 2,629,315.194018 and 2,370,689.686783 respectively. These values quantify a substantial improvement in the observed search result; the second value still carries no global-optimality certificate. Raw chemical units also strongly privilege high-variance coordinates. The first raw PCA display axis alone contains approximately 99.8091% of total raw variance. A visually compelling projection in that geometry should not be mistaken for equal weighting of all 13 measurements.</p>
+<p>The source displays clusters as colors and cultivars as point shapes, then tabulates cultivar against cluster. The translated cross-tabulation preserves this distinction. Cluster labels can be permuted without changing the partition, so numerical label equality is not a classification accuracy. To compute an accuracy after label matching, the matching rule would itself need to be specified. More fundamentally, agreement with cultivars is an external assessment; it is not the squared-error quantity the clustering procedure optimized.</p>
+<p>The <code>useful::FitKMeans</code> call evaluates one through twenty groups with 25 starts, resetting seed 278613 before each fit. The lab reproduces that reset convention and computes (6.4). The package's returned column <code>Clusters</code> denotes the group count being <em>added</em>: its row labeled 17 contains the comparison $H(16)$ between sixteen and seventeen groups. A reader must account for this offset before interpreting the plot. The primary <a href="https://github.com/cran/useful/blob/master/R/hartigan.r">wrapper source</a> establishes both the indexing and seed reset.</p>
+<p>This table does not justify three groups by the stated threshold rule. In the fresh reference the first statistic at most ten is $H(16)\approx1.987005$. The source's visually emphasized early reduction and its threshold rule are different decision procedures. Their disagreement is an informative consequence of raw-scale geometry and heuristic selection, not a reason to edit the table until it supports a preferred answer.</p>
+<figure><img src="assets/ch06-wine-raw.svg" alt="Raw wine PCA display colored by cluster and shaped by cultivar, alongside the Hartigan comparison curve."><figcaption>Figure 6.2. Raw-scale wine analysis. The Hartigan horizontal axis follows the source wrapper's next-group indexing, while the PCA display retains the original raw feature scales.</figcaption></figure>
+<p>A separate source block loads <code>rattle::wine</code>, removes its first label column, and standardizes every chemical feature. It evaluates a one-start error curve for $k=1,\ldots,15$, resetting seed 1234 before each fitted value with $k\ge2$. It then calls <code>NbClust(df,min.nc=2,max.nc=15,method="kmeans")</code>, with default Euclidean distances and the default collection of 26 indices. These are new, standardized fits; they must not be merged with the raw-scale Hartigan calculation. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=1710">Source: standardized wine and the complete multi-index call</a>.</p>
+<p>An additional source-code convention matters here. NbClust 3.0.1 explicitly resets the seed to one before its internal k-means partitions. The outer <code>set.seed(1234)</code> is therefore not the effective initialization seed for those partitions. The literal Python wrapper retains this behavior and records its package-version scope. Its output includes the full index and critical-value tables, group-count recommendations, and selected partition. The lecture's displayed recommendation favors three groups; that result belongs to this standardized multi-index procedure. It does not turn the raw-scale Hartigan table into a three-group threshold result.</p>
+<figure><img src="assets/ch06-wine-selection.svg" alt="Standardized wine within-group error curve, the complete NbClust recommendation counts, and Dindex curve."><figcaption>Figure 6.3. Distinct diagnostics for the standardized wine analysis. The multi-index calculation uses the source package's internal initialization convention.</figcaption></figure>
+</section>
+<section id="ch06-arrests">
+<h2 id="ch06-arrests-heading">6.6 USArrests: inspect the partition and the diagnostics separately</h2>
+<p>The final application uses the 50-state USArrests table. The four columns are Murder, Assault, Urban Population percentage, and Rape. The source removes missing rows and standardizes the retained features by sample standard deviations. This table has no missing entries, so the removal changes no rows. The translated distance heatmap contains Euclidean distances between these standardized state profiles, rather than feature values or center distances. <a href="https://www.youtube.com/watch?v=6qNLWCODvz0&amp;t=1770">Source: preprocessing and distance display</a>.</p>
+<p>The source fits two through five groups with 25 starts and displays their projections into two principal coordinates. The first two standardized PCA directions contain approximately 62.0% and 24.7% of the total variance, leaving about 13.3% outside the picture. The lab records a controlled stream for these comparisons because the initial seed is not shown in that source block. Convex hulls in the projection help a reader see the displayed groups; overlap of projected hulls does not prove overlap in the complete four-dimensional feature space.</p>
+<figure><img src="assets/ch06-arrests-partitions.svg" alt="Four PCA projections of standardized USArrests partitions for two through five clusters."><figcaption>Figure 6.4. Candidate partitions in one common PCA display. The projection is a diagnostic view of fitted labels, not a replacement for their original four-feature geometry.</figcaption></figure>
+<p>The separate <code>fviz_nbclust</code> calls forward no number of starts to <code>kmeans</code>, so their default is one start, with a maximum of ten groups. The lab retains these additional wrapper curves alongside the custom ten-start error and 25-start silhouette curves. Separate recorded seeds make these demonstrations repeatable; an unseen historical session stream is not inferred. <a href="assets/ch06-arrests-state-labels.svg">The full state-label displays</a> also preserve the source's selected-feature two-group scatter and final four-group PCA view.</p>
+<p>The source's error-curve function uses ten starts and seed 123 over one through fifteen groups. Its silhouette function uses 25 starts and Euclidean pairwise distances. Those are distinct fitting/evaluation settings. In a separately recorded seed-123 silhouette run, the maximum mean width is approximately 0.408489 at two groups; four groups give approximately 0.339689. Consequently the chosen four-group solution should be explained as a particular descriptive resolution, rather than presented as the unanimous optimum of every diagnostic.</p>
+<p>The final, explicitly seeded source call is <code>set.seed(123);kmeans(df,4,nstart=25)</code>. The fresh reference has group sizes $8,13,16,13$ and total within-group error $56.4031734583$. Total standardized error about the overall mean is $4(50-1)=196$. Its between-group component is therefore $139.5968265417$, or approximately 71.22% of total variation. This percentage is a descriptive variance decomposition, not a predictive accuracy or a causal explanation of differences among states.</p>
+<p>The source also reports means on the original feature scales. The first group, for example, has means 13.9375 for Murder, 243.625 for Assault, 53.75 for Urban Population, and 21.4125 for Rape. Original-scale summaries are often easier to interpret than standardized center coordinates. The lab prints all groups, retains each state assignment, and permits a reader to audit the summary against the exact input rows. None of these aggregate observations licenses a claim about a particular individual's behavior.</p>
+<figure><img src="assets/ch06-arrests-diagnostics.svg" alt="USArrests standardized distance heatmap, within-group squared-error curve, and mean silhouette curve."><figcaption>Figure 6.5. Distance structure, squared-error improvement, and average silhouette address separate questions. A local-fit error increase does not overturn the monotonicity of the optimal objective.</figcaption></figure>
+<p>The downloadable lab separates the source-data workflow from an independent mathematical construction. Its four-point example exhaustively checks every nonempty two-group partition, proving the reported error fourteen is globally best for that small dataset. No analogous exhaustive claim is made for the larger examples. The conversion ledger records optimizer, random-stream, scaling, wrapper, and data conventions separately so a numerical agreement has a clear scope.</p>
+</section>
+<section id="ch06-exercises">
+<h2 id="ch06-exercises-heading">6.7 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>Mean optimality.</strong> For the four source points, compare the one-group squared error at the mean with its value at $a=(2,-3)$. Show why the difference cannot be negative.</p><details><summary>Worked solution</summary><p>The overall mean is $(0.5,0)$. The lab verifies that both sides of (6.2), evaluated at $a$, equal 98. The additional error is $4\|(2,-3)-(0.5,0)\|^2=4(2.25+9)=45$, so the mean-centered error is 53. The difference is a nonnegative squared norm multiplied by group size; no choice of $a$ can reduce it below zero.</p></details></li>
+<li><p><strong>Two descent steps.</strong> In the source initialization, why is the intermediate error 27 rather than 14? Which operation is responsible for each reduction?</p><details><summary>Worked solution</summary><p>Initially the assigned squared distances sum to 28. Keeping the centers fixed but moving $B$ changes its contribution from ten to nine, producing 27. Updating the first center to $A$ makes its contribution zero; updating the second center from $(-1,-2)$ to $(-1,-1)$ yields contributions $4,5,5$ for $B,C,D$, giving total fourteen. Combining assignment and centroid updates in one report conceals which conditional minimization established each inequality.</p></details></li>
+<li><p><strong>Optimal errors and failed searches.</strong> A fitted curve reports $W_4=60$ and $W_5=68$. Has the monotonicity theorem been disproved? Give a feasible five-group construction from the four-group fit.</p><details><summary>Worked solution</summary><p>No. The theorem concerns globally best errors, whereas these are errors returned by particular searches. Split any nonsingleton group of the four-group fit into two nonempty parts. Retaining the old center for both gives error sixty, and refitting the two means cannot increase it. Thus a feasible five-group solution has error at most sixty. The reported value sixty-eight is inferior to an explicitly available candidate; it does not establish that five groups are unnecessary.</p></details></li>
+<li><p><strong>A silhouette calculation.</strong> Partition the one-dimensional observations $0,2,10,12$ into $\{0,2\}$ and $\{10,12\}$. Compute every silhouette width and its mean using ordinary absolute distance.</p><details><summary>Worked solution</summary><p>Each within-group average is two. For zero and twelve the competing-group average is eleven, giving width $9/11$. For two and ten it is nine, giving width $7/9$. The mean is $(9/11+7/9)/2=79/99\approx0.79797980$, matching the executed library calculation. Squaring the pairwise distances would change the competing averages and answer.</p></details></li>
+<li><p><strong>One seed, several meanings.</strong> Explain the difference between the wine WSS loop, <code>FitKMeans</code>, and NbClust initialization. Why is replacing all three by one scikit-learn call with the same integer seed insufficient?</p><details><summary>Worked solution</summary><p>The source WSS loop resets seed 1234 for each fitted group count and uses one start. FitKMeans resets seed 278613 for each group count and uses 25 starts. The audited NbClust version overwrites the outer seed with one before its internal fits. Moreover R's default optimizer is Hartigan–Wong, and its random-row initialization and generator stream differ from scikit-learn defaults. Reproducing the objective alone omits optimizer and initialization behavior. The literal helper and reference comparisons must test these conventions explicitly.</p></details></li>
+<li><p><strong>Interpreting four groups.</strong> Recover the final USArrests between-group fraction from the reported total and within-group errors. Explain why a silhouette preference for two groups does not make the four-group descriptive table arithmetically incorrect.</p><details><summary>Worked solution</summary><p>The between-group fraction is $(196-56.4031734583)/196\approx0.71222871$. It measures the error reduction from the overall mean to four fitted means. Silhouette instead compares within-group pairwise distances with nearest competing-group distances. The objectives differ, and different resolutions can serve different descriptive purposes. A four-group table can be computed correctly while its group count remains a modeling choice requiring explanation.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch06.py"><code>labs/ch06.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p><p>Supporting modules: <a href="labs/ch06_hartigan_wong.py"><code>ch06_hartigan_wong.py</code></a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;K-means descent and the lecture&#x27;s exact source-data workflows.
+
+The source workflows use the adjacent pure-Python Hartigan-Wong/R-RNG
+port. --theory-only executes the independent mathematical construction.
+No fitted R results are substituted for Python calculations.
+&quot;&quot;&quot;
+
+import argparse
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from scipy.spatial.distance import cdist, pdist, squareform
+from sklearn.metrics import silhouette_score
+
+DATA = Path(__file__).resolve().parent / &quot;data&quot;
+ROOT = DATA.parents[1]
+
+
+def standardize(values):
+    values = np.asarray(values, dtype=float)
+    return (values - values.mean(0)) / values.std(0, ddof=1)
+
+
+def centered_scores(values):
+    &quot;&quot;&quot;Unscaled PCA coordinates; callers explicitly choose their geometry.&quot;&quot;&quot;
+    centered = values - np.mean(values, axis=0)
+    u, singular, _ = np.linalg.svd(centered, full_matrices=False)
+    return u[:, :2] * singular[:2], singular[:2] ** 2 / np.sum(singular**2)
+
+
+def assigned_error(data, labels, centers):
+    return np.sum((data - centers[labels]) ** 2)
+
+
+def mathematical_checks():
+    points = np.array([[5.0, 3.0], [-1.0, 1.0], [1.0, -2.0], [-3.0, -2.0]])
+    labels = np.array([0, 0, 1, 1])
+    centers = np.array([points[labels == j].mean(0) for j in range(2)])
+    before = assigned_error(points, labels, centers)
+    distances = cdist(points, centers, metric=&quot;sqeuclidean&quot;)
+    assigned = distances.argmin(axis=1)
+    reassigned = assigned_error(points, assigned, centers)
+    updated = np.array([points[assigned == j].mean(0) for j in range(2)])
+    after = assigned_error(points, assigned, updated)
+    assert np.allclose([before, reassigned, after], [28, 27, 14])
+    transfer_change = (2 / 3) * distances[1, 1] - 2 * distances[1, 0]
+    assert np.isclose(after - before, transfer_change)
+    assert np.array_equal(cdist(points, updated).argmin(1), assigned)
+    print(&quot;Source four-point squared distances:\n&quot;, distances)
+    print(&quot;Assignment/update WSS:&quot;, before, reassigned, after)
+    print(&quot;Stable centers:\n&quot;, updated)
+    print(&quot;Exact refitted transfer change:&quot;, transfer_change)
+    # Exhaustive small-data verification: all nonempty two-group partitions.
+    candidates = []
+    for mask in range(1, 2 ** len(points) - 1):
+        assignment = np.array([(mask &gt;&gt; i) &amp; 1 for i in range(len(points))])
+        means = np.array([points[assignment == j].mean(0) for j in range(2)])
+        candidates.append(assigned_error(points, assignment, means))
+    print(&quot;Exhaustive four-point optimal two-group WSS:&quot;, min(candidates))
+    assert min(candidates) == 14
+    mean = points.mean(0)
+    trial = np.array([2.0, -3.0])
+    left = np.sum((points - trial) ** 2)
+    right = np.sum((points - mean) ** 2) + len(points) * np.sum(
+        (trial - mean) ** 2
+    )
+    assert np.allclose(left, right)
+    print(&quot;Mean-minimization identity, both sides:&quot;, left, right)
+    example = np.array([[0.0], [2.0], [10.0], [12.0]])
+    widths = silhouette_score(example, [0, 0, 1, 1])
+    expected = np.mean([9 / 11, 7 / 9, 7 / 9, 9 / 11])
+    assert np.allclose(widths, expected)
+    print(f&quot;Authored silhouette example mean: {widths:.8f}&quot;)
+    print(&quot;Independent mathematical checks passed.&quot;)
+
+
+def report_fit(name, result, columns):
+    print(&quot;\n&quot; + name)
+    print(&quot;Sizes:&quot;, result[&quot;size&quot;])
+    print(&quot;Centers:&quot;)
+    print(pd.DataFrame(result[&quot;centers&quot;], columns=columns).to_string())
+    print(&quot;Within-group sums of squares:&quot;, result[&quot;withinss&quot;])
+    print(&quot;Total WSS:&quot;, result[&quot;tot_withinss&quot;])
+    print(&quot;Total SS:&quot;, result[&quot;totss&quot;])
+    print(&quot;Between SS:&quot;, result[&quot;betweenss&quot;])
+    print(&quot;ifault:&quot;, result[&quot;ifault&quot;])
+
+
+def save_fit(name, result, index):
+    pd.DataFrame({&quot;cluster&quot;: result[&quot;cluster&quot;]}, index=index).to_csv(
+        DATA / f&quot;ch06-{name}-membership.csv&quot;
+    )
+
+
+def plot_source_workflow(
+    utilities,
+    utility_fit,
+    wine,
+    cultivar,
+    wine_fit,
+    raw_fractions,
+    hartigan,
+    wine_wss,
+    arrests,
+    arrest_fits,
+    arrest_wss,
+    silhouettes,
+    wrapper_wss,
+    wrapper_silhouettes,
+    multi,
+):
+    import matplotlib
+
+    matplotlib.use(&quot;Agg&quot;)
+    import matplotlib.pyplot as plt
+    from scipy.spatial import ConvexHull
+
+    plt.style.use(&quot;dark_background&quot;)
+    figure, axes = plt.subplots(1, 2, figsize=(12, 4), constrained_layout=True)
+    for j, center in enumerate(utility_fit[&quot;centers&quot;]):
+        axes[0].plot(range(8), center, &quot;o-&quot;, label=f&quot;Group {j + 1}&quot;)
+    axes[0].set_xticks(range(8), utilities.columns, rotation=55, ha=&quot;right&quot;)
+    axes[0].set(
+        title=&quot;Utilities: all eight standardized features&quot;,
+        ylabel=&quot;Standardized center coordinate&quot;,
+    )
+    axes[0].legend(ncol=2, fontsize=8)
+    distances = cdist(utility_fit[&quot;centers&quot;], utility_fit[&quot;centers&quot;])
+    image = axes[1].imshow(distances, cmap=&quot;magma&quot;)
+    axes[1].set(
+        title=&quot;Euclidean distances between fitted centers&quot;,
+        xlabel=&quot;Group&quot;,
+        ylabel=&quot;Group&quot;,
+    )
+    figure.colorbar(image, ax=axes[1])
+    figure.savefig(ROOT / &quot;assets/ch06-utilities.svg&quot;, metadata={&quot;Date&quot;: None})
+    plt.close(figure)
+
+    scores, _ = centered_scores(wine)
+    figure, axes = plt.subplots(1, 2, figsize=(11, 4), constrained_layout=True)
+    markers = [&quot;o&quot;, &quot;^&quot;, &quot;s&quot;]
+    for group in range(1, 4):
+        for actual in range(1, 4):
+            subset = (wine_fit[&quot;cluster&quot;] == group) &amp; (cultivar == actual)
+            axes[0].scatter(
+                *scores[subset].T,
+                marker=markers[actual - 1],
+                color=f&quot;C{group - 1}&quot;,
+                s=18,
+                alpha=0.8,
+            )
+    axes[0].set(
+        title=&quot;Raw wine: color=cluster, shape=cultivar&quot;,
+        xlabel=f&quot;PC1 ({100 * raw_fractions[0]:.1f}%)&quot;,
+        ylabel=f&quot;PC2 ({100 * raw_fractions[1]:.1f}%)&quot;,
+    )
+    axes[1].plot(hartigan[&quot;Clusters&quot;], hartigan[&quot;Hartigan&quot;], &quot;o-&quot;)
+    axes[1].axhline(10, color=&quot;#fb7185&quot;, linestyle=&quot;--&quot;, label=&quot;Threshold10&quot;)
+    axes[1].set(
+        title=&quot;Literal FitKMeans: next-group count on x axis&quot;,
+        xlabel=&quot;Candidate number of groups being added&quot;,
+        ylabel=&quot;Hartigan statistic&quot;,
+    )
+    axes[1].legend()
+    figure.savefig(ROOT / &quot;assets/ch06-wine-raw.svg&quot;, metadata={&quot;Date&quot;: None})
+    plt.close(figure)
+
+    figure, axes = plt.subplots(
+        1, 3, figsize=(13, 3.8), constrained_layout=True
+    )
+    axes[0].plot(range(1, 16), wine_wss, &quot;o-&quot;)
+    axes[0].set(
+        title=&quot;Standardized wine: source WSS loop&quot;,
+        xlabel=&quot;k&quot;,
+        ylabel=&quot;Within-group squared error&quot;,
+    )
+    axes[1].bar(list(multi[&quot;votes&quot;]), list(multi[&quot;votes&quot;].values()))
+    axes[1].set(
+        title=&quot;Literal NbClust26 votes&quot;,
+        xlabel=&quot;Recommended k&quot;,
+        ylabel=&quot;Number of criteria&quot;,
+    )
+    dindex = multi[&quot;raw_indices&quot;][&quot;Dindex&quot;]
+    axes[2].plot(dindex.index, dindex, &quot;o-&quot;, label=&quot;Dindex&quot;)
+    axes[2].set(title=&quot;NbClust Dindex&quot;, xlabel=&quot;Candidate k&quot;)
+    figure.savefig(
+        ROOT / &quot;assets/ch06-wine-selection.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+
+    scores, fractions = centered_scores(arrests)
+    figure, axes = plt.subplots(2, 2, figsize=(10, 8), constrained_layout=True)
+    for axis, (count, fit) in zip(axes.flat, arrest_fits.items()):
+        for group in range(1, count + 1):
+            subset = scores[fit[&quot;cluster&quot;] == group]
+            axis.scatter(*subset.T, s=20, color=f&quot;C{group - 1}&quot;)
+            if len(subset) &gt;= 3:
+                hull = ConvexHull(subset)
+                polygon = subset[hull.vertices]
+                axis.fill(*polygon.T, alpha=0.12, color=f&quot;C{group - 1}&quot;)
+        axis.set(
+            title=f&quot;k={count}; WSS={fit[&#x27;tot_withinss&#x27;]:.3f}&quot;,
+            xlabel=f&quot;PC1 ({100 * fractions[0]:.1f}%)&quot;,
+            ylabel=f&quot;PC2 ({100 * fractions[1]:.1f}%)&quot;,
+        )
+    figure.savefig(
+        ROOT / &quot;assets/ch06-arrests-partitions.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+
+    figure, axes = plt.subplots(1, 3, figsize=(13, 4), constrained_layout=True)
+    image = axes[0].imshow(squareform(pdist(arrests)), cmap=&quot;coolwarm&quot;)
+    axes[0].set(
+        title=&quot;Standardized USArrests distances&quot;,
+        xlabel=&quot;Original state order&quot;,
+        ylabel=&quot;Original state order&quot;,
+    )
+    figure.colorbar(image, ax=axes[0], shrink=0.7)
+    axes[1].plot(range(1, 16), arrest_wss, &quot;o-&quot;, label=&quot;Independent fits&quot;)
+    axes[1].plot(range(1, 11), wrapper_wss, &quot;:s&quot;, label=&quot;Wrapper: one start&quot;)
+    axes[1].plot(
+        range(1, 16),
+        np.minimum.accumulate(arrest_wss),
+        &quot;--&quot;,
+        label=&quot;Running minimum&quot;,
+    )
+    axes[1].set(title=&quot;WSS is distinct from transformed jump&quot;, xlabel=&quot;k&quot;)
+    axes[1].legend(fontsize=8)
+    axes[2].plot(range(2, 16), silhouettes, &quot;o-&quot;, label=&quot;Custom: 25 starts&quot;)
+    axes[2].plot(
+        range(2, 11), wrapper_silhouettes, &quot;:s&quot;, label=&quot;Wrapper: one start&quot;
+    )
+    axes[2].set(title=&quot;Mean Euclidean silhouette&quot;, xlabel=&quot;k&quot;)
+    axes[2].legend(fontsize=8)
+    figure.savefig(
+        ROOT / &quot;assets/ch06-arrests-diagnostics.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+
+
+def plot_state_coordinates(arrests_frame, arrests, initial, final):
+    &quot;&quot;&quot;Translate the source two-feature state labels and final PCA labels.&quot;&quot;&quot;
+    import matplotlib
+
+    matplotlib.use(&quot;Agg&quot;)
+    import matplotlib.pyplot as plt
+
+    plt.style.use(&quot;dark_background&quot;)
+    scores, fractions = centered_scores(arrests)
+    figure, axes = plt.subplots(1, 2, figsize=(14, 6), constrained_layout=True)
+    for i, state in enumerate(arrests_frame.index):
+        axes[0].text(
+            arrests[i, 2],
+            arrests[i, 0],
+            state,
+            fontsize=6,
+            color=f&quot;C{initial[&#x27;cluster&#x27;][i] - 1}&quot;,
+        )
+        axes[1].text(
+            *scores[i], state, fontsize=6, color=f&quot;C{final[&#x27;cluster&#x27;][i] - 1}&quot;
+        )
+    for axis, values in zip(axes, [arrests[:, [2, 0]], scores]):
+        span = np.ptp(values, axis=0)
+        axis.set_xlim(
+            values[:, 0].min() - 0.1 * span[0],
+            values[:, 0].max() + 0.25 * span[0],
+        )
+        axis.set_ylim(
+            values[:, 1].min() - 0.1 * span[1],
+            values[:, 1].max() + 0.1 * span[1],
+        )
+    axes[0].set(
+        title=&quot;Two-group labels in selected feature coordinates&quot;,
+        xlabel=&quot;Standardized Urban Population&quot;,
+        ylabel=&quot;Standardized Murder&quot;,
+    )
+    axes[1].set(
+        title=&quot;Final source four-group state labels&quot;,
+        xlabel=f&quot;PC1 ({100 * fractions[0]:.1f}%)&quot;,
+        ylabel=f&quot;PC2 ({100 * fractions[1]:.1f}%)&quot;,
+    )
+    figure.savefig(
+        ROOT / &quot;assets/ch06-arrests-state-labels.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+
+
+def run_source_workflow():
+    from ch06_hartigan_wong import RRandom, kmeans_r
+    from ch05_nbclust import nbclust_average
+
+    utilities = pd.read_csv(DATA / &quot;ch05-Utilities.csv&quot;, index_col=0)
+    scaled_utilities = standardize(utilities)
+    utility_fit = kmeans_r(scaled_utilities, 6, seed=2026)
+    report_fit(
+        &quot;Utilities k6; controlled seed2026 (source seed unspecified)&quot;,
+        utility_fit,
+        utilities.columns,
+    )
+    print(&quot;Utilities memberships:&quot;)
+    print(pd.Series(utility_fit[&quot;cluster&quot;], index=utilities.index).to_string())
+    print(
+        &quot;Utilities center distances:\n&quot;,
+        cdist(utility_fit[&quot;centers&quot;], utility_fit[&quot;centers&quot;]),
+    )
+    save_fit(&quot;utilities&quot;, utility_fit, utilities.index)
+
+    table = np.loadtxt(DATA / &quot;ch06-wine-uci.data&quot;, delimiter=&quot;,&quot;)
+    cultivar, wine = table[:, 0].astype(int), table[:, 1:]
+    columns = [
+        &quot;Alcohol&quot;,
+        &quot;Malic_acid&quot;,
+        &quot;Ash&quot;,
+        &quot;Alcalinity&quot;,
+        &quot;Magnesium&quot;,
+        &quot;Phenols&quot;,
+        &quot;Flavanoids&quot;,
+        &quot;Nonflavonoid_phenols&quot;,
+        &quot;Proanthocyanins&quot;,
+        &quot;Color&quot;,
+        &quot;Hue&quot;,
+        &quot;OD280_OD315&quot;,
+        &quot;Proline&quot;,
+    ]
+    single = kmeans_r(wine, 3, seed=278613)
+    multiple = kmeans_r(wine, 3, nstart=25, seed=278613)
+    report_fit(&quot;Raw wine k3; one source start&quot;, single, columns)
+    report_fit(&quot;Raw wine k3; 25 source starts&quot;, multiple, columns)
+    print(&quot;Wine cultivar versus fitted cluster (labels need no alignment):&quot;)
+    print(pd.crosstab(cultivar, multiple[&quot;cluster&quot;]).to_string())
+    _, raw_fractions = centered_scores(wine)
+    print(&quot;Raw wine first two PCA display fractions:&quot;, raw_fractions)
+    raw_wss = [
+        kmeans_r(wine, k, nstart=25, seed=278613)[&quot;tot_withinss&quot;]
+        for k in range(1, 21)
+    ]
+    hartigan_values = [
+        (len(wine) - k - 1) * (raw_wss[k - 1] / raw_wss[k] - 1)
+        for k in range(1, 20)
+    ]
+    hartigan = pd.DataFrame(
+        {&quot;Clusters&quot;: range(2, 21), &quot;Hartigan&quot;: hartigan_values}
+    )
+    hartigan[&quot;AddCluster&quot;] = hartigan[&quot;Hartigan&quot;] &gt; 10
+    print(
+        &quot;Literal useful::FitKMeans table:\n&quot;, hartigan.to_string(index=False)
+    )
+    hartigan.to_csv(DATA / &quot;ch06-wine-hartigan.csv&quot;, index=False)
+
+    scaled_wine = standardize(wine)
+    # The source WSS function resets seed1234 at every k&gt;=2.
+    wine_wss = [np.sum(scaled_wine**2)] + [
+        kmeans_r(scaled_wine, k, seed=1234)[&quot;tot_withinss&quot;]
+        for k in range(2, 16)
+    ]
+    print(&quot;Standardized wine one-start WSS:&quot;, np.array(wine_wss))
+    multi = nbclust_average(
+        wine, min_nc=2, max_nc=15, standardize=True, method=&quot;kmeans&quot;, seed=1234
+    )
+    print(&quot;Standardized wine NbClust26 recommendations:&quot;, multi[&quot;votes&quot;])
+    print(&quot;NbClust selected k:&quot;, multi[&quot;selected_k&quot;])
+
+    arrests_frame = pd.read_csv(DATA / &quot;ch05-USArrests.csv&quot;, index_col=0)
+    arrests = standardize(arrests_frame)
+    rng = RRandom(123)
+    arrest_fits = {
+        k: kmeans_r(arrests, k, nstart=25, rng=rng) for k in range(2, 6)
+    }
+    print(&quot;USArrests k2..5 controlled seed123, sequential25starts.&quot;)
+    print(&quot;The lecture&#x27;s corresponding initial seed is not shown.&quot;)
+    rng = RRandom(123)
+    arrest_wss = [
+        kmeans_r(arrests, k, nstart=10, rng=rng)[&quot;tot_withinss&quot;]
+        for k in range(1, 16)
+    ]
+    rng = RRandom(123)
+    silhouettes = []
+    for k in range(2, 16):
+        fit = kmeans_r(arrests, k, nstart=25, rng=rng)
+        silhouettes.append(silhouette_score(arrests, fit[&quot;cluster&quot;]))
+    print(&quot;USArrests WSS k1..15:&quot;, np.array(arrest_wss))
+    print(&quot;USArrests mean silhouettes k2..15:&quot;, np.array(silhouettes))
+    print(&quot;Silhouette-selected k:&quot;, np.argmax(silhouettes) + 2)
+    # fviz_nbclust(...,kmeans) forwards no nstart: one-start default.
+    # Controlled seeds make these separate wrapper demonstrations repeatable.
+    rng = RRandom(123)
+    wrapper_wss = [np.sum(arrests**2)] + [
+        kmeans_r(arrests, k, rng=rng)[&quot;tot_withinss&quot;] for k in range(2, 11)
+    ]
+    rng = RRandom(123)
+    wrapper_silhouettes = [
+        silhouette_score(arrests, kmeans_r(arrests, k, rng=rng)[&quot;cluster&quot;])
+        for k in range(2, 11)
+    ]
+    print(&quot;fviz_nbclust-equivalent WSS k1..10, one start:&quot;, wrapper_wss)
+    print(
+        &quot;fviz_nbclust-equivalent silhouettes k2..10, one start:&quot;,
+        wrapper_silhouettes,
+    )
+    final = kmeans_r(arrests, 4, nstart=25, seed=123)
+    report_fit(
+        &quot;USArrests final source k4, seed123,nstart25&quot;,
+        final,
+        arrests_frame.columns,
+    )
+    print(&quot;Final state membership:&quot;)
+    print(pd.Series(final[&quot;cluster&quot;], index=arrests_frame.index).to_string())
+    print(&quot;Raw-data means by final group:&quot;)
+    print(arrests_frame.groupby(final[&quot;cluster&quot;]).mean().to_string())
+    save_fit(&quot;arrests-final&quot;, final, arrests_frame.index)
+    assert np.isclose(final[&quot;tot_withinss&quot;], 56.4031734582928)
+    plot_source_workflow(
+        utilities,
+        utility_fit,
+        wine,
+        cultivar,
+        multiple,
+        raw_fractions,
+        hartigan,
+        wine_wss,
+        arrests,
+        arrest_fits,
+        arrest_wss,
+        silhouettes,
+        wrapper_wss,
+        wrapper_silhouettes,
+        multi,
+    )
+    plot_state_coordinates(arrests_frame, arrests, arrest_fits[2], final)
+    print(&quot;Source workflows executed with pure-Python Hartigan-Wong.&quot;)
+
+
+if __name__ == &quot;__main__&quot;:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(&quot;--theory-only&quot;, action=&quot;store_true&quot;)
+    arguments = parser.parse_args()
+    mathematical_checks()
+    if not arguments.theory_only:
+        run_source_workflow()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Source four-point squared distances:
+ [[10. 61.]
+ [10.  9.]
+ [17.  4.]
+ [41.  4.]]
+Assignment/update WSS: 28.0 27.0 14.0
+Stable centers:
+ [[ 5.  3.]
+ [-1. -1.]]
+Exact refitted transfer change: -14.0
+Exhaustive four-point optimal two-group WSS: 14.0
+Mean-minimization identity, both sides: 98.0 98.0
+Authored silhouette example mean: 0.79797980
+Independent mathematical checks passed.
+
+Utilities k6; controlled seed2026 (source seed unspecified)
+Sizes: [3 7 5 1 5 1]
+Centers:
+   Fixed_charge       RoR      Cost  Load_factor  Demand_growth     Sales   Nuclear  Fuel_Cost
+0     -0.600276 -0.833180  1.338910    -0.480580       0.991718  1.856521 -0.714629  -0.965766
+1      0.504316  0.779551 -0.985896    -0.337546      -0.489577  0.351860 -0.523211  -0.410537
+2     -0.011332  0.331381  0.218934    -0.358041       0.166469 -0.401874  1.565038  -0.595448
+3     -1.919076 -1.932383 -0.781276     1.103467       1.846898 -0.901425 -0.220344   1.469656
+4     -0.358195 -0.363790  0.398583     1.157264      -0.301743 -0.708072 -0.402575   1.117200
+5      2.037324 -0.862888  0.578233    -1.295019      -0.718643 -1.581428  0.214389   1.692638
+Within-group sums of squares: [ 9.53352169 26.50776933 10.1770935   0.         11.93524896  0.        ]
+Total WSS: 58.153633482400025
+Total SS: 168.0
+Between SS: 109.84636651759998
+ifault: 0
+Utilities memberships:
+Company
+Arizona         2
+Boston          5
+Central         2
+Commonwealth    3
+NY              6
+Florida         2
+Hawaiian        5
+Idaho           1
+Kentucky        2
+Madison         3
+Nevada          1
+New England     5
+Northern        3
+Oklahoma        2
+Pacific         5
+Puget           1
+San Diego       4
+Southern        2
+Texas           2
+Wisconsin       3
+United          5
+Virginia        3
+Utilities center distances:
+ [[0.         3.74824849 3.75337535 4.94621835 4.0659544  5.55650765]
+ [3.74824849 0.         2.70412122 5.09926414 3.11603381 4.14348234]
+ [3.75337535 2.70412122 0.         4.73562859 3.17011718 3.98304653]
+ [4.94621835 5.09926414 4.73562859 0.         3.33215726 5.62859128]
+ [4.0659544  3.11603381 3.17011718 3.33215726 0.         3.69890635]
+ [5.55650765 4.14348234 3.98304653 5.62859128 3.69890635 0.        ]]
+
+Raw wine k3; one source start
+Sizes: [ 28  50 100]
+Centers:
+     Alcohol  Malic_acid     Ash  Alcalinity   Magnesium   Phenols  Flavanoids  Nonflavonoid_phenols  Proanthocyanins     Color       Hue  OD280_OD315  Proline
+0  13.822143    1.773929  2.4900   16.964286  105.357143  2.923929    3.111429              0.298571         1.986786  6.202857  1.103571     2.984643  1301.50
+1  13.336800    2.396800  2.3718   18.510000  108.600000  2.432400    2.214800              0.323600         1.707200  5.143600  0.966720     2.862800   894.60
+2  12.602500    2.463600  2.3293   20.696000   93.740000  2.050400    1.633500              0.398700         1.421900  4.694800  0.911900     2.381700   517.75
+Within-group sums of squares: [ 550200.99627143  815783.68095208 1263330.51679459]
+Total WSS: 2629315.1940180985
+Total SS: 17592296.383508474
+Between SS: 14962981.189490374
+ifault: 0
+
+Raw wine k3; 25 source starts
+Sizes: [62 69 47]
+Centers:
+     Alcohol  Malic_acid       Ash  Alcalinity   Magnesium   Phenols  Flavanoids  Nonflavonoid_phenols  Proanthocyanins     Color       Hue  OD280_OD315      Proline
+0  12.929839    2.504032  2.408065   19.890323  103.596774  2.111129    1.584032              0.388387         1.503387  5.650323  0.883968     2.365484   728.338710
+1  12.516667    2.494203  2.288551   20.823188   92.347826  2.070725    1.758406              0.390145         1.451884  4.086957  0.941159     2.490725   458.231884
+2  13.804468    1.883404  2.426170   17.023404  105.510638  2.867234    3.014255              0.285319         1.910426  5.702553  1.078298     3.114043  1195.148936
+Within-group sums of squares: [ 566572.50317252  443166.72075939 1360950.46285106]
+Total WSS: 2370689.686782968
+Total SS: 17592296.383508474
+Between SS: 15221606.696725506
+ifault: 0
+Wine cultivar versus fitted cluster (labels need no alignment):
+col_0   1   2   3
+row_0            
+1      13   0  46
+2      20  50   1
+3      29  19   0
+Raw wine first two PCA display fractions: [0.99809123 0.00173592]
+Literal useful::FitKMeans table:
+  Clusters   Hartigan  AddCluster
+        2 505.429310        True
+        3 160.411331        True
+        4 135.707228        True
+        5  78.445289        True
+        6  71.489710        True
+        7  96.657223        True
+        8  47.521525        True
+        9  33.198650        True
+       10  40.244743        True
+       11  28.928383        True
+       12  15.903544        True
+       13  17.083783        True
+       14  24.998172        True
+       15  14.809907        True
+       16  15.765533        True
+       17   1.987005       False
+       18  14.165725        True
+       19   6.225141       False
+       20  51.175564        True
+Standardized wine one-start WSS: [2301.         1649.43998247 1270.74911531 1178.94491359 1107.07772326
+ 1048.34330134  990.55581917  926.72251042  904.7776129   870.917831
+  823.46696893  803.24837991  763.20233665  740.93497588  725.79242206]
+Standardized wine NbClust26 recommendations: {2: 2, 3: 19, 14: 1, 15: 1}
+NbClust selected k: 3
+USArrests k2..5 controlled seed123, sequential25starts.
+The lecture&#x27;s corresponding initial seed is not shown.
+USArrests WSS k1..15: [196.         102.86240049  78.32326897  56.40317346  48.94420319
+  42.83302698  38.85506898  33.77736577  30.59528245  27.43242879
+  25.17423375  22.39871536  19.68082025  18.60707348  16.91724208]
+USArrests mean silhouettes k2..15: [0.40848903 0.30943125 0.33968891 0.30307807 0.28598207 0.28896919
+ 0.26248505 0.25761002 0.27041112 0.25288528 0.26793855 0.23464047
+ 0.27625871 0.26938911]
+Silhouette-selected k: 2
+fviz_nbclust-equivalent WSS k1..10, one start: [np.float64(195.99999999999997), np.float64(102.86240049441732), np.float64(81.59328844322391), np.float64(56.40317345829283), np.float64(48.944203189774136), np.float64(45.13666115254738), np.float64(41.336066205085764), np.float64(34.463082883900974), np.float64(32.65985045893862), np.float64(28.676014909259674)]
+fviz_nbclust-equivalent silhouettes k2..10, one start: [0.4084890326217642, 0.3668284276184688, 0.3396889143334439, 0.30307807075646026, 0.2744592244443411, 0.262622944962152, 0.26503914466754774, 0.2555583063765261, 0.25269690613021334]
+
+USArrests final source k4, seed123,nstart25
+Sizes: [ 8 13 16 13]
+Centers:
+     Murder   Assault  UrbanPop      Rape
+0  1.411890  0.874335 -0.814521  0.019271
+1 -0.961541 -1.106601 -0.930107 -0.966763
+2 -0.489438 -0.382600  0.575830 -0.261654
+3  0.695070  1.039441  0.722637  1.276940
+Within-group sums of squares: [ 8.31606082 11.95246286 16.21221326 19.92243652]
+Total WSS: 56.40317345829281
+Total SS: 196.0
+Between SS: 139.59682654170717
+ifault: 0
+Final state membership:
+Alabama           1
+Alaska            4
+Arizona           4
+Arkansas          1
+California        4
+Colorado          4
+Connecticut       3
+Delaware          3
+Florida           4
+Georgia           1
+Hawaii            3
+Idaho             2
+Illinois          4
+Indiana           3
+Iowa              2
+Kansas            3
+Kentucky          2
+Louisiana         1
+Maine             2
+Maryland          4
+Massachusetts     3
+Michigan          4
+Minnesota         2
+Mississippi       1
+Missouri          4
+Montana           2
+Nebraska          2
+Nevada            4
+New Hampshire     2
+New Jersey        3
+New Mexico        4
+New York          4
+North Carolina    1
+North Dakota      2
+Ohio              3
+Oklahoma          3
+Oregon            3
+Pennsylvania      3
+Rhode Island      3
+South Carolina    1
+South Dakota      2
+Tennessee         1
+Texas             4
+Utah              3
+Vermont           2
+Virginia          3
+Washington        3
+West Virginia     2
+Wisconsin         2
+Wyoming           3
+Raw-data means by final group:
+      Murder     Assault   UrbanPop       Rape
+1  13.937500  243.625000  53.750000  21.412500
+2   3.600000   78.538462  52.076923  12.176923
+3   5.656250  138.875000  73.875000  18.781250
+4  10.815385  257.384615  76.000000  33.192308
+Source workflows executed with pure-Python Hartigan-Wong.
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-05.html">← Previous chapter</a><a href="chapter-07.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

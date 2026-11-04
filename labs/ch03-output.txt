@@ -1,0 +1,74 @@
+Three-variable exercise covariance:
+[[1.   0.48 0.  ]
+ [0.48 1.   0.  ]
+ [0.   0.   1.  ]]
+Ability correlation matrix (converted cov2cor):
+[[1.       0.466265 0.551663 0.340325 0.57648  0.514406]
+ [0.466265 1.       0.572436 0.193099 0.262923 0.239277]
+ [0.551663 0.572436 1.       0.44509  0.354025 0.356472]
+ [0.340325 0.193099 0.44509  1.       0.183964 0.218837]
+ [0.57648  0.262923 0.354025 0.183964 1.       0.791378]
+ [0.514406 0.239277 0.356472 0.218837 0.791378 1.      ]]
+ability principal-axis iterations: 22
+ability final total-communality change: 0.00092766
+ability source tolerance reached: True
+ability unrotated loadings:
+[[ 0.750625  0.067719]
+ [ 0.524771  0.319111]
+ [ 0.750748  0.519724]
+ [ 0.392938  0.218591]
+ [ 0.809291 -0.5058  ]
+ [ 0.731469 -0.389663]]
+ability Kaiser-normalized varimax loadings:
+[[0.494408 0.568844]
+ [0.157374 0.593674]
+ [0.181362 0.894898]
+ [0.131939 0.429854]
+ [0.934031 0.195887]
+ [0.797452 0.225728]]
+ability communalities: [0.568023 0.377216 0.833735 0.202182 0.910786 0.686884]
+ability uniquenesses: [0.431977 0.622784 0.166265 0.797818 0.089214 0.313116]
+ability off-diagonal RMS residual: 0.03223321
+ability score weights R^-1 L (individual rows unavailable):
+[[ 0.017703  0.215044]
+ [-0.007986  0.096877]
+ [-0.19831   0.793927]
+ [ 0.019156  0.030275]
+ [ 0.841777 -0.224042]
+ [ 0.190593 -0.020407]]
+stock principal-axis iterations: 50
+stock final total-communality change: 0.00273909
+stock source tolerance reached: False
+stock unrotated loadings:
+[[ 0.626096 -0.428835]
+ [ 0.776216 -0.340897]
+ [ 0.591501 -0.33184 ]
+ [ 0.702754  0.708278]
+ [ 0.508823  0.455247]]
+stock Kaiser-normalized varimax loadings:
+[[0.756998 0.053381]
+ [0.819904 0.215591]
+ [0.669598 0.107842]
+ [0.110068 0.991668]
+ [0.115489 0.672914]]
+stock communalities: [0.575896 0.718723 0.459992 0.995521 0.466151]
+stock uniquenesses: [0.424104 0.281277 0.540008 0.004479 0.533849]
+stock off-diagonal RMS residual: 0.01590018
+stock score weights R^-1 L (individual rows unavailable):
+[[ 0.31768   0.021794]
+ [ 0.535204 -0.115752]
+ [ 0.225084 -0.025288]
+ [-0.159197  1.039168]
+ [ 0.028119 -0.011869]]
+ability pc_actual [3.076824 1.139688 0.817187 0.411313 0.355074 0.199915]
+ability fa_actual [ 2.555073  0.557914  0.032351 -0.008786 -0.284328 -0.297151]
+ability pc_cutoff [1.435111 1.240739 1.099417 0.998431 0.911204 0.799192]
+ability fa_cutoff [ 1.09001   0.274431  0.137555  0.055212 -0.032934 -0.119793]
+stock pc_actual [2.437615 1.406261 0.500186 0.400033 0.255905]
+stock fa_actual [ 1.908715  0.641647 -0.019534 -0.086601 -0.535512]
+stock pc_cutoff [1.40359  1.235298 1.041111 0.944486 0.828283]
+stock fa_cutoff [ 1.093554  0.264155  0.097254  0.002696 -0.085087]
+Stock uniqueness after100 diagnostic iterations: [ 0.421984  0.283889  0.540155 -0.199958  0.60903 ]
+Stock n unknown:100 is the source package fallback, not known n.
+Individual factor scores unavailable from summary matrices.
+Checks passed: covariance, principal-axis extraction, rotation.

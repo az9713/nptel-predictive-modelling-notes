@@ -1,0 +1,10 @@
+numpy
+scipy
+pandas
+matplotlib
+scikit-learn
+statsmodels
+factor-analyzer
+beautifulsoup4
+playwright
+pycodestyle

@@ -1,0 +1,22 @@
+{
+  "reference": "Fresh R4.5.1 psych2.6.9",
+  "max_absolute_differences": {
+    "ability_none_loadings": 3.774758283725532e-15,
+    "ability_none_weights": 1.176836406102666e-14,
+    "ability_varimax_loadings": 3.9968028886505635e-15,
+    "ability_varimax_weights": 1.354472090042691e-14,
+    "ability_minres_reduced_eigenvalues": 5.44445862424997e-07,
+    "stock_none_loadings": 7.438494264988549e-15,
+    "stock_none_weights": 2.0539125955565396e-14,
+    "stock_varimax_loadings": 8.548717289613705e-15,
+    "stock_varimax_weights": 2.040034807748725e-14,
+    "stock_minres_reduced_eigenvalues": 1.3772852573933764e-05
+  },
+  "loadings_and_weights_tolerance": 1e-08,
+  "minres_optimizer_tolerance": 0.001,
+  "passed": true,
+  "limitations": [
+    "Stock source principal-axis default50 iterations does not converge in either language; agreement certifies finite-iteration reproduction, not valid latent model.",
+    "Factor parallel null simulations use different RNG streams; only actual reduced eigenvalues compared here."
+  ]
+}

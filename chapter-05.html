@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Ward clustering, dendrograms, and reproducible implementations — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a aria-current="page" href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Ward clustering, dendrograms, and reproducible implementations</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch05-tree-heading">5.1 Reading the source&#x27;s five-object hierarchies</a></li><li><a href="#ch05-ward-heading">5.2 Ward&#x27;s criterion measures the cost of a merge</a></li><li><a href="#ch05-divisive-heading">5.3 DIANA divides a group through a splinter</a></li><li><a href="#ch05-nutrient-heading">5.4 Nutrient data: a cut is a decision</a></li><li><a href="#ch05-utilities-heading">5.5 Utilities: separate the clustering space from the display space</a></li><li><a href="#ch05-datasets-heading">5.6 Divisive examples and distinct splitting algorithms</a></li><li><a href="#ch05-exercises-heading">5.7 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 5 · <a href="https://www.youtube.com/watch?v=ybgCUIU1isY">Recording 1</a> · <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch05-tree">
+<h2 id="ch05-tree-heading">5.1 Reading the source's five-object hierarchies</h2>
+<p>A dendrogram records a nested sequence of groups and the comparison value at each merge or division. Its vertical coordinate is not a universal measure of scientific similarity. It must be interpreted through the linkage or splitting criterion that generated the tree. The horizontal leaf order can change when a branch is reversed without changing a single membership.</p>
+<p>The source's first numerical example supplies the symmetric dissimilarity matrix</p>
+$$\mathbf{D}=\begin{pmatrix}0&9&3&6&11\\9&0&7&5&10\\3&7&0&9&2\\6&5&9&0&8\\11&10&2&8&0\end{pmatrix}. \tag{5.1}$$
+<p>Selected handwritten frames confirm its entries, including $D_{34}=9$. The matrix is a valid nonnegative symmetric dissimilarity with zero diagonal, but it is not a metric: $D_{15}=11$ exceeds $D_{13}+D_{35}=5$. Single and complete linkage can still analyze it as a dissimilarity matrix. A Euclidean geometric interpretation would require additional evidence.</p>
+<p>Single linkage first joins objects three and five at height two. The distance from that group to object one is $\min(3,11)=3$, so object one joins next. Objects two and four merge at height five, and the final two groups merge at height six. The successive heights are therefore $2,3,5,6$. A two-group cut yields $\{1,3,5\}$ and $\{2,4\}$.</p>
+<p>Complete linkage also begins with three and five at height two. It then joins two and four at height five. Object one is at complete-link distance nine from that group and eleven from the other, so it joins $\{2,4\}$ next. The final height is eleven. A two-group cut therefore gives $\{1,2,4\}$ and $\{3,5\}$. The source's intermediate verbal calculation of the distance from object four to $\{3,5\}$ is inconsistent with the displayed matrix: the maximum of nine and eight is nine. Correcting that slip leaves the stated merge sequence unchanged.</p>
+<figure id="ch05-manual-figure"><img src="assets/ch05-manual.svg" alt="Single-link and complete-link dendrograms for the same five-object source dissimilarity matrix."><figcaption>Figure 5.1. The same source dissimilarities produce different two-group cuts under single and complete linkage. Merge heights describe their respective linkage rules; leaf order is a drawing convention.</figcaption></figure>
+<p>For a monotone hierarchy, cutting at a height merges all branches whose relevant joins are at or below that threshold. Cutting for a specified number of groups instead follows the merge sequence until that number remains. Tied heights can make these operations differ: a horizontal threshold may cross several simultaneous joins. The laboratory uses an explicit fixed-group cut and compares partitions independently of their arbitrary label numbers.</p>
+<p class="source-note">Source calculation: <a href="https://www.youtube.com/watch?v=ybgCUIU1isY&amp;t=53">single linkage, 0:53</a> and <a href="https://www.youtube.com/watch?v=ybgCUIU1isY&amp;t=917">complete linkage, 15:17</a>. The matrix and the separate divisive example were checked against selected source frames.</p>
+</section>
+<section id="ch05-ward">
+<h2 id="ch05-ward-heading">5.2 Ward's criterion measures the cost of a merge</h2>
+<p>A useful extension compares two groups through the increase in squared-error distortion caused by representing their union by one centroid. For a nonempty set $A$ of numerical observations, let $\boldsymbol\mu_A$ be its arithmetic centroid and define $W(A)=\sum_{i\in A}\|\mathbf{x}_i-\boldsymbol\mu_A\|^2$. Ward's criterion chooses a merge with the smallest increase $W(A\cup B)-W(A)-W(B)$.</p>
+<div class="prop"><strong>Proposition 5.1 — Ward merge increment.</strong> For Euclidean observations and disjoint nonempty groups,
+$$\Delta W(A,B)=\frac{|A||B|}{|A|+|B|}\|\boldsymbol\mu_A-\boldsymbol\mu_B\|^2. \tag{5.2}$$</div>
+<div class="proof"><p>The union centroid is $(|A|\boldsymbol\mu_A+|B|\boldsymbol\mu_B)/(|A|+|B|)$. For the points of $A$, expand each difference from that union centroid as $(\mathbf{x}_i-\boldsymbol\mu_A)+(\boldsymbol\mu_A-\boldsymbol\mu_{A\cup B})$. The cross term sums to zero because deviations from an arithmetic mean sum to zero. The squared-error contribution becomes $W(A)+|A|\|\boldsymbol\mu_A-\boldsymbol\mu_{A\cup B}\|^2$. Repeat for $B$. Substitute the union centroid into the two remaining terms and collect their common squared centroid difference; the coefficient reduces to $|A||B|/(|A|+|B|)$. <span class="qed">∎</span></p></div>
+<p>This increment includes both centroid separation and group sizes. Simply choosing the closest centroids is therefore a different rule. The conventional Ward dendrogram height used by SciPy and R's <code>ward.D2</code> corresponds to $\sqrt{2\Delta W}$ for Euclidean inputs. For singleton groups, it reduces to their original Euclidean distance. R's older <code>ward.D</code> convention is different and must not be silently substituted.</p>
+<p>The laboratory checks the squared-error identity on the source Utilities numerical features and separately compares the complete Ward cophenetic matrix with a fresh R <code>ward.D2</code> calculation. This extension is intentionally applied to Euclidean observations, not to the nonmetric matrix (5.1). Squared-error geometry cannot be asserted for an arbitrary supplied dissimilarity merely by selecting a method named Ward.</p>
+<p class="source-note">This section is an authored extension. Conventions verified in <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/hclust.html">R hclust</a> and <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html">SciPy linkage</a>.</p>
+</section>
+<section id="ch05-divisive">
+<h2 id="ch05-divisive-heading">5.3 DIANA divides a group through a splinter</h2>
+<p>The source's divisive example begins with observations $A,B,C,D,E$ together. DIANA, short for divisive analysis, chooses a current cluster with the largest <dfn>diameter</dfn>, the largest dissimilarity between any two of its members. It starts a new splinter group with the observation having the largest average dissimilarity to the other members. It then considers transferring more observations from the remaining party to that splinter.</p>
+<p>For an observation $i$ still in a party $P$, let $a_i$ be its average dissimilarity to the other members of $P$, excluding itself. Let $b_i$ be its average dissimilarity to the current splinter $S$. The largest positive contrast $a_i-b_i$ identifies the next transfer. Recompute the averages after each transfer, and stop when no positive contrast remains or only one party member remains. This produces two nonempty groups. Repeating the largest-diameter division creates a complete nested hierarchy.</p>
+<p>The source's five-observation divisive matrix has row totals $84,73,65,89,91$, so $E$ starts the first splinter. Observation $D$ then has average dissimilarity $(32+25+23)/3$ to the remaining party, but dissimilarity nine to $E$. It moves to the splinter. The remaining party is $\{A,B,C\}$; its within-party averages are $10.5,10.5,9$, while its averages to $\{D,E\}$ are $31.5,26,23.5$. Every transfer contrast is now negative. The first stable division is therefore $\{A,B,C\}$ and $\{D,E\}$, as the laboratory verifies from the inspected source matrix.</p>
+<p>Software preprocessing is particularly consequential here. In <code>cluster::diana(...,stand=TRUE)</code>, standardization subtracts a feature's mean and divides by its mean absolute deviation from that mean. It does not divide by its sample standard deviation. The source uses this option for both the arrest and voting examples. Python implements that exact convention. Missing feature values in the voting table are handled through pairwise available comparisons with the same full-dimension rescaling used by the source dissimilarity calculation.</p>
+<p>The <dfn>divisive coefficient</dfn> summarizes the tree through the diameter of the last cluster containing each observation before it becomes a singleton. If these diameters are $d_i$ and the full-data diameter is $D&gt;0$, the coefficient is $1-n^{-1}\sum_i d_i/D$. The Python implementation agrees with the R coefficient and the full cophenetic matrix, whose $(i,j)$ entry is the height of their lowest common ancestor, equivalently the last cluster containing both observations before a divisive split separates them. This coefficient describes a hierarchy; it is not a probability that its clusters are genuine population classes.</p>
+<p class="source-note">Source algorithm and numerical split: <a href="https://www.youtube.com/watch?v=ybgCUIU1isY&amp;t=1514">25:14</a>. The literal Python helper is <a href="labs/ch05_diana.py">ch05_diana.py</a>; standardization and splitting conventions were checked against <a href="https://stat.ethz.ch/R-manual/R-devel/library/cluster/html/diana.html">the primary DIANA documentation</a>.</p>
+</section>
+<section id="ch05-nutrient">
+<h2 id="ch05-nutrient-heading">5.4 Nutrient data: a cut is a decision</h2>
+<p>The first R demonstration uses the 27-by-five <code>flexclust::nutrient</code> dataset. Its columns are energy, protein, fat, calcium, and iron for different foods. The canonical package data are bundled in CSV form. The source first computes raw Euclidean distances, then subtracts column means and divides by sample standard deviations before recomputing distances and fitting average linkage. Python reproduces both distance matrices and the complete average-linkage cophenetic matrix against a fresh R reference.</p>
+<p>The manual five-group cut gives group sizes $7,16,1,2,1$ under first-occurrence label numbering. Raw and standardized within-group medians are computed separately, preserving the source's <code>aggregate(...,median)</code> demonstrations. A raw median has the original measurement units; its standardized counterpart expresses a position relative to the full-data mean and sample standard deviation. The two summaries serve different interpretations even though they describe the same membership.</p>
+<figure id="ch05-agglomerative-figure"><img src="assets/ch05-agglomerative.svg" alt="Average-linkage nutrient dendrogram and single- and average-linkage Utilities dendrograms with explicit fixed-group cut rectangles."><figcaption>Figure 5.2. Converted agglomerative examples. Nutrient distances use all five standardized variables. Utilities distances use only standardized Sales and Fuel_Cost. The highlighted cuts are decisions on the trees, rather than evidence that an automatic group count has been established.</figcaption></figure>
+<p>The displayed <code>NbClust</code> call requests Euclidean average linkage for candidate counts two through fifteen and leaves its index argument at the default multi-index setting. That requests 26 criteria. It is not a request for one elbow curve or one silhouette calculation. In the fresh R reference, four criteria each recommend two, three, five, and fifteen groups: the largest vote count is tied. The package's reported selection of two resolves that tie by its convention; it is not a unique majority. The separate manual choice of five groups should remain distinguishable from this reported choice.</p>
+<p>The exact multi-index calculation is converted in <a href="labs/ch05_nbclust.py">ch05_nbclust.py</a>. Its complete index tables, critical values, recommendations, and chosen partition match fresh R references for the nutrient data and a second independent fixture after the source's rounding. The <a href="validation/ch05-nbclust-comparison.json">comparison record</a> states that scope. Its <a href="assets/ch05-nbclust.svg">vote and Dindex plots</a> reproduce the requested diagnostic quantities rather than substituting an elbow or silhouette curve. The recording also produces plotting warnings and an error in one barplot annotation; correcting a display call does not resolve the tied recommendations.</p>
+<p class="source-note">Source examples: <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=76">nutrient data, 1:16</a>, <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=415">scaling and average linkage, 6:55</a>, and <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=778">the multi-index calculation, 12:58</a>.</p>
+</section>
+<section id="ch05-utilities">
+<h2 id="ch05-utilities-heading">5.5 Utilities: separate the clustering space from the display space</h2>
+<p>The source's Utilities table contains 22 companies and eight numerical features. Its named company column becomes row labels. The code standardizes all eight measurements, but then computes Euclidean clustering distances from columns six and eight only: <code>Sales</code> and <code>Fuel_Cost</code>. That column selection is part of the example. Clustering on all eight standardized variables would answer a different question even if a plotting call happened to produce a similar-looking figure.</p>
+<p>Python reproduces single- and average-linkage trees, requested fixed-count cuts, colored membership displays, and group listings. A fresh R reference verifies the full pairwise cophenetic matrix for each hierarchy and partition agreement for a four-group cut. A tree's drawing can reverse individual branches; exact horizontal positions and color names are not statistical invariants.</p>
+<p>The source's four-group scatter display passes all eight variables to a PCA visualization while using membership determined from two variables. Python follows the same separation. The first two display components explain approximately $27.16\%$ and $23.75\%$ of all-eight-variable standardized variation. Separation or overlap in this plot is therefore not a complete depiction of the two-variable clustering geometry. Its convex hulls summarize projected group points and do not establish a probabilistic boundary.</p>
+<figure id="ch05-display-figure"><img src="assets/ch05-utilities-display.svg" alt="Utilities four-group PCA display based on all eight features beside a row-scaled feature heatmap whose row names include six-group membership labels."><figcaption>Figure 5.3. Two source display conventions translated separately. Left: four-group labels come from Sales/Fuel_Cost clustering, while the projection uses all eight variables. Right: colors encode within-row standardized feature values, rather than pairwise company distances.</figcaption></figure>
+<p>The heatmap has another independent operation. The source supplies all eight standardized numerical columns to <code>heatmap</code>, keeps the column order with <code>Colv=NA</code>, and uses a complete-linkage row hierarchy. The default heatmap color scaling then centers and standardizes each row for display. These rowwise colors are not the original Euclidean distance matrix and do not define the earlier two-feature average-linkage groups. The converted <a href="assets/ch05-utilities-heatmap.svg">full heatmap with its row tree</a> preserves that distinction. Its row labels include the source's six-group average-linkage memberships as an annotation.</p>
+<p class="source-note">Source code and outputs: <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=887">Utilities input and column selection, 14:47</a>; <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=1104">PCA cluster display, 18:24</a>; <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=1155">heatmap, 19:15</a>. Default color scaling and independent tree construction are documented in <a href="https://stat.ethz.ch/R-manual/R-devel/library/stats/html/heatmap.html">R heatmap</a>.</p>
+</section>
+<section id="ch05-datasets">
+<h2 id="ch05-datasets-heading">5.6 Divisive examples and distinct splitting algorithms</h2>
+<p>The source next fits standardized DIANA to <code>USArrests</code>, then to <code>votes.repub</code> with Manhattan distance and mean-absolute-deviation standardization. Python retains the voting table's missing historical entries and reproduces the source distance convention. It obtains divisive coefficient $0.88691817$ for the Manhattan voting tree. Its two groups contain eight and 42 states, matching the source group listing. The standardized Euclidean version produces the same two-group partition for this table, although its complete hierarchy and coefficient differ. That agreement is an observed result for this dataset, not a metric-invariance theorem.</p>
+<p>The agriculture take-home example is also included. Fresh R checks of all four DIANA variants—arrests, Manhattan votes, Euclidean votes, and agriculture—compare their complete distance matrices, cophenetic matrices, two-group partitions, and divisive coefficients. All numerical comparisons pass the recorded tolerances. The executable <a href="labs/ch05.py">main laboratory</a> and <a href="labs/ch05_diana.py">DIANA helper</a> require no R runtime.</p>
+<figure id="ch05-diana-figure"><img src="assets/ch05-diana.svg" alt="Four DIANA trees for arrests, Manhattan voting distances, Euclidean voting distances, and agriculture."><figcaption>Figure 5.4. Converted DIANA examples with criterion-specific division heights. Equal two-group membership in the two voting analyses does not make their full trees equal. A <a href="assets/ch05-votes-banner.svg">separate banner display</a> uses neighboring leaf split heights from the Manhattan voting tree.</figcaption></figure>
+<p>The final source script uses a different package, <code>clustlearn</code>, on its supplied two-dimensional demonstration datasets. Its <code>divisive_clustering(...,max_iterations=5)</code> helper repeatedly bisects groups by a bounded-iteration two-means procedure. It is not DIANA. Its height convention also differs: it records a square-root parent squared-error quantity rather than DIANA's diameter. The dedicated Python conversion is <a href="labs/ch05_clusterlearn.py">ch05_clusterlearn.py</a>, with all six original demonstration datasets bundled. Its <a href="validation/ch05-clustlearn-reference.json">separate comparison record</a> states how reference initialization is replayed to distinguish algorithm agreement from unrelated random starts.</p>
+<p>These examples illustrate three distinct decisions: the dissimilarity or feature geometry, the hierarchy construction, and the cut or display. None can be inferred reliably from a function's general label “hierarchical.” Source-code arguments and their defaults are part of the statistical specification.</p>
+<p class="source-note">Source demonstrations: <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=1233">arrest DIANA, 20:33</a>; <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=1386">voting example, 23:06</a>; <a href="https://www.youtube.com/watch?v=JgFfF_ysuNo&amp;t=1507">agriculture and the separate toy helper, 25:07</a>. Independent numeric evidence: <a href="validation/ch05-diana-comparison.json">DIANA comparisons</a> and <a href="validation/ch05-agglomerative-comparison.json">agglomerative comparisons</a>.</p>
+</section>
+<section id="ch05-exercises">
+<h2 id="ch05-exercises-heading">5.7 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>A source-matrix audit.</strong> Recalculate the distance between object four and cluster $\{3,5\}$ in (5.1) for both single and complete linkage. Does the resulting difference change the reported two-group complete-linkage partition?</p><details><summary>Worked solution</summary><p>The relevant dissimilarities are nine and eight. Single linkage gives eight; complete linkage gives nine. The smallest remaining complete-linkage merge after joining three and five is still the two–four pair at five. Object one then joins that group at nine, so the final two groups remain $\{1,2,4\}$ and $\{3,5\}$. A corrected intermediate calculation can therefore leave the final partition unchanged while remaining necessary for an accurate derivation.</p></details></li>
+<li><p><strong>Ward's domain.</strong> Why is it invalid to claim squared-error Ward geometry for (5.1) solely because the matrix is symmetric? State a condition that makes the centroid derivation applicable.</p><details><summary>Worked solution</summary><p>Symmetry and nonnegative entries do not show that distances arise from Euclidean coordinate differences. Here the triangle inequality already fails because eleven exceeds three plus two. The derivation requires actual observations in a Euclidean inner-product space, with arithmetic centroids and squared norms. On such coordinates (5.2) follows by centering and expanding sums of squares. A routine accepting arbitrary numbers does not establish those prerequisites.</p></details></li>
+<li><p><strong>Divisive transfer.</strong> After $E$ starts the source splinter, explain why $D$ transfers. Recheck the decision after the split becomes $\{A,B,C\}$ and $\{D,E\}$.</p><details><summary>Worked solution</summary><p>Observation $D$ is on average $(32+25+23)/3$ from its party but only nine from the splinter, so moving it has a positive contrast. Afterward the three party members have within-party averages $10.5,10.5,9$ and cross-splinter averages $31.5,26,23.5$. Their contrasts are all negative, so none transfers. The averages exclude the observation itself; including its zero self-distance would change the criterion.</p></details></li>
+<li><p><strong>One option, two scaling formulas.</strong> Explain why replacing <code>diana(...,stand=TRUE)</code> by column sample-standard-deviation scaling is not a literal conversion. How can a programmer verify that a translation uses the intended convention?</p><details><summary>Worked solution</summary><p>The DIANA option uses the mean absolute deviation about the column mean. The scale denominator differs from a sample standard deviation and need not differ by the same ratio across columns. Therefore the relative contributions to distance can change. Inspect the primary function documentation and compare complete dissimilarity matrices on the same original data. This project's fresh R comparisons test the full matrices, rather than relying on a similar final picture.</p></details></li>
+<li><p><strong>Multiple answers on one table.</strong> The source uses two Utilities variables for clustering, all eight for PCA display, and row-standardized colors in a heatmap. State which evidence is needed before calling visual overlap a clustering failure.</p><details><summary>Worked solution</summary><p>First recover the actual feature subset and distance used for the labels. Then inspect that geometry or the full fitted objective, not only the two-dimensional projection of another feature space. The heatmap's rowwise colors encode relative feature levels and supply no direct pairwise-distance test. A projected overlap can result from information lost by display or from differences between the display and clustering spaces. It does not by itself refute the two-feature hierarchy.</p></details></li>
+<li><p><strong>Algorithm and group-count claims.</strong> Explain why neither the multi-index selection of two groups nor agreement of two voting cuts establishes a unique population clustering. Why must the final <code>clustlearn</code> examples be checked independently of DIANA?</p><details><summary>Worked solution</summary><p>The fresh multi-index reference has a four-way tie in its largest recommendation count, so the selected two groups follow a tie convention. The voting distance choices happen to agree at a two-group cut but differ elsewhere in their trees. Neither finding is a population-identification theorem. The toy helper uses repeated two-means bisections and a squared-error height convention; DIANA uses a splinter-distance rule and diameter heights. Correctly translating one algorithm gives no automatic evidence that the other has been translated.</p></details></li>
+</ol>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch05.py"><code>labs/ch05.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p><p>Supporting modules: <a href="labs/ch05_clusterlearn.py"><code>ch05_clusterlearn.py</code></a> · <a href="labs/ch05_diana.py"><code>ch05_diana.py</code></a> · <a href="labs/ch05_nbclust.py"><code>ch05_nbclust.py</code></a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Source hierarchical examples: agglomeration, Ward, and literal DIANA.&quot;&quot;&quot;
+
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+from scipy.cluster.hierarchy import cophenet, cut_tree, dendrogram, linkage
+from scipy.spatial.distance import pdist, squareform
+
+from ch05_diana import diana, diana_from_data
+from ch05_nbclust import nbclust_average
+
+DATA = Path(__file__).resolve().parent / &quot;data&quot;
+ROOT = DATA.parents[1]
+
+
+def standardize(data):
+    values = np.asarray(data, dtype=float)
+    return (values - values.mean(axis=0)) / values.std(axis=0, ddof=1)
+
+
+def canonical_labels(labels):
+    &quot;&quot;&quot;Number groups by first occurrence; preserve the partition.&quot;&quot;&quot;
+    mapping = {}
+    return np.array(
+        [mapping.setdefault(int(x), len(mapping) + 1) for x in labels]
+    )
+
+
+def cut(links, count):
+    return canonical_labels(cut_tree(links, n_clusters=count).ravel())
+
+
+def plot_nbclust(result):
+    &quot;&quot;&quot;Render all 26 index votes and Dindex diagnostics.&quot;&quot;&quot;
+    import matplotlib
+
+    matplotlib.use(&quot;Agg&quot;)
+    import matplotlib.pyplot as plt
+
+    plt.style.use(&quot;dark_background&quot;)
+    figure, axes = plt.subplots(
+        1, 3, figsize=(13, 3.8), constrained_layout=True
+    )
+    votes = result[&quot;votes&quot;]
+    axes[0].bar(list(votes), list(votes.values()), color=&quot;#6ee7d8&quot;)
+    axes[0].set(
+        xlabel=&quot;Recommended cluster count&quot;,
+        ylabel=&quot;Number of criteria&quot;,
+        title=&quot;Four tied pluralities, not a unique majority&quot;,
+    )
+    index = result[&quot;raw_indices&quot;][&quot;Dindex&quot;]
+    axes[1].plot(index.index, index, &quot;o-&quot;, color=&quot;#fb7185&quot;)
+    axes[1].set(
+        xlabel=&quot;Candidate clusters&quot;,
+        ylabel=&quot;Dindex&quot;,
+        title=&quot;Literal NbClust Dindex curve&quot;,
+    )
+    axes[2].plot(
+        index.index[1:-1],
+        np.diff(index.to_numpy(), n=2),
+        &quot;o-&quot;,
+        color=&quot;#c4b5fd&quot;,
+    )
+    axes[2].set(
+        xlabel=&quot;Candidate clusters&quot;,
+        ylabel=&quot;Second difference&quot;,
+        title=&quot;Dindex second differences&quot;,
+    )
+    figure.savefig(ROOT / &quot;assets/ch05-nbclust.svg&quot;, metadata={&quot;Date&quot;: None})
+    plt.close(figure)
+
+
+def plot_examples(manual, nutrient, utilities, scaled, links, diana_results):
+    &quot;&quot;&quot;Convert source trees, cuts, projection, heatmap and banner.&quot;&quot;&quot;
+    import matplotlib
+
+    matplotlib.use(&quot;Agg&quot;)
+    import matplotlib.pyplot as plt
+    from matplotlib.patches import Rectangle
+    from scipy.spatial import ConvexHull
+
+    plt.style.use(&quot;dark_background&quot;)
+    figure, axes = plt.subplots(
+        1, 2, figsize=(10, 3.5), constrained_layout=True
+    )
+    for axis, method in zip(axes, [&quot;single&quot;, &quot;complete&quot;]):
+        dendrogram(
+            linkage(squareform(manual), method=method),
+            labels=[&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;],
+            ax=axis,
+            above_threshold_color=&quot;#cbd5e1&quot;,
+        )
+        axis.set(title=f&quot;Source five objects: {method}&quot;, ylabel=&quot;Merge height&quot;)
+    figure.savefig(ROOT / &quot;assets/ch05-manual.svg&quot;, metadata={&quot;Date&quot;: None})
+    plt.close(figure)
+    figure, axes = plt.subplots(
+        1, 3, figsize=(15, 4.2), constrained_layout=True
+    )
+    for axis, name, table, tree in [
+        (axes[0], &quot;Nutrient: scaled average&quot;, nutrient, links[&quot;nutrient&quot;]),
+        (axes[1], &quot;Utilities: Sales/Fuel single&quot;, utilities, links[&quot;single&quot;]),
+        (
+            axes[2],
+            &quot;Utilities: Sales/Fuel average&quot;,
+            utilities,
+            links[&quot;average&quot;],
+        ),
+    ]:
+        displayed = dendrogram(
+            tree,
+            labels=list(table.index),
+            leaf_rotation=90,
+            leaf_font_size=5,
+            ax=axis,
+            above_threshold_color=&quot;#cbd5e1&quot;,
+        )
+        count = 5 if name.startswith(&quot;Nutrient&quot;) or &quot;average&quot; in name else 3
+        labels = cut(tree, count)
+        positions = {
+            index: 5 + 10 * j for j, index in enumerate(displayed[&quot;leaves&quot;])
+        }
+        low, high = tree[-count, 2], tree[-count + 1, 2]
+        height = (low + high) / 2
+        for group in range(1, count + 1):
+            locations = [positions[i] for i in np.flatnonzero(labels == group)]
+            axis.add_patch(
+                Rectangle(
+                    (min(locations) - 4, 0),
+                    max(locations) - min(locations) + 8,
+                    height,
+                    fill=False,
+                    edgecolor=&quot;#fb7185&quot;,
+                    linewidth=0.7,
+                )
+            )
+        axis.set(title=name, ylabel=&quot;Merge height&quot;)
+    figure.savefig(
+        ROOT / &quot;assets/ch05-agglomerative.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+    figure, axes = plt.subplots(1, 2, figsize=(13, 6), constrained_layout=True)
+    _, singular, right = np.linalg.svd(scaled, full_matrices=False)
+    projected = scaled @ right[:2].T
+    labels = cut(links[&quot;average&quot;], 4)
+    axes[0].scatter(*projected.T, c=labels, cmap=&quot;Set2&quot;, s=30)
+    palette = plt.get_cmap(&quot;Set2&quot;)
+    for group in range(1, 5):
+        members = projected[labels == group]
+        if len(members) &gt;= 3:
+            hull = ConvexHull(members)
+            axes[0].fill(
+                *members[hull.vertices].T,
+                alpha=0.15,
+                color=palette((group - 1) / 3),
+            )
+    for i, name in enumerate(utilities.index):
+        offset = {
+            &quot;Commonwealth&quot;: (3, -11),
+            &quot;Kentucky&quot;: (-38, 5),
+            &quot;Central&quot;: (-35, 4),
+        }.get(name, (3, 3))
+        axes[0].annotate(
+            name,
+            projected[i],
+            xytext=offset,
+            textcoords=&quot;offset points&quot;,
+            fontsize=6,
+        )
+    fractions = singular**2 / np.sum(singular**2)
+    axes[0].set(
+        xlabel=f&quot;PC1: {100 * fractions[0]:.2f}% all8 variance&quot;,
+        ylabel=f&quot;PC2: {100 * fractions[1]:.2f}% all8 variance&quot;,
+        title=&quot;Labels from two features, display from all eight&quot;,
+    )
+    heatmap_tree = linkage(pdist(scaled), method=&quot;complete&quot;)
+    row_order = dendrogram(heatmap_tree, no_plot=True)[&quot;leaves&quot;]
+    row_centered = scaled - scaled.mean(axis=1, keepdims=True)
+    colors = row_centered / scaled.std(axis=1, ddof=1, keepdims=True)
+    axes[1].imshow(colors[row_order], aspect=&quot;auto&quot;, cmap=&quot;gray_r&quot;)
+    axes[1].set_xticks(
+        np.arange(len(utilities.columns)),
+        utilities.columns,
+        rotation=65,
+        ha=&quot;right&quot;,
+        fontsize=6,
+    )
+    labels6 = cut(links[&quot;average&quot;], 6)
+    heat_labels = [f&quot;{labels6[i]}: {utilities.index[i]}&quot; for i in row_order]
+    axes[1].set_yticks(np.arange(len(row_order)), heat_labels, fontsize=6)
+    axes[1].set_title(&quot;Source heatmap: row-scaled color, complete row tree&quot;)
+    figure.savefig(
+        ROOT / &quot;assets/ch05-utilities-display.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    figure.savefig(
+        ROOT / &quot;validation/chapters/ch05-utilities-figure.png&quot;, dpi=130
+    )
+    plt.close(figure)
+    figure = plt.figure(figsize=(11, 7), constrained_layout=True)
+    grid = figure.add_gridspec(1, 3, width_ratios=[1.5, 6, 0.25])
+    tree_axis = figure.add_subplot(grid[0])
+    dendrogram(
+        heatmap_tree,
+        orientation=&quot;left&quot;,
+        no_labels=True,
+        ax=tree_axis,
+        above_threshold_color=&quot;#cbd5e1&quot;,
+    )
+    tree_axis.set(xlabel=&quot;Complete-link height&quot;, yticks=[])
+    image_axis = figure.add_subplot(grid[1])
+    image = image_axis.imshow(
+        colors[row_order],
+        origin=&quot;lower&quot;,
+        aspect=&quot;auto&quot;,
+        extent=(-0.5, len(utilities.columns) - 0.5, 0, 10 * len(utilities)),
+        cmap=&quot;gray_r&quot;,
+    )
+    image_axis.set_xticks(
+        np.arange(len(utilities.columns)),
+        utilities.columns,
+        rotation=60,
+        ha=&quot;right&quot;,
+        fontsize=7,
+    )
+    image_axis.set_yticks(
+        np.arange(len(row_order)) * 10 + 5, heat_labels, fontsize=7
+    )
+    image_axis.yaxis.tick_right()
+    color_axis = figure.add_subplot(grid[2])
+    figure.colorbar(
+        image, cax=color_axis, label=&quot;Within-row standardized value&quot;
+    )
+    figure.savefig(
+        ROOT / &quot;assets/ch05-utilities-heatmap.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+    figure, axes = plt.subplots(2, 2, figsize=(14, 8), constrained_layout=True)
+    for axis, (name, table, tree, coefficient) in zip(
+        axes.ravel(), diana_results
+    ):
+        count = 4 if name == &quot;USArrests&quot; else 2
+        threshold = (tree[-count, 2] + tree[-count + 1, 2]) / 2
+        dendrogram(
+            tree,
+            labels=list(table.index),
+            leaf_rotation=90,
+            leaf_font_size=4,
+            ax=axis,
+            color_threshold=threshold,
+            above_threshold_color=&quot;#cbd5e1&quot;,
+        )
+        axis.set(
+            title=f&quot;{name}; divisive coefficient={coefficient:.4f}&quot;,
+            ylabel=&quot;Cluster diameter at division&quot;,
+        )
+    figure.savefig(ROOT / &quot;assets/ch05-diana.svg&quot;, metadata={&quot;Date&quot;: None})
+    plt.close(figure)
+    votes_tree = diana_results[1][2]
+    leaf_order = dendrogram(votes_tree, no_plot=True)[&quot;leaves&quot;]
+    cophenetic = squareform(cophenet(votes_tree))
+    heights = [
+        cophenetic[a, b] for a, b in zip(leaf_order[:-1], leaf_order[1:])
+    ]
+    figure, axis = plt.subplots(figsize=(8, 7), constrained_layout=True)
+    axis.barh(np.arange(len(heights)), heights, color=&quot;#fb7185&quot;)
+    axis.invert_xaxis()
+    axis.set(
+        xlabel=&quot;Neighbor-leaf split height&quot;,
+        ylabel=&quot;Leaf boundary in tree order&quot;,
+        title=&quot;Votes DIANA banner: topology-equivalent leaf ordering&quot;,
+    )
+    figure.savefig(
+        ROOT / &quot;assets/ch05-votes-banner.svg&quot;, metadata={&quot;Date&quot;: None}
+    )
+    plt.close(figure)
+
+
+def main():
+    np.set_printoptions(precision=6, suppress=True)
+    manual = np.array(
+        [
+            [0, 9, 3, 6, 11],
+            [9, 0, 7, 5, 10],
+            [3, 7, 0, 9, 2],
+            [6, 5, 9, 0, 8],
+            [11, 10, 2, 8, 0],
+        ],
+        dtype=float,
+    )
+    for method in [&quot;single&quot;, &quot;complete&quot;]:
+        tree = linkage(squareform(manual), method=method)
+        print(&quot;Source five-object&quot;, method, &quot;merge heights:&quot;, tree[:, 2])
+        print(&quot;Source five-object&quot;, method, &quot;cut2:&quot;, cut(tree, 2))
+    source_divisive = np.array(
+        [
+            [0, 12, 9, 32, 31],
+            [12, 0, 9, 25, 27],
+            [9, 9, 0, 23, 24],
+            [32, 25, 23, 0, 9],
+            [31, 27, 24, 9, 0],
+        ],
+        dtype=float,
+    )
+    tree, _ = diana(source_divisive)
+    print(&quot;Source ABCDE divisive cut2:&quot;, cut(tree, 2))
+    assert np.array_equal(cut(tree, 2), [1, 1, 1, 2, 2])
+    nutrient = pd.read_csv(DATA / &quot;ch05-nutrient.csv&quot;, index_col=0)
+    nutrient.index = nutrient.index.str.lower()
+    standardized_nutrient = standardize(nutrient)
+    print(&quot;Nutrient raw distances first4:&quot;)
+    print(squareform(pdist(nutrient))[:4, :4])
+    print(&quot;Nutrient scaled distances first4:&quot;)
+    print(squareform(pdist(standardized_nutrient))[:4, :4])
+    nutrient_tree = linkage(standardized_nutrient, method=&quot;average&quot;)
+    nutrient_labels = cut(nutrient_tree, 5)
+    print(&quot;Nutrient cut5 sizes:&quot;, np.bincount(nutrient_labels)[1:])
+    print(&quot;Nutrient raw within-cluster medians:&quot;)
+    print(nutrient.groupby(nutrient_labels).median().to_string())
+    nutrient.assign(cluster=nutrient_labels).to_csv(
+        DATA / &quot;ch05-nutrient-cut5.csv&quot;
+    )
+    print(&quot;Nutrient standardized within-cluster medians:&quot;)
+    print(
+        pd.DataFrame(standardized_nutrient, columns=nutrient.columns)
+        .groupby(nutrient_labels)
+        .median()
+        .to_string()
+    )
+    multi_index = nbclust_average(
+        nutrient.to_numpy(), min_nc=2, max_nc=15, standardize=True
+    )
+    print(&quot;Nutrient literal26-index recommendations:&quot;, multi_index[&quot;votes&quot;])
+    print(&quot;Tied largest vote counts:&quot;, multi_index[&quot;tied_pluralities&quot;])
+    print(&quot;NbClust convention-selected k:&quot;, multi_index[&quot;selected_k&quot;])
+    plot_nbclust(multi_index)
+    utilities = pd.read_csv(DATA / &quot;ch05-Utilities.csv&quot;, index_col=0)
+    scaled = standardize(utilities)
+    _, singular, _ = np.linalg.svd(scaled, full_matrices=False)
+    print(
+        &quot;Utilities all8-variable PCA display fractions:&quot;,
+        singular[:2] ** 2 / np.sum(singular**2),
+    )
+    selected = scaled[:, [5, 7]]
+    links = {
+        method: linkage(selected, method=method)
+        for method in [&quot;single&quot;, &quot;average&quot;, &quot;ward&quot;]
+    }
+    links[&quot;nutrient&quot;] = nutrient_tree
+    for method in [&quot;single&quot;, &quot;average&quot;]:
+        for count in [3, 5, 6]:
+            labels = cut(links[method], count)
+            print(
+                &quot;Utilities&quot;,
+                method,
+                f&quot;cut{count} sizes:&quot;,
+                np.bincount(labels)[1:],
+            )
+    labels = cut(links[&quot;average&quot;], 4)
+    print(&quot;Utilities average cut4 membership:&quot;)
+    print(pd.Series(labels, index=utilities.index).to_string())
+    utilities.assign(cluster=labels).to_csv(DATA / &quot;ch05-utilities-cut4.csv&quot;)
+    # Original Ward check: geometry on the actual selected two-feature input.
+    a, b = selected[:3], selected[3:5]
+    union = np.vstack([a, b])
+
+    def sse(x):
+        return np.sum((x - x.mean(axis=0)) ** 2)
+
+    increment = sse(union) - sse(a) - sse(b)
+    formula = (
+        len(a) * len(b) / len(union) * np.sum((a.mean(0) - b.mean(0)) ** 2)
+    )
+    assert np.allclose(increment, formula)
+    print(f&quot;Authored Ward SSE increment/direct formula: {increment:.8f}&quot;)
+    diana_results = []
+    for name, filename, metric, stand in [
+        (&quot;USArrests&quot;, &quot;USArrests&quot;, &quot;euclidean&quot;, True),
+        (&quot;Votes Manhattan&quot;, &quot;votes-repub&quot;, &quot;manhattan&quot;, True),
+        (&quot;Votes Euclidean&quot;, &quot;votes-repub&quot;, &quot;euclidean&quot;, True),
+        (&quot;Agriculture&quot;, &quot;agriculture&quot;, &quot;euclidean&quot;, False),
+    ]:
+        table = pd.read_csv(DATA / f&quot;ch05-{filename}.csv&quot;, index_col=0)
+        tree, coefficient, _ = diana_from_data(table, metric, stand)
+        print(
+            name,
+            f&quot;DC={coefficient:.8f}&quot;,
+            &quot;cut2 sizes:&quot;,
+            np.bincount(cut(tree, 2))[1:],
+        )
+        diana_results.append((name, table, tree, coefficient))
+    votes_manhattan = cut(diana_results[1][2], 2)
+    votes_euclidean = cut(diana_results[2][2], 2)
+    assert np.array_equal(votes_manhattan, votes_euclidean)
+    print(&quot;Votes Manhattan/Euclidean cut2 assignments identical:&quot;, True)
+    print(&quot;Votes first cut2 group:&quot;)
+    print(diana_results[1][1].index[votes_manhattan == 1].tolist())
+    plot_examples(manual, nutrient, utilities, scaled, links, diana_results)
+    print(
+        &quot;Source bisecting-kmeans examples: run ch05_clusterlearn.py.&quot;
+    )
+    print(
+        &quot;NbClust26-index source wrapper converted and independently R-checked.&quot;
+    )
+    print(
+        &quot;Checks passed: source merges, Ward identity, hierarchies.&quot;
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Source five-object single merge heights: [2. 3. 5. 6.]
+Source five-object single cut2: [1 2 1 2 1]
+Source five-object complete merge heights: [ 2.  5.  9. 11.]
+Source five-object complete cut2: [1 1 2 1 2]
+Source ABCDE divisive cut2: [1 1 1 2 2]
+Nutrient raw distances first4:
+[[  0.        95.640002  80.934294  35.24202 ]
+ [ 95.640002   0.       176.492181 130.877844]
+ [ 80.934294 176.492181   0.        45.764178]
+ [ 35.24202  130.877844  45.764178   0.      ]]
+Nutrient scaled distances first4:
+[[0.       1.376933 1.769715 0.548794]
+ [1.376933 0.       3.005141 1.910869]
+ [1.769715 3.005141 0.       1.280126]
+ [0.548794 1.910869 1.280126 0.      ]]
+Nutrient cut5 sizes: [ 7 16  1  2  1]
+Nutrient raw within-cluster medians:
+   energy  protein   fat  calcium  iron
+1   340.0     19.0  29.0      9.0  2.50
+2   170.0     20.0   8.0     13.0  1.45
+3   160.0     26.0   5.0     14.0  5.90
+4    57.5      9.0   1.0     78.0  5.70
+5   180.0     22.0   9.0    367.0  2.50
+Nutrient standardized within-cluster medians:
+     energy   protein       fat   calcium      iron
+1  1.310102  0.000000  1.378562 -0.448046  0.081105
+2 -0.369610  0.235200 -0.486938 -0.396787 -0.637431
+3 -0.468417  1.646402 -0.753438 -0.383972  2.407792
+4 -1.481184 -2.352002 -1.108772  0.436181  2.270928
+5 -0.270803  0.705601 -0.398105  4.139683  0.081105
+Nutrient literal26-index recommendations: {2: 4, 3: 4, 4: 2, 5: 4, 9: 1, 10: 1, 13: 2, 14: 1, 15: 4}
+Tied largest vote counts: [2, 3, 5, 15]
+NbClust convention-selected k: 2
+Utilities all8-variable PCA display fractions: [0.271618 0.237533]
+Utilities single cut3 sizes: [11  7  4]
+Utilities single cut5 sizes: [11  6  1  2  2]
+Utilities single cut6 sizes: [11  3  1  2  2  3]
+Utilities average cut3 sizes: [11  7  4]
+Utilities average cut5 sizes: [7 7 4 2 2]
+Utilities average cut6 sizes: [7 3 4 4 2 2]
+Utilities average cut4 membership:
+Company
+Arizona         1
+Boston          2
+Central         3
+Commonwealth    1
+NY              2
+Florida         3
+Hawaiian        2
+Idaho           4
+Kentucky        1
+Madison         1
+Nevada          4
+New England     2
+Northern        1
+Oklahoma        1
+Pacific         2
+Puget           4
+San Diego       2
+Southern        3
+Texas           4
+Wisconsin       1
+United          2
+Virginia        3
+Authored Ward SSE increment/direct formula: 1.14802472
+USArrests DC=0.85304811 cut2 sizes: [20 30]
+Votes Manhattan DC=0.88691817 cut2 sizes: [ 8 42]
+Votes Euclidean DC=0.86163004 cut2 sizes: [ 8 42]
+Agriculture DC=0.87110617 cut2 sizes: [8 4]
+Votes Manhattan/Euclidean cut2 assignments identical: True
+Votes first cut2 group:
+[&#x27;Alabama&#x27;, &#x27;Arkansas&#x27;, &#x27;Florida&#x27;, &#x27;Georgia&#x27;, &#x27;Louisiana&#x27;, &#x27;Mississippi&#x27;, &#x27;South Carolina&#x27;, &#x27;Texas&#x27;]
+Source bisecting-kmeans examples: run ch05_clusterlearn.py.
+NbClust26-index source wrapper converted and independently R-checked.
+Checks passed: source merges, Ward identity, hierarchies.
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-04.html">← Previous chapter</a><a href="chapter-06.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

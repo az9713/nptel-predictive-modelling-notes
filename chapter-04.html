@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Independent study notes for NPTEL Predictive Modelling with Applications, with Python laboratories and worked solutions.">
+<title>Clustering and hierarchical linkage — Predictive Modelling</title>
+<link rel="stylesheet" href="assets/book.css">
+<script defer src="assets/math-config.js"></script>
+<script defer src="assets/mathjax-tex-svg.js"></script>
+<script defer src="assets/search-index.js"></script>
+<script defer src="assets/book.js"></script></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="toolbar"><a class="brand" href="index.html">PREDICTIVE MODELLING</a>
+<div class="controls"><button type="button" data-action="theme">Theme</button>
+<button type="button" data-action="smaller" aria-label="Smaller text">A−</button>
+<button type="button" data-action="larger" aria-label="Larger text">A+</button>
+<button type="button" data-action="print">Print / PDF</button></div></header>
+<div class="layout"><aside class="sidebar"><details open><summary>Course contents</summary>
+<ol><li><a href="chapter-01.html">1. Data, prediction, and correlation</a></li><li><a href="chapter-02.html">2. Principal components: variance, geometry, and reconstruction</a></li><li><a href="chapter-03.html">3. Factor analysis and the limits of latent explanations</a></li><li><a aria-current="page" href="chapter-04.html">4. Clustering and hierarchical linkage</a></li><li><a href="chapter-05.html">5. Ward clustering, dendrograms, and reproducible implementations</a></li><li><a href="chapter-06.html">6. K-means as alternating optimization</a></li><li><a href="chapter-07.html">7. Simple linear regression: fitting and uncertainty</a></li><li><a href="chapter-08.html">8. Multiple regression and projection geometry</a></li><li><a href="chapter-09.html">9. Outliers, leverage, and influence</a></li><li><a href="chapter-10.html">10. Categorical predictors and interpretable contrasts</a></li><li><a href="chapter-11.html">11. Nonlinear features and interaction effects</a></li><li><a href="chapter-12.html">12. Autocorrelated errors and dependent observations</a></li><li><a href="chapter-13.html">13. Normality checks and the assumptions behind inference</a></li><li><a href="chapter-14.html">14. Multicollinearity, identifiability, and conditioning</a></li><li><a href="chapter-15.html">15. Heteroscedasticity and variance-aware regression</a></li><li><a href="chapter-16.html">16. Model selection, evaluation, and an end-to-end case study</a></li><li><a href="chapter-17.html">17. Odds ratios and logistic regression</a></li><li><a href="chapter-18.html">18. Regression discontinuity and local causal identification</a></li></ol><nav class="utility" aria-label="Companion pages">
+<a href="index.html">Course home and search</a><a href="study-guide.html">Study guide</a>
+<a href="source-map.html">Recordings and timestamps</a><a href="python-conversions.html">R-to-Python conversions</a>
+<a href="laboratory.html">Python laboratory</a><a href="notation.html">Notation</a>
+<a href="about.html">Sources and verification</a></nav></details></aside>
+<main id="main"><p class="eyebrow">IIT Hyderabad · NPTEL · Independent study edition</p>
+<h1>Clustering and hierarchical linkage</h1><nav class="toc" aria-label="Chapter sections"><ul><li><a href="#ch04-task-heading">4.1 Similar observations depend on a chosen comparison</a></li><li><a href="#ch04-norms-heading">4.2 Numerical distances and the effect of units</a></li><li><a href="#ch04-special-heading">4.3 Covariance geometry, profiles, and mixed features</a></li><li><a href="#ch04-linkage-heading">4.4 A point distance does not determine a cluster distance</a></li><li><a href="#ch04-exercises-heading">4.5 Exercises with worked solutions</a></li></ul></nav><p class="meta">Chapter 4 · <a href="https://www.youtube.com/watch?v=AZ6KZikxguU">Recording 1</a> · <a href="https://www.youtube.com/watch?v=G83gaUNketk">Recording 2</a></p><p class="meta">Two current-content independent reviews accepted</p><section id="ch04-task">
+<h2 id="ch04-task-heading">4.1 Similar observations depend on a chosen comparison</h2>
+<p>A collection of customer profiles may contain observations that can be served by a common strategy. A clustering procedure attempts to express those similarities through groups. Its output depends on what is measured, which differences matter, and how a group is defined. An algorithm can divide an undifferentiated cloud into groups when asked; the existence of a returned partition is not proof that the population contains distinct natural classes.</p>
+<p>Let $\mathbf{x}_1,\ldots,\mathbf{x}_n$ be $n$ observations with $d$ feature coordinates. A <dfn>partition into $k$ clusters</dfn> is a collection $C_1,\ldots,C_k$ of nonempty sets of observation indices whose union is $\{1,\ldots,n\}$ and whose pairwise intersections are empty. Every observation belongs to exactly one cluster in this hard-partition setting. A label such as cluster one is an arbitrary identifier. Two programs can return identical partitions while numbering them differently.</p>
+<p>PCA and factor analysis study relationships among feature coordinates; clustering usually groups observation rows. Reducing a table to representative cluster summaries may compress its description, but assigning labels does not by itself reduce the number of feature dimensions. Nor does clustering guarantee lower total computational cost. In particular, constructing all pairwise dissimilarities already requires a quadratic number of stored values in the number of observations.</p>
+<p>A <dfn>dissimilarity</dfn> $\delta(i,j)$ is a numerical comparison in which a smaller value means the two observations are more alike for the chosen task. It should at least have a stated interpretation. A <dfn>metric</dfn> is a more restrictive function on feature vectors: it is nonnegative, symmetric, zero exactly for identical vectors, and satisfies the triangle inequality $\delta(\mathbf{x},\mathbf{z})\leq\delta(\mathbf{x},\mathbf{y})+\delta(\mathbf{y},\mathbf{z})$. Distinct observations can nevertheless have zero metric distance if their recorded feature vectors are identical.</p>
+<p>The triangle inequality is a property of a comparison, not a claim that every real route is a straight line in a geographical drawing. Some clustering procedures can operate on dissimilarities that are not metrics. That flexibility does not entitle us to use metric geometry to interpret their results. A definition such as one minus an absolute correlation needs its own audit rather than acquiring metric properties by being called a distance.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=AZ6KZikxguU&amp;t=554">row grouping versus feature reduction, 9:14</a> and <a href="https://www.youtube.com/watch?v=AZ6KZikxguU&amp;t=1487">metric properties, 24:47</a>. Specific commercial and historical anecdotes are not required for the mathematical claims and are not asserted as verified deployment descriptions.</p>
+</section>
+<section id="ch04-norms">
+<h2 id="ch04-norms-heading">4.2 Numerical distances and the effect of units</h2>
+<p>For real vectors $\mathbf{x},\mathbf{y}\in\mathbb{R}^d$, the <dfn>Manhattan distance</dfn> is $\delta_1(\mathbf{x},\mathbf{y})=\sum_{j=1}^d|x_j-y_j|$, while the <dfn>Euclidean distance</dfn> is $\delta_2(\mathbf{x},\mathbf{y})=[\sum_{j=1}^d(x_j-y_j)^2]^{1/2}$. Both are metrics on numerical feature vectors. Manhattan geometry adds coordinatewise travel, whereas Euclidean geometry combines orthogonal coordinate differences through a squared norm. They are not interchangeable simply because both preserve a notion of proximity.</p>
+<div class="prop"><strong>Proposition 4.1 — two metric triangle inequalities.</strong> For finite-dimensional real vectors, both $\delta_1$ and $\delta_2$ satisfy the triangle inequality.</div>
+<div class="proof"><p>Write $\mathbf{x}-\mathbf{z}=(\mathbf{x}-\mathbf{y})+(\mathbf{y}-\mathbf{z})=\mathbf{a}+\mathbf{b}$. The scalar absolute-value inequality gives $\sum_j|a_j+b_j|\leq\sum_j|a_j|+\sum_j|b_j|$, proving the Manhattan case. For the Euclidean case, expand $\|\mathbf{a}+\mathbf{b}\|^2=\|\mathbf{a}\|^2+2\mathbf{a}^{\mathsf T}\mathbf{b}+\|\mathbf{b}\|^2$. Cauchy–Schwarz bounds the middle term by $2\|\mathbf{a}\|\|\mathbf{b}\|$, giving the square of $\|\mathbf{a}\|+\|\mathbf{b}\|$. Taking nonnegative square roots proves the result. <span class="qed">∎</span></p></div>
+<p>The <dfn>Minkowski distance</dfn> of order $r\geq1$ is $\delta_r(\mathbf{x},\mathbf{y})=[\sum_j|x_j-y_j|^r]^{1/r}$. Orders one and two give the two distances above. The condition $r\geq1$ matters. At $r=1/2$, the expression between $(0,0)$ and $(1,1)$ is four, while the route through $(1,0)$ has total two. Thus the triangle inequality fails. The laboratory executes this counterexample; a formula that resembles a norm is not automatically a metric for every exponent.</p>
+<p>More generally, for $r&gt;1$, Hölder's inequality with conjugate exponent $r/(r-1)$ gives $\sum_j|a_j+b_j|^r\leq(\|\mathbf{a}\|_r+\|\mathbf{b}\|_r)\|\mathbf{a}+\mathbf{b}\|_r^{r-1}$. Dividing by the last factor when it is positive gives Minkowski's triangle inequality; if it is zero, the inequality is immediate. This explicitly identifies the inequality used to extend the two elementary proofs.</p>
+<p>Changing a feature's units changes these distances. If numerical feature $j$ is multiplied by $c_j$, its contribution to squared Euclidean distance is multiplied by $c_j^2$. Standardizing by a positive sample standard deviation $s_j$ therefore chooses coordinate weight $1/s_j^2$. That is a substantive decision that gives a unit sample-standard-deviation difference the same distance contribution across features. It can be useful when original units are incomparable, but it can also increase the influence of a noisy small-variance measurement.</p>
+<p>Centering alone does not alter pairwise differences. A numerical scale change does. On the other hand, standardization fitted on a training population may produce different distances if recomputed on a different population. A reusable clustering model should retain its preprocessing parameters and describe how new observations are assigned. An agglomerative tree of a fixed dataset does not itself supply a unique out-of-sample assignment rule.</p>
+<p class="source-note">Source definitions: <a href="https://www.youtube.com/watch?v=AZ6KZikxguU&amp;t=1626">Manhattan distance, 27:06</a> and <a href="https://www.youtube.com/watch?v=AZ6KZikxguU&amp;t=1799">Euclidean and Minkowski distances, 29:59</a>. All numerical comparisons in this chapter are reproduced by <a href="labs/ch04.py">the laboratory</a>.</p>
+</section>
+<section id="ch04-special">
+<h2 id="ch04-special-heading">4.3 Covariance geometry, profiles, and mixed features</h2>
+<p>A covariance-aware comparison can account for correlated coordinate variation. Given a symmetric positive-definite matrix $\mathbf{S}$, the <dfn>Mahalanobis distance</dfn> is $\delta_M(\mathbf{x},\mathbf{y})=[(\mathbf{x}-\mathbf{y})^{\mathsf T}\mathbf{S}^{-1}(\mathbf{x}-\mathbf{y})]^{1/2}$. Let $\mathbf{S}=\mathbf{V}\operatorname{diag}(\lambda_j)\mathbf{V}^{\mathsf T}$ with every $\lambda_j&gt;0$, and define $\mathbf{W}=\mathbf{V}\operatorname{diag}(\lambda_j^{-1/2})\mathbf{V}^{\mathsf T}$. Then $\delta_M=\|\mathbf{W}(\mathbf{x}-\mathbf{y})\|$. It is Euclidean distance after an invertible <dfn>whitening</dfn> transformation, and therefore is a metric.</p>
+<p>Large-variance covariance directions receive smaller weights, and small-variance directions receive larger ones. The laboratory independently computes the quadratic form and the whitened-vector norm, obtaining $2.563480$ for its specified example. If $\mathbf{S}$ is singular, the inverse in this definition does not exist. Replacing it by a pseudoinverse is a different convention and can assign zero distance to nonzero differences in the nullspace. Estimated covariance also introduces sensitivity to limited samples and outliers.</p>
+<p>For profiles whose shape across coordinates matters more than their levels, one can compare centered unit-length profile vectors by their correlation. The choice $1-|\rho|$ treats opposite patterns as identical, assigning zero dissimilarity to a profile and its negative. The choice $1-\rho$ preserves that sign distinction but need not satisfy the triangle inequality. The laboratory constructs three centered unit profiles for which the direct value is one and the sum through the third profile is $0.585786$. By contrast, $\sqrt{2(1-\rho)}$ is the Euclidean distance between these normalized profiles. Its interpretation still concerns standardized shape, not original levels.</p>
+<p>For binary presence information, let $A$ and $B$ be the sets of features present in two observations. Their <dfn>Jaccard dissimilarity</dfn> is $1-|A\cap B|/|A\cup B|$ when the union is nonempty. Joint absences do not contribute to the numerator or denominator. A convention must be specified for two empty sets; setting their distance to zero is a common implementation choice. Applying this definition to arbitrary integer category codes without a presence-set interpretation would change its meaning.</p>
+<p>A simple complete-data <dfn>Gower dissimilarity</dfn> combines numerical and nominal variables. For numerical feature $j$, divide $|x_j-y_j|$ by a declared positive range $R_j$. For a nominal feature, use zero for equal categories and one for different categories. Average the contributions using declared nonnegative feature weights. The laboratory's numerical contribution is one half and nominal contribution is one, so equal weighting gives $0.75$. This implementation deliberately states its complete-data and nonzero-range assumptions. Extensions for missing values, ordered categories, and asymmetric binary features must specify their conventions separately.</p>
+<p>Every comparison discards something: Euclidean distance depends on units, profile correlation discards levels, Jaccard ignores joint absences, and range-normalized mixed comparisons depend on how ranges and weights are chosen. These are properties to match to a task. An automatic scalar distance cannot decide which differences are scientifically meaningful.</p>
+<p class="source-note">Source discussion: <a href="https://www.youtube.com/watch?v=G83gaUNketk&amp;t=374">Mahalanobis distance, 6:14</a> and <a href="https://www.youtube.com/watch?v=G83gaUNketk&amp;t=432">categorical and mixed-data distances, 7:12</a>. The profile counterexample and whitening verification are authored checks.</p>
+</section>
+<section id="ch04-linkage">
+<h2 id="ch04-linkage-heading">4.4 A point distance does not determine a cluster distance</h2>
+<p>Once a cluster contains more than one observation, comparing two clusters needs another definition. For two nonempty disjoint index sets $A$ and $B$, <dfn>single linkage</dfn> is $\delta_{\mathrm{single}}(A,B)=\min_{i\in A,j\in B}\delta(i,j)$. <dfn>Complete linkage</dfn> is the corresponding maximum, and <dfn>average linkage</dfn> is $\delta_{\mathrm{average}}(A,B)=(|A||B|)^{-1}\sum_{i\in A,j\in B}\delta(i,j)$. Here $|A|$ denotes the number of observations in the cluster.</p>
+<p>These definitions answer different questions. Single linkage asks whether at least one close cross-cluster pair connects the groups. Complete linkage asks how far apart their most separated cross-cluster members are. Average linkage considers every cross-cluster pair. For $A=\{(0,0),(0,2)\}$ and $B=\{(3,0),(3,2)\}$, the laboratory obtains single linkage $3$, complete linkage $3.605551$, and average linkage $3.302776$. The centroids are $(0,1)$ and $(3,1)$, whose distance is $3$. Centroid distance is therefore another rule, not a synonym for average pairwise distance.</p>
+<p><dfn>Agglomerative hierarchical clustering</dfn> starts with $n$ singleton clusters. At each step it merges a pair having the smallest current linkage dissimilarity, updates comparisons with the new cluster, and continues. Each step reduces the number of clusters by one, so a complete hierarchy has $n-1$ merges. Its partitions are nested: a cluster once formed is never split later. A <dfn>divisive</dfn> hierarchy starts with all observations together and splits groups, using a separately specified splitting rule.</p>
+<p>The linkage updates follow directly from their definitions. For single linkage, the distance from $A\cup B$ to a third cluster $C$ is the smaller of the previous distances from $A$ and $B$ to $C$. Complete linkage takes the larger. For average linkage, counting all cross-pairs gives</p>
+$$\delta_{\mathrm{average}}(A\cup B,C)=\frac{|A|\delta_{\mathrm{average}}(A,C)+|B|\delta_{\mathrm{average}}(B,C)}{|A|+|B|}. \tag{4.1}$$
+<p>The factors of $|C|$ cancel because they occur in both numerator and denominator. Replacing the two weights by one half would instead weight previously formed clusters equally regardless of their sizes. That is a distinct clustering rule. Explicit recurrence formulas make these otherwise easy-to-miss software conventions visible.</p>
+<p>Single linkage has a useful threshold interpretation. Join pairs of observations whose dissimilarity is at most a threshold. Its connected components are the single-linkage groups at that threshold, with the chosen tie convention. A chain of short links can therefore join observations whose endpoints are far apart. This explains its sensitivity to bridges. Complete linkage constrains a newly formed cluster's largest internal pairwise dissimilarity through the merge height. Average linkage lies between the minimum and maximum cross-pair values but supplies neither the single-link connectivity interpretation nor the same diameter bound.</p>
+<p>The greedy merge sequence is not a proof that a cut with $k$ groups globally optimizes every possible $k$-cluster objective. Ties can yield more than one valid hierarchy. Reversing left and right children in a plotted tree also changes its leaf order without changing any cluster. Reproducibility therefore requires comparisons of memberships and heights under stated tie rules, rather than a demand that every dendrogram drawing look identical.</p>
+<p class="source-note">Source definitions: <a href="https://www.youtube.com/watch?v=G83gaUNketk&amp;t=553">single, complete, and average linkage, 9:13</a>; <a href="https://www.youtube.com/watch?v=G83gaUNketk&amp;t=880">centroid distance, 14:40</a>; <a href="https://www.youtube.com/watch?v=G83gaUNketk&amp;t=1177">agglomerative and divisive hierarchies, 19:37</a>.</p>
+</section>
+<section id="ch04-exercises">
+<h2 id="ch04-exercises-heading">4.5 Exercises with worked solutions</h2>
+<ol class="exercises">
+<li><p><strong>What is reduced?</strong> A clustering program replaces each row by a group label. Explain how this differs from retaining principal-component scores, and why a returned set of five groups is not evidence for five natural populations.</p><details><summary>Worked solution</summary><p>The group label records membership in a partition of observations. PCA scores are numerical coordinates obtained by projecting feature vectors into a linear subspace. Neither object can be interpreted as the other without an additional construction. A clustering procedure can return five nonempty groups because five was requested, even for a homogeneous distribution. Population claims require a specified model or external evidence and sensitivity analysis, not simply a successful algorithm call.</p></details></li>
+<li><p><strong>Numerical units.</strong> Show that multiplying one numerical feature by $c$ multiplies its contribution to squared Euclidean distance by $c^2$. What does standardization choose as that feature's weight?</p><details><summary>Worked solution</summary><p>The coordinate difference becomes $c(x_j-y_j)$, whose square is $c^2(x_j-y_j)^2$. Dividing by sample standard deviation $s_j&gt;0$ chooses weight $1/s_j^2$. Centering changes neither difference. Equal standardized weights therefore encode a relative-variation convention, not an empirically established equality of feature importance. A zero-variance column cannot be standardized by this formula.</p></details></li>
+<li><p><strong>Cluster comparison.</strong> Reproduce the single, complete, average, and centroid comparisons for the two vertical point pairs in the text. Why can average linkage exceed centroid distance even though the clusters have equal sizes?</p><details><summary>Worked solution</summary><p>The four cross-distances are $3,\sqrt{13},\sqrt{13},3$. Their minimum is $3$, maximum $\sqrt{13}$, and average $(3+\sqrt{13})/2$, approximately $3.302776$. The centroid difference is $(3,0)$, so its norm is $3$. Averaging distances is not the same operation as taking the distance between averaged coordinates. The nonlinearity of the norm is responsible; equal sample counts do not make the operations commute.</p></details></li>
+<li><p><strong>Average-linkage update.</strong> Derive (4.1) by dividing the pairwise sum between $A\cup B$ and $C$ into two parts. Explain the defect in updating with an unweighted average when $|A|\ne|B|$.</p><details><summary>Worked solution</summary><p>The two sums contain $|A||C|$ and $|B||C|$ pairs. Replace each sum by its average times its pair count, then divide their sum by $(|A|+|B|)|C|$. The factor $|C|$ cancels and leaves size weights. Giving both previous averages weight one half overweights the smaller cluster's members relative to the larger cluster's members. That is a different linkage definition, even though it is also sometimes called an average in informal descriptions.</p></details></li>
+<li><p><strong>Audit a proposed metric.</strong> Use the laboratory's three centered unit profiles to test the triangle inequality for one minus correlation. Explain why one minus absolute correlation also fails metric separation on distinct signed profiles.</p><details><summary>Worked solution</summary><p>The first and third profiles are orthogonal; the middle profile lies midway in angle. One minus their direct correlation is one, while the two intermediate values sum to $0.585786$. The direct value exceeds that sum, violating the triangle inequality. A profile and its negative have absolute correlation one, so one minus absolute correlation is zero despite their different signed vectors. Both definitions can still be meaningful dissimilarities under particular goals; neither deserves all metric conclusions automatically.</p></details></li>
+<li><p><strong>Missing information and mixed scales.</strong> For the two-feature Gower example, use a numerical range of 40, values 10 and 30, and unequal nominal categories. Calculate the equal-weight dissimilarity. What additional rule is needed if one nominal value is missing?</p><details><summary>Worked solution</summary><p>The numerical contribution is $|30-10|/40=1/2$. The nominal contribution is one, so their mean is $3/4$. With a missing nominal value, the complete-data formula is inapplicable. A common extension excludes unavailable comparisons and renormalizes the weights over available features, which would give one half here. That convention must be stated because pair-specific availability can change the geometry; filling a missing category with an ordinary label would answer a different comparison.</p></details></li>
+</ol>
+<p>The laboratory verifies its direct linkage calculations against SciPy's implementation. These are original teaching constructions for the theory recordings; no R program is demonstrated in the two assigned caption tracks. The next chapter follows the source's manual hierarchy examples and converts its actual R demonstrations.</p>
+</section>
+<section id="python-laboratory"><h2>Python laboratory</h2>
+<p>Run <a href="labs/ch04.py"><code>labs/ch04.py</code></a> from the course folder.
+Data and figure paths, when used, are resolved by the program. Dependencies are listed in
+<a href="requirements.txt">requirements.txt</a>.</p>
+<details><summary>Complete runnable Python source</summary><pre><code class="language-python">&quot;&quot;&quot;Transparent distance and linkage calculations for the clustering theory.&quot;&quot;&quot;
+
+import numpy as np
+from scipy.cluster.hierarchy import linkage
+from scipy.spatial.distance import cdist, pdist, squareform
+
+
+def gower_pair(left, right, kinds, ranges, weights=None):
+    &quot;&quot;&quot;Complete-data Gower variant: numeric and nominal features.&quot;&quot;&quot;
+    if weights is None:
+        weights = np.ones(len(kinds))
+    contributions = []
+    for a, b, kind, span in zip(left, right, kinds, ranges):
+        if kind == &quot;numeric&quot;:
+            if span &lt;= 0:
+                raise ValueError(&quot;Numeric range must be strictly positive&quot;)
+            contributions.append(abs(float(a) - float(b)) / span)
+        elif kind == &quot;nominal&quot;:
+            contributions.append(float(a != b))
+        else:
+            raise ValueError(&quot;Unknown feature type&quot;)
+    return np.average(contributions, weights=weights)
+
+
+def agglomerate(points, method):
+    &quot;&quot;&quot;Small direct implementation of single/complete/size-weighted average.&quot;&quot;&quot;
+    distance = squareform(pdist(points))
+    clusters = {i: [i] for i in range(len(points))}
+    result = []
+    while len(clusters) &gt; 1:
+        candidates = []
+        identifiers = sorted(clusters)
+        for position, left in enumerate(identifiers):
+            for right in identifiers[position + 1:]:
+                cross = distance[np.ix_(clusters[left], clusters[right])]
+                criterion = {
+                    &quot;single&quot;: np.min,
+                    &quot;complete&quot;: np.max,
+                    &quot;average&quot;: np.mean,
+                }[method](cross)
+                candidates.append((criterion, left, right))
+        height, left, right = min(candidates)
+        members = clusters.pop(left) + clusters.pop(right)
+        result.append([left, right, height, len(members)])
+        clusters[len(points) + len(result) - 1] = members
+    return np.array(result)
+
+
+def main():
+    np.set_printoptions(precision=6, suppress=True)
+    difference = np.array([3.0, 4.0])
+    print(
+        &quot;Difference(3,4): L1=&quot;,
+        np.linalg.norm(difference, 1),
+        &quot;L2=&quot;,
+        np.linalg.norm(difference),
+    )
+    assert np.linalg.norm(difference) &lt;= np.linalg.norm(difference, 1)
+    left = np.array([[0.0, 0.0], [0.0, 2.0]])
+    right = np.array([[3.0, 0.0], [3.0, 2.0]])
+    cross = cdist(left, right)
+    print(&quot;Cross-cluster Euclidean distances:&quot;)
+    print(cross)
+    print(f&quot;Single linkage: {cross.min():.6f}&quot;)
+    print(f&quot;Complete linkage: {cross.max():.6f}&quot;)
+    print(f&quot;Average linkage: {cross.mean():.6f}&quot;)
+    print(&quot;Centroid distance:&quot;, np.linalg.norm(left.mean(0) - right.mean(0)))
+    points = np.array([[0.0, 0.0], [0.0, 1.0], [4.0, 0.0], [4.0, 2.0]])
+    for method in [&quot;single&quot;, &quot;complete&quot;, &quot;average&quot;]:
+        direct = agglomerate(points, method)
+        reference = linkage(points, method=method)
+        assert np.allclose(direct[:, 2:], reference[:, 2:])
+        print(method, &quot;merge heights:&quot;, direct[:, 2])
+    covariance = np.array([[4.0, 1.0], [1.0, 2.0]])
+    a, b = np.array([2.0, 1.0]), np.array([-1.0, 3.0])
+    delta = a - b
+    mahalanobis = np.sqrt(delta @ np.linalg.solve(covariance, delta))
+    eigenvalues, eigenvectors = np.linalg.eigh(covariance)
+    whitening = (
+        eigenvectors @ np.diag(1 / np.sqrt(eigenvalues)) @ eigenvectors.T
+    )
+    assert np.allclose(mahalanobis, np.linalg.norm(whitening @ delta))
+    print(f&quot;Mahalanobis versus whitened Euclidean: {mahalanobis:.6f}&quot;)
+    u = np.array([1.0, -1.0, 0.0]) / np.sqrt(2)
+    v = np.array([1.0, 1.0, -2.0]) / np.sqrt(6)
+    w = (u + v) / np.sqrt(2)
+    direct = 1 - np.dot(u, v)
+    indirect = (1 - np.dot(u, w)) + (1 - np.dot(w, v))
+    assert direct &gt; indirect
+    print(
+        f&quot;1-correlation triangle: direct={direct:.6f}, &quot;
+        f&quot;via third={indirect:.6f} (fails)&quot;
+    )
+    binary_a = np.array([1, 0, 1, 0], dtype=bool)
+    binary_b = np.array([1, 1, 0, 0], dtype=bool)
+    unequal = np.logical_xor(binary_a, binary_b).sum()
+    present = np.logical_or(binary_a, binary_b).sum()
+    jaccard = unequal / present
+    print(f&quot;Jaccard presence distance: {jaccard:.6f}&quot;)
+    mixed = gower_pair(
+        [10, &quot;A&quot;], [30, &quot;B&quot;], [&quot;numeric&quot;, &quot;nominal&quot;], [40, None]
+    )
+    print(f&quot;Mixed numeric/nominal Gower pair: {mixed:.6f}&quot;)
+    assert np.isclose(mixed, 0.75)
+    exponent = 0.5
+    diagonal = np.sum(np.abs(np.array([1.0, 1.0])) ** exponent) ** (
+        1 / exponent
+    )
+    via = 2.0
+    assert diagonal &gt; via
+    print(
+        f&quot;Minkowski exponent0.5: direct={diagonal:.6f}, &quot;
+        f&quot;axis route={via:.6f} (fails triangle)&quot;
+    )
+    print(
+        &quot;Checks passed: distances, linkage, whitening, counterexamples.&quot;
+    )
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre></details>
+<details id="laboratory-output"><summary>Recorded execution output</summary><pre><code>Difference(3,4): L1= 7.0 L2= 5.0
+Cross-cluster Euclidean distances:
+[[3.       3.605551]
+ [3.605551 3.      ]]
+Single linkage: 3.000000
+Complete linkage: 3.605551
+Average linkage: 3.302776
+Centroid distance: 3.0
+single merge heights: [1. 2. 4.]
+complete merge heights: [1.       2.       4.472136]
+average merge heights: [1.       2.       4.179587]
+Mahalanobis versus whitened Euclidean: 2.563480
+1-correlation triangle: direct=1.000000, via third=0.585786 (fails)
+Jaccard presence distance: 0.666667
+Mixed numeric/nominal Gower pair: 0.750000
+Minkowski exponent0.5: direct=4.000000, axis route=2.000000 (fails triangle)
+Checks passed: distances, linkage, whitening, counterexamples.
+</code></pre></details></section><nav class="chapter-nav" aria-label="Chapter navigation"><a href="chapter-03.html">← Previous chapter</a><a href="chapter-05.html">Next chapter →</a></nav>
+<footer>Based on Prof. Sayantee Jana’s NPTEL course. Independent educational notes; no institutional endorsement.
+Source recordings remain with their creators. Mathematics and teaching additions are identified in context.</footer>
+</main></div></body></html>

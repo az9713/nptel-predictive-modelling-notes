@@ -1,0 +1,118 @@
+{
+  "passed": true,
+  "issues": [],
+  "private_sources_present": false,
+  "html_files_compared": 26,
+  "source_free_labs_executed": 18,
+  "source_free_checks_passed": true,
+  "files": [
+    {
+      "file": "about.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-01.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-02.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-03.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-04.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-05.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-06.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-07.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-08.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-09.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-10.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-11.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-12.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-13.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-14.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-15.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-16.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-17.html",
+      "bytes_match": true
+    },
+    {
+      "file": "chapter-18.html",
+      "bytes_match": true
+    },
+    {
+      "file": "course-plan.html",
+      "bytes_match": true
+    },
+    {
+      "file": "index.html",
+      "bytes_match": true
+    },
+    {
+      "file": "laboratory.html",
+      "bytes_match": true
+    },
+    {
+      "file": "notation.html",
+      "bytes_match": true
+    },
+    {
+      "file": "python-conversions.html",
+      "bytes_match": true
+    },
+    {
+      "file": "source-map.html",
+      "bytes_match": true
+    },
+    {
+      "file": "study-guide.html",
+      "bytes_match": true
+    }
+  ],
+  "archive": "dist/predictive-modelling-notes.zip",
+  "archive_sha256": "b580bd70b8a99f60a80f242ada35f54a4a9b32e99ab344661fc36676a3ac3341",
+  "archive_bytes": 2901054,
+  "scope": "Reader rebuild and all main labs from authored public inputs without private media, transcripts or R references; no network retrieval in the build/lab code."
+}

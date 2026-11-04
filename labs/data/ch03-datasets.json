@@ -1,0 +1,22 @@
+{
+  "datasets": [
+    {
+      "name": "ability.cov",
+      "path": "labs/data/ch03-ability-covariance.csv",
+      "n_obs": 112,
+      "primary_source": "https://raw.githubusercontent.com/wch/r-source/trunk/src/library/datasets/data/ability.cov.R",
+      "documentation": "https://stat.ethz.ch/R-manual/R-devel/library/datasets/html/ability.cov.html",
+      "limits": "Covariance summary only; individual observations not supplied.",
+      "sha256": "b95ad453384a8e3e68315ec1304ecceb40eb80148dc2ac0ac309374046b190b7"
+    },
+    {
+      "name": "Stock Returns.csv correlation matrix",
+      "path": "labs/data/ch03-stock-correlation.csv",
+      "n_obs": null,
+      "source": "https://www.youtube.com/watch?v=_gpVmTEUJ8Y&t=440",
+      "evidence_frame": "sources/private/frames/factor-440-detail.png",
+      "limits": "All25 displayed matrix entries transcribed and inspected; original return sample and count not supplied. Source fa.parallel omits n.obs and assumes100.",
+      "sha256": "20ee749099c64c1f08461ce0882fc798f92221ec01070012193058b3a06945b0"
+    }
+  ]
+}

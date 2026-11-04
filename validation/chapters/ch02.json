@@ -1,0 +1,172 @@
+{
+  "number": 2,
+  "title": "Principal components: variance, geometry, and reconstruction",
+  "source_videos": [
+    "Zq7WPJprL8o",
+    "RbPOCNjJNlE",
+    "BwZuubr6_-c"
+  ],
+  "reading_records": [
+    {
+      "video_id": "Zq7WPJprL8o",
+      "read_full": true,
+      "transcript_sha256": "0b64b4225048cf35328b3918a34a2d4fa2f933e66b3053a192905bcbd88310fc",
+      "limitations": "English automatic captions; selected PCA R-code/output frames inspected, no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "RbPOCNjJNlE",
+      "read_full": true,
+      "transcript_sha256": "0292f3713248e20655e4863bc70df92d60d8296915de1fb2dd64593be4ba959d",
+      "limitations": "English automatic captions; selected PCA R-code/output frames inspected, no comprehensive audiovisual review."
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "read_full": true,
+      "transcript_sha256": "f5fd8f13f18d82c490e3c5cc3e047ca310c1d099b9c25b9f8f5ddf93a6a0350d",
+      "limitations": "English automatic captions; selected PCA R-code/output frames inspected, no comprehensive audiovisual review."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch02-judge-summary",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 907,
+      "source_method": "cov/cor/plot of cbind(DECI,DILG)",
+      "python_method": "pandas covariance/correlation and Matplotlib scatter plot",
+      "data_status": "canonical_data_available; numeric USJudgeRatings source values checked against R source",
+      "status": "verified_against_source_output",
+      "verification": "Covariance/correlation numeric values match inspected output; same canonical rows.",
+      "limitations": "No fresh R execution; source code frames and primary documentation inspected."
+    },
+    {
+      "id": "ch02-judge-parallel",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1064,
+      "source_method": "psych::fa.parallel(USJudgeRatings[,-1],fa=pc,n.iter=100)",
+      "python_method": "parallel_pca Gaussian and independent column-bootstrap null spectra",
+      "data_status": "canonical_data_available; numeric USJudgeRatings source values checked against R source",
+      "status": "verified_against_independent_calculation",
+      "verification": "Observed eigenvalues agree; Monte Carlo draws intentionally use a documented Python RNG.",
+      "limitations": "No fresh R execution; source code frames and primary documentation inspected."
+    },
+    {
+      "id": "ch02-judge-principal",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1390,
+      "source_method": "psych::principal(USJudgeRatings[,-1],nfactors=1)",
+      "python_method": "principal correlation eigenvalues/loadings/communalities/weights",
+      "data_status": "canonical_data_available; numeric USJudgeRatings source values checked against R source",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Loadings .92,.91,.97 and SS10.13 agree at printed precision. Fresh R4.5.1 psych2.6.9 all relevant loadings/weights/scores agree below1e-8 after sign/permutation alignment.",
+      "limitations": "Fresh package version differs from unspecified lecture package; see dedicated comparison scope."
+    },
+    {
+      "id": "ch02-harman-parallel",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1575,
+      "source_method": "psych::fa.parallel(Harman23.cor$cov,n.obs=302,fa=pc,n.iter=100)",
+      "python_method": "parallel_pca with source302 plus canonical305 sensitivity",
+      "data_status": "Canonical Harman23.cor8x8correlation matrix available; n.obs305; source parallel command uses302. Individual measurement rows not supplied or invented.",
+      "status": "verified_against_independent_calculation",
+      "verification": "Source sample-count error retained separately from corrected run; no raw resampling possible.",
+      "limitations": "No fresh R execution; source code frames and primary documentation inspected."
+    },
+    {
+      "id": "ch02-harman-none",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1663,
+      "source_method": "psych::principal(Harman23.cor$cov,nfactors=2,rotate=none)",
+      "python_method": "principal(correlation,2)",
+      "data_status": "Canonical Harman23.cor8x8correlation matrix available; n.obs305; source parallel command uses302. Individual measurement rows not supplied or invented.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Unrotated loadings and variance .58,.22 match source frame1775. Fresh R4.5.1 psych2.6.9 all relevant loadings/weights/scores agree below1e-8 after sign/permutation alignment.",
+      "limitations": "Fresh package version differs from unspecified lecture package; see dedicated comparison scope."
+    },
+    {
+      "id": "ch02-harman-varimax",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1773,
+      "source_method": "psych::principal(...,nfactors=2,rotate=varimax); round(rc$weights,2)",
+      "python_method": "Kaiser-normalized varimax, solve(R,L), round(weights,2)",
+      "data_status": "Canonical Harman23.cor8x8correlation matrix available; n.obs305; source parallel command uses302. Individual measurement rows not supplied or invented.",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Rotation and reconstruction invariants checked. Fresh R4.5.1 psych2.6.9 all relevant loadings/weights/scores agree below1e-8 after sign/permutation alignment.",
+      "limitations": "Fresh package version differs from unspecified lecture package; see dedicated comparison scope."
+    },
+    {
+      "id": "ch02-judge-scores",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1893,
+      "source_method": "principal(...,score=TRUE);head(pc$scores)",
+      "python_method": "standardized observations multiplied by regression score weights",
+      "data_status": "canonical_data_available; numeric USJudgeRatings source values checked against R source",
+      "status": "verified_against_fresh_r_run",
+      "verification": "First six scores match frame1980 values to displayed precision. Fresh R4.5.1 psych2.6.9 all relevant loadings/weights/scores agree below1e-8 after sign/permutation alignment.",
+      "limitations": "Fresh package version differs from unspecified lecture package; see dedicated comparison scope."
+    },
+    {
+      "id": "ch02-two-feature-prcomp",
+      "video_id": "BwZuubr6_-c",
+      "start_seconds": 1960,
+      "source_method": "prcomp(data.frame(DECI,DILG));summary;pcs$x;head(scores,5)",
+      "python_method": "Centered unscaled SVD, ordinary scores and variance fractions",
+      "data_status": "canonical_data_available; numeric USJudgeRatings source values checked against R source",
+      "status": "verified_against_independent_calculation",
+      "verification": "Explicit source column order; eigenvalues/scores printed with sign ambiguity acknowledged.",
+      "limitations": "No fresh R execution; source code frames and primary documentation inspected."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch02.py",
+    "stdout_path": "labs/ch02-output.txt",
+    "execution": "passed in project .venv"
+  },
+  "source_limitations": [
+    "Individual Harman observations unavailable; score weights converted, individual scores cannot be reconstructed from correlation alone.",
+    "Source Harman n.obs=302 differs from documented305; both null calculations executed.",
+    "Finite null curves differ because R RNG state and package version not fixed."
+  ],
+  "word_count": 2666,
+  "body_sha256": "c2df83f909f5b2a9e80c777968e5c3e05eea361d7efc05631d16c7e7276394da",
+  "visual_records": [
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1088,
+      "path": "sources/private/frames/pca-1088.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1395,
+      "path": "sources/private/frames/pca-1395.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1510,
+      "path": "sources/private/frames/pca-1510.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1675,
+      "path": "sources/private/frames/pca-1675.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1775,
+      "path": "sources/private/frames/pca-1775.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1898,
+      "path": "sources/private/frames/pca-1898.png"
+    },
+    {
+      "video_id": "BwZuubr6_-c",
+      "seconds": 1980,
+      "path": "sources/private/frames/pca-1980.png"
+    }
+  ],
+  "figures": [
+    "assets/ch02-source-plots.svg"
+  ],
+  "fresh_r_comparison": "validation/ch02-fresh-r-comparison.json"
+}

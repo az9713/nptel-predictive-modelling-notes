@@ -1,0 +1,148 @@
+{
+  "number": 9,
+  "title": "Outliers, leverage, and influence",
+  "source_videos": [
+    "3EX388b-7s4",
+    "Cn572X5kKKA",
+    "la5PiJboaoo"
+  ],
+  "reading_records": [
+    {
+      "video_id": "3EX388b-7s4",
+      "read_full": true,
+      "transcript_sha256": "875f520662afe874a7f2d133df09a8d695f63487137daeb1e754ec184e386c4a",
+      "limitations": "Complete English caption reading; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "Cn572X5kKKA",
+      "read_full": true,
+      "transcript_sha256": "830296f127fde195d8dfb7e2fba140896e3a78b7d3baa8e208773c06c312bdbf",
+      "limitations": "Complete English caption reading; no comprehensive audiovisual audit."
+    },
+    {
+      "video_id": "la5PiJboaoo",
+      "read_full": true,
+      "transcript_sha256": "615cdc35cc9053736f6f59dbbfabad97255631573e158066a10a13c605b8a915",
+      "limitations": "Complete English caption reading; no comprehensive audiovisual audit."
+    }
+  ],
+  "r_examples": [
+    {
+      "id": "ch09-delivery-fit",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 213,
+      "source_method": "lm(delTime~.)",
+      "python_method": "OLS with explicit intercept",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-studentized",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 462,
+      "source_method": "studentized residual plot",
+      "python_method": "OLSInfluence.resid_studentized_external",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-standardized",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 519,
+      "source_method": "standardized residual plot",
+      "python_method": "OLSInfluence.resid_studentized_internal",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-leverage",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 557,
+      "source_method": "leverage plot",
+      "python_method": "OLSInfluence.hat_matrix_diag",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-studentized-fit",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 591,
+      "source_method": "studentized fitted-change plot",
+      "python_method": "OLSInfluence.dffits",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-cook-bar",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 632,
+      "source_method": "Cook distance bars",
+      "python_method": "OLSInfluence.cooks_distance; Matplotlib stem",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-cook-chart",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 706,
+      "source_method": "Cook distance chart",
+      "python_method": "OLSInfluence.cooks_distance; Matplotlib plot",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-dfbetas",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 864,
+      "source_method": "DFBETAS coefficient panels",
+      "python_method": "OLSInfluence.dfbetas",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    },
+    {
+      "id": "ch09-dffits",
+      "video_id": "la5PiJboaoo",
+      "start_seconds": 1037,
+      "source_method": "DFFITS plot",
+      "python_method": "OLSInfluence.dffits",
+      "data_status": "Actual25 delivery rows in original order, included as numeric triples for offline execution",
+      "status": "verified_against_fresh_r_run",
+      "verification": "Fresh base-R lm, hatvalues, rstandard, rstudent, cooks.distance, dffits and dfbetas matched all Python values at absolute tolerance1e-8; all25 direct deleted refits independently checked.",
+      "limitations": "Source plot styling and package-specific default colors/cutoffs not claimed identical."
+    }
+  ],
+  "lab": {
+    "path": "labs/ch09.py",
+    "stdout_path": "labs/ch09-output.txt",
+    "execution": "passed; same stdout with or without optional --plots assets"
+  },
+  "fresh_r_comparison": {
+    "record": "validation/chapters/ch07-09-r-comparison.json",
+    "status": "passed"
+  },
+  "word_count": 2239,
+  "source_limitations": [
+    "Full caption reading and actual diagnostic-data conversion; no comprehensive audiovisual audit.",
+    "Source leverage-extreme and internal-t claims corrected with explicit mathematical distinctions."
+  ],
+  "body_sha256": "90be5a6e79b40144d0b00b8f787fba852015e659970ba0f8d95e3e919ec04b69",
+  "code_validation": "validation/chapters/ch07-12-code-checks.json",
+  "lab_sha256": "49717d8b715c634395598914a79d568e3605f0b3fdb6b5f5a845c639acf22334",
+  "stdout_sha256": "e1d60826fc54321fb27019c44c5b8ae4f7c0cc6ae3db1b50de56bf4de0fee452"
+}

@@ -1,0 +1,16 @@
+<p>The sequence follows the official teaching order. Each chapter combines a statistical problem, explicit assumptions, a mathematical development, an executable laboratory, and exercises with worked solutions.</p>
+<h2 id="prerequisites">Prerequisites and working method</h2>
+<p>Review matrix multiplication, rank, orthogonal projections, symmetric eigenproblems, derivatives, expectation, variance, and covariance. Keep the <a href="notation.html">notation reference</a> nearby. A symbol table supplements a local definition; it does not replace one.</p>
+<p>Read the derivation before running the laboratory. Change one assumption or input, predict the effect, and compare your prediction with the calculation. Solve an exercise before opening its solution. When a computed value differs from a recording, check the input rows, centering, scaling, model matrix, algorithm, and default settings before deciding that one implementation is wrong.</p>
+<h2 id="routes">Routes through the course</h2>
+<table><thead><tr><th>Goal</th><th>Route</th><th>Result to demonstrate</th></tr></thead><tbody>
+<tr><td>Understand multivariate structure</td><td>Chapters 1–6</td><td>Derive PCA, explain factor-model nonidentifiability, and compare clustering objectives.</td></tr>
+<tr><td>Build interpretable regression models</td><td>Chapter 1, then 7–11</td><td>Construct a design matrix, derive least squares, explain uncertainty, and interpret contrasts and interactions.</td></tr>
+<tr><td>Diagnose and assess a fitted model</td><td>Chapters 8–16</td><td>Separate model misspecification, influential observations, invalid uncertainty, and poor new-data prediction.</td></tr>
+<tr><td>Classify binary outcomes</td><td>Chapters 7–8, 16–17</td><td>Derive the logistic likelihood, interpret an odds ratio, and assess probabilities and decisions separately.</td></tr>
+<tr><td>Understand a causal cutoff design</td><td>Chapters 8, 10–11, 15–16, 18</td><td>State the identification assumptions and distinguish an observed jump from an identified treatment effect.</td></tr>
+</tbody></table>
+<h2 id="three-questions">Three questions to carry through every chapter</h2>
+<p><strong>Prediction:</strong> how well will the complete fitted procedure perform on new observations drawn from the relevant population? <strong>Inference:</strong> what parameter or uncertainty statement is supported by the sampling model? <strong>Causality:</strong> which intervention is being compared, and which assumptions identify its effect? These questions can use similar equations while requiring different evidence.</p>
+<h2 id="capstone">A capstone for independent work</h2>
+<p>Choose a documented, redistributable dataset. State its sampling unit, outcome, intended prediction population, and plausible sources of dependence. Reserve an assessment sample, fit all preprocessing and model selection on training data, examine diagnostics, and report predictive performance with its limitations. A causal claim additionally needs an identification argument; a predictive score cannot supply it.</p>

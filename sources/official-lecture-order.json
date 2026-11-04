@@ -1,0 +1,241 @@
+{
+  "url": "https://nptel.ac.in/courses/106106850",
+  "method": "Svelte server-rendered course data lesson array",
+  "matches_planned_order": true,
+  "lessons": [
+    {
+      "lecture_number": 1,
+      "title": "Introduction to Predictive Modelling",
+      "video_id": "aF8LvZhelzw",
+      "concepts_covered": "Qualitative variables, Quantitative varibles, Cross-sectional Data, Longitudinal Data"
+    },
+    {
+      "lecture_number": 2,
+      "title": "Correlation coefficient",
+      "video_id": "pi-nFW0SOV8",
+      "concepts_covered": "Covariance, Correlation"
+    },
+    {
+      "lecture_number": 3,
+      "title": "Principal Components Analysis 1",
+      "video_id": "Zq7WPJprL8o",
+      "concepts_covered": "Standardized Prinicipal components, Scree plot,"
+    },
+    {
+      "lecture_number": 4,
+      "title": "Principal Components Analysis 2",
+      "video_id": "RbPOCNjJNlE",
+      "concepts_covered": "Variance-Covariance matrix, Prinicipal components"
+    },
+    {
+      "lecture_number": 5,
+      "title": "Principal Components Analysis 3",
+      "video_id": "BwZuubr6_-c",
+      "concepts_covered": "Data preparation for PCA, Methods for selecting number of  Principal Components,  R Demonstrations"
+    },
+    {
+      "lecture_number": 6,
+      "title": "Factor Analysis - 1",
+      "video_id": "hLVE1-3632M",
+      "concepts_covered": "Covariance structure of Orthogonal factor Model"
+    },
+    {
+      "lecture_number": 7,
+      "title": "Factor Analysis - 2",
+      "video_id": "w6xUwBqBmQI",
+      "concepts_covered": "Covariance structure of Orthogonal factor Model"
+    },
+    {
+      "lecture_number": 8,
+      "title": "Factor Analysis applications with R",
+      "video_id": "_gpVmTEUJ8Y",
+      "concepts_covered": "Factor rotation, Scree plots with parallel analysis"
+    },
+    {
+      "lecture_number": 9,
+      "title": "Introduction to Cluster Analysis",
+      "video_id": "AZ6KZikxguU",
+      "concepts_covered": "Introduction to cluster analysis and distance measures"
+    },
+    {
+      "lecture_number": 10,
+      "title": "Agglomerative Hierarchical clustering 1",
+      "video_id": "G83gaUNketk",
+      "concepts_covered": "Distance matrices, Different types of linkages and clustering algorithm, Hierarchical algorithm"
+    },
+    {
+      "lecture_number": 11,
+      "title": "Hierarchical clustering",
+      "video_id": "ybgCUIU1isY",
+      "concepts_covered": "Agglomerative and divisive hierarchical clustering with Numerical examples"
+    },
+    {
+      "lecture_number": 12,
+      "title": "Hierarchical clustering using R examples",
+      "video_id": "JgFfF_ysuNo",
+      "concepts_covered": "Implementation of agglomerative and divisive hierarchical clustering in R"
+    },
+    {
+      "lecture_number": 13,
+      "title": "k-means clustering",
+      "video_id": "6qNLWCODvz0",
+      "concepts_covered": "Limitation of hierarchical clustering,K means clustering and its implemention in R"
+    },
+    {
+      "lecture_number": 14,
+      "title": "Simple linear regression 1",
+      "video_id": "znWxD_73rtg",
+      "concepts_covered": "Bivariate data, Scatter plots, simple linear regression"
+    },
+    {
+      "lecture_number": 15,
+      "title": "Simple linear regression 2",
+      "video_id": "j35ZjlaXpPs",
+      "concepts_covered": "Least square estimators of regression coefficients"
+    },
+    {
+      "lecture_number": 16,
+      "title": "Multiple linear regression 1",
+      "video_id": "BSk7RaB4kbk",
+      "concepts_covered": "multiple regression model and its implementation in R with an example"
+    },
+    {
+      "lecture_number": 17,
+      "title": "Multiple linear regression 2",
+      "video_id": "dK7LyVwHlyo",
+      "concepts_covered": "multiple regression model and its implementation in R with an example"
+    },
+    {
+      "lecture_number": 18,
+      "title": "Multiple linear Regression 3",
+      "video_id": "rLXNVsz9qwo",
+      "concepts_covered": "multiple regression model,pvalue ,confidence interval and prediction interval"
+    },
+    {
+      "lecture_number": 19,
+      "title": "Outliers 1",
+      "video_id": "3EX388b-7s4",
+      "concepts_covered": "Outliers, Multiple Linear Regression"
+    },
+    {
+      "lecture_number": 20,
+      "title": "Outliers 2",
+      "video_id": "Cn572X5kKKA",
+      "concepts_covered": "Outliers, Multiple Linear Regression"
+    },
+    {
+      "lecture_number": 21,
+      "title": "Outliers Detection",
+      "video_id": "la5PiJboaoo",
+      "concepts_covered": "Outliers detection,cooks distance,residual plot"
+    },
+    {
+      "lecture_number": 22,
+      "title": "Regression Modelling with Categorical predictors using R",
+      "video_id": "vgvKOKD-daM",
+      "concepts_covered": "Qualitative variables,  Concept of Dummy coding, Model interpretation"
+    },
+    {
+      "lecture_number": 23,
+      "title": "Modelling Non-linear and Interaction effects in Regression using R",
+      "video_id": "HMpiRyz2c9c",
+      "concepts_covered": "Meaning and interpretation of interaction terms, Non-linear effects"
+    },
+    {
+      "lecture_number": 24,
+      "title": "Autocorrelation 1",
+      "video_id": "oWddrGt3xJA",
+      "concepts_covered": "Correlated errors,  Different tests for autocorrelation"
+    },
+    {
+      "lecture_number": 25,
+      "title": "Autocorrelation 2",
+      "video_id": "WLXxjZPbRg0",
+      "concepts_covered": "Correlated errors,  Different tests for autocorrelation"
+    },
+    {
+      "lecture_number": 26,
+      "title": "Tests for Normality 1",
+      "video_id": "C7ihAtunKro",
+      "concepts_covered": "Tests for normality,Kolmogorov Smirnov Test"
+    },
+    {
+      "lecture_number": 27,
+      "title": "Tests for Normality 2",
+      "video_id": "D_oscdlZD40",
+      "concepts_covered": "Shapiro Wilks Test, application in R"
+    },
+    {
+      "lecture_number": 28,
+      "title": "Multicollinearity in Regression 1",
+      "video_id": "vqPB9ZDECaw",
+      "concepts_covered": "Violation of assumption - Multicollinearity"
+    },
+    {
+      "lecture_number": 29,
+      "title": "Multicollinearity in Regression 2",
+      "video_id": "AokQyy_Pt5o",
+      "concepts_covered": "Violation of assumption - Multicollinearity"
+    },
+    {
+      "lecture_number": 30,
+      "title": "Multicollinearity in Regression 3",
+      "video_id": "n8yN78mF9qw",
+      "concepts_covered": "Violation of assumption - Multicollinearity"
+    },
+    {
+      "lecture_number": 31,
+      "title": "Heteroscedasticity 1",
+      "video_id": "-K6Nqjr9eTA",
+      "concepts_covered": "Detection and Remedies of Heteroscedasticity, Goldfeld Quandt test"
+    },
+    {
+      "lecture_number": 32,
+      "title": "Heteroscedasticity 2",
+      "video_id": "KMRZHOGE1aQ",
+      "concepts_covered": "Detection and Remedies of Heteroscedasticity, Goldfeld Quandt test"
+    },
+    {
+      "lecture_number": 33,
+      "title": "Heteroscedasticity 3",
+      "video_id": "_gooKHbGkS0",
+      "concepts_covered": "consequences of heteroskedasticity and remedies of it"
+    },
+    {
+      "lecture_number": 34,
+      "title": "Variable Selection and Model Evaluation",
+      "video_id": "c1MST7rrPIw",
+      "concepts_covered": "Feature selection methods, Stepwise Regression"
+    },
+    {
+      "lecture_number": 35,
+      "title": "Case study",
+      "video_id": "s9U_b3hOs5A",
+      "concepts_covered": "case study of simple and multiple regression in R, Polynomial regression ,outlier detection and model evaluation"
+    },
+    {
+      "lecture_number": 36,
+      "title": "Odds Ratio",
+      "video_id": "ZJsfDrVT8CE",
+      "concepts_covered": "Odds Ratio,Relative risk ,log odds ratio"
+    },
+    {
+      "lecture_number": 37,
+      "title": "Logistic Regression 1",
+      "video_id": "BQBpBFFsHyI",
+      "concepts_covered": "Logistic Regression, Implementation of logistic regression in R"
+    },
+    {
+      "lecture_number": 38,
+      "title": "Logistic Regression 2",
+      "video_id": "7wq85IH9sDY",
+      "concepts_covered": "Model fitting and inference for logistic regression"
+    },
+    {
+      "lecture_number": 39,
+      "title": "Regression Disconituity Design",
+      "video_id": "9qR4g3nkpis",
+      "concepts_covered": "Regression discontinuity design"
+    }
+  ]
+}

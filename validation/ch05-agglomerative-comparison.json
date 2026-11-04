@@ -1,0 +1,18 @@
+{
+  "reference": "Fresh R4.5.1 stats hierarchical methods; exact source data and sample-SD scaling",
+  "comparisons": {
+    "nutrient_raw_distances": 5.115907697472721e-13,
+    "nutrient_scaled_distances": 5.329070518200751e-15,
+    "nutrient_average_cophenetic": 3.774758283725532e-15,
+    "nutrient_cut5": true,
+    "utilities_single_cophenetic": 5.273559366969494e-16,
+    "utilities_single_cut4": true,
+    "utilities_average_cophenetic": 3.552713678800501e-15,
+    "utilities_average_cut4": true,
+    "utilities_ward_cophenetic": 4.440892098500626e-15,
+    "utilities_ward_cut4": true
+  },
+  "numeric_tolerance": 1e-08,
+  "passed": true,
+  "limits": "Leaf order and plot styling are not asserted byte-identical."
+}

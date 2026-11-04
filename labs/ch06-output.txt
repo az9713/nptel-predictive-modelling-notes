@@ -1,0 +1,203 @@
+Source four-point squared distances:
+ [[10. 61.]
+ [10.  9.]
+ [17.  4.]
+ [41.  4.]]
+Assignment/update WSS: 28.0 27.0 14.0
+Stable centers:
+ [[ 5.  3.]
+ [-1. -1.]]
+Exact refitted transfer change: -14.0
+Exhaustive four-point optimal two-group WSS: 14.0
+Mean-minimization identity, both sides: 98.0 98.0
+Authored silhouette example mean: 0.79797980
+Independent mathematical checks passed.
+
+Utilities k6; controlled seed2026 (source seed unspecified)
+Sizes: [3 7 5 1 5 1]
+Centers:
+   Fixed_charge       RoR      Cost  Load_factor  Demand_growth     Sales   Nuclear  Fuel_Cost
+0     -0.600276 -0.833180  1.338910    -0.480580       0.991718  1.856521 -0.714629  -0.965766
+1      0.504316  0.779551 -0.985896    -0.337546      -0.489577  0.351860 -0.523211  -0.410537
+2     -0.011332  0.331381  0.218934    -0.358041       0.166469 -0.401874  1.565038  -0.595448
+3     -1.919076 -1.932383 -0.781276     1.103467       1.846898 -0.901425 -0.220344   1.469656
+4     -0.358195 -0.363790  0.398583     1.157264      -0.301743 -0.708072 -0.402575   1.117200
+5      2.037324 -0.862888  0.578233    -1.295019      -0.718643 -1.581428  0.214389   1.692638
+Within-group sums of squares: [ 9.53352169 26.50776933 10.1770935   0.         11.93524896  0.        ]
+Total WSS: 58.153633482400025
+Total SS: 168.0
+Between SS: 109.84636651759998
+ifault: 0
+Utilities memberships:
+Company
+Arizona         2
+Boston          5
+Central         2
+Commonwealth    3
+NY              6
+Florida         2
+Hawaiian        5
+Idaho           1
+Kentucky        2
+Madison         3
+Nevada          1
+New England     5
+Northern        3
+Oklahoma        2
+Pacific         5
+Puget           1
+San Diego       4
+Southern        2
+Texas           2
+Wisconsin       3
+United          5
+Virginia        3
+Utilities center distances:
+ [[0.         3.74824849 3.75337535 4.94621835 4.0659544  5.55650765]
+ [3.74824849 0.         2.70412122 5.09926414 3.11603381 4.14348234]
+ [3.75337535 2.70412122 0.         4.73562859 3.17011718 3.98304653]
+ [4.94621835 5.09926414 4.73562859 0.         3.33215726 5.62859128]
+ [4.0659544  3.11603381 3.17011718 3.33215726 0.         3.69890635]
+ [5.55650765 4.14348234 3.98304653 5.62859128 3.69890635 0.        ]]
+
+Raw wine k3; one source start
+Sizes: [ 28  50 100]
+Centers:
+     Alcohol  Malic_acid     Ash  Alcalinity   Magnesium   Phenols  Flavanoids  Nonflavonoid_phenols  Proanthocyanins     Color       Hue  OD280_OD315  Proline
+0  13.822143    1.773929  2.4900   16.964286  105.357143  2.923929    3.111429              0.298571         1.986786  6.202857  1.103571     2.984643  1301.50
+1  13.336800    2.396800  2.3718   18.510000  108.600000  2.432400    2.214800              0.323600         1.707200  5.143600  0.966720     2.862800   894.60
+2  12.602500    2.463600  2.3293   20.696000   93.740000  2.050400    1.633500              0.398700         1.421900  4.694800  0.911900     2.381700   517.75
+Within-group sums of squares: [ 550200.99627143  815783.68095208 1263330.51679459]
+Total WSS: 2629315.1940180985
+Total SS: 17592296.383508474
+Between SS: 14962981.189490374
+ifault: 0
+
+Raw wine k3; 25 source starts
+Sizes: [62 69 47]
+Centers:
+     Alcohol  Malic_acid       Ash  Alcalinity   Magnesium   Phenols  Flavanoids  Nonflavonoid_phenols  Proanthocyanins     Color       Hue  OD280_OD315      Proline
+0  12.929839    2.504032  2.408065   19.890323  103.596774  2.111129    1.584032              0.388387         1.503387  5.650323  0.883968     2.365484   728.338710
+1  12.516667    2.494203  2.288551   20.823188   92.347826  2.070725    1.758406              0.390145         1.451884  4.086957  0.941159     2.490725   458.231884
+2  13.804468    1.883404  2.426170   17.023404  105.510638  2.867234    3.014255              0.285319         1.910426  5.702553  1.078298     3.114043  1195.148936
+Within-group sums of squares: [ 566572.50317252  443166.72075939 1360950.46285106]
+Total WSS: 2370689.686782968
+Total SS: 17592296.383508474
+Between SS: 15221606.696725506
+ifault: 0
+Wine cultivar versus fitted cluster (labels need no alignment):
+col_0   1   2   3
+row_0            
+1      13   0  46
+2      20  50   1
+3      29  19   0
+Raw wine first two PCA display fractions: [0.99809123 0.00173592]
+Literal useful::FitKMeans table:
+  Clusters   Hartigan  AddCluster
+        2 505.429310        True
+        3 160.411331        True
+        4 135.707228        True
+        5  78.445289        True
+        6  71.489710        True
+        7  96.657223        True
+        8  47.521525        True
+        9  33.198650        True
+       10  40.244743        True
+       11  28.928383        True
+       12  15.903544        True
+       13  17.083783        True
+       14  24.998172        True
+       15  14.809907        True
+       16  15.765533        True
+       17   1.987005       False
+       18  14.165725        True
+       19   6.225141       False
+       20  51.175564        True
+Standardized wine one-start WSS: [2301.         1649.43998247 1270.74911531 1178.94491359 1107.07772326
+ 1048.34330134  990.55581917  926.72251042  904.7776129   870.917831
+  823.46696893  803.24837991  763.20233665  740.93497588  725.79242206]
+Standardized wine NbClust26 recommendations: {2: 2, 3: 19, 14: 1, 15: 1}
+NbClust selected k: 3
+USArrests k2..5 controlled seed123, sequential25starts.
+The lecture's corresponding initial seed is not shown.
+USArrests WSS k1..15: [196.         102.86240049  78.32326897  56.40317346  48.94420319
+  42.83302698  38.85506898  33.77736577  30.59528245  27.43242879
+  25.17423375  22.39871536  19.68082025  18.60707348  16.91724208]
+USArrests mean silhouettes k2..15: [0.40848903 0.30943125 0.33968891 0.30307807 0.28598207 0.28896919
+ 0.26248505 0.25761002 0.27041112 0.25288528 0.26793855 0.23464047
+ 0.27625871 0.26938911]
+Silhouette-selected k: 2
+fviz_nbclust-equivalent WSS k1..10, one start: [np.float64(195.99999999999997), np.float64(102.86240049441732), np.float64(81.59328844322391), np.float64(56.40317345829283), np.float64(48.944203189774136), np.float64(45.13666115254738), np.float64(41.336066205085764), np.float64(34.463082883900974), np.float64(32.65985045893862), np.float64(28.676014909259674)]
+fviz_nbclust-equivalent silhouettes k2..10, one start: [0.4084890326217642, 0.3668284276184688, 0.3396889143334439, 0.30307807075646026, 0.2744592244443411, 0.262622944962152, 0.26503914466754774, 0.2555583063765261, 0.25269690613021334]
+
+USArrests final source k4, seed123,nstart25
+Sizes: [ 8 13 16 13]
+Centers:
+     Murder   Assault  UrbanPop      Rape
+0  1.411890  0.874335 -0.814521  0.019271
+1 -0.961541 -1.106601 -0.930107 -0.966763
+2 -0.489438 -0.382600  0.575830 -0.261654
+3  0.695070  1.039441  0.722637  1.276940
+Within-group sums of squares: [ 8.31606082 11.95246286 16.21221326 19.92243652]
+Total WSS: 56.40317345829281
+Total SS: 196.0
+Between SS: 139.59682654170717
+ifault: 0
+Final state membership:
+Alabama           1
+Alaska            4
+Arizona           4
+Arkansas          1
+California        4
+Colorado          4
+Connecticut       3
+Delaware          3
+Florida           4
+Georgia           1
+Hawaii            3
+Idaho             2
+Illinois          4
+Indiana           3
+Iowa              2
+Kansas            3
+Kentucky          2
+Louisiana         1
+Maine             2
+Maryland          4
+Massachusetts     3
+Michigan          4
+Minnesota         2
+Mississippi       1
+Missouri          4
+Montana           2
+Nebraska          2
+Nevada            4
+New Hampshire     2
+New Jersey        3
+New Mexico        4
+New York          4
+North Carolina    1
+North Dakota      2
+Ohio              3
+Oklahoma          3
+Oregon            3
+Pennsylvania      3
+Rhode Island      3
+South Carolina    1
+South Dakota      2
+Tennessee         1
+Texas             4
+Utah              3
+Vermont           2
+Virginia          3
+Washington        3
+West Virginia     2
+Wisconsin         2
+Wyoming           3
+Raw-data means by final group:
+      Murder     Assault   UrbanPop       Rape
+1  13.937500  243.625000  53.750000  21.412500
+2   3.600000   78.538462  52.076923  12.176923
+3   5.656250  138.875000  73.875000  18.781250
+4  10.815385  257.384615  76.000000  33.192308
+Source workflows executed with pure-Python Hartigan-Wong.
